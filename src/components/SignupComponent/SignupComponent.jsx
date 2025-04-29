@@ -7,11 +7,12 @@ import {
   FaEyeSlash,
 } from "react-icons/fa";
 import { GoPerson } from "react-icons/go";
-import { MdOutlineEmail, MdLockOutline } from "react-icons/md";
+import { MdOutlineEmail, MdLockOutline, MdOutlineLocalPhone } from "react-icons/md";
 
 const SignupComponent = ({ onClose, onSwitchToLogin }) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [gender, setGender] = useState("");
@@ -19,6 +20,8 @@ const SignupComponent = ({ onClose, onSwitchToLogin }) => {
   const [formattedDate, setFormattedDate] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState("");
   const hiddenDateRef = useRef();
 
   const togglePassword = () => {
@@ -29,17 +32,46 @@ const SignupComponent = ({ onClose, onSwitchToLogin }) => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
   
-    console.log("Name:", name);
-    console.log("Email:", email);
-    console.log("Password:", password);
-    console.log("Gender:", gender);
-    console.log("Date of Birth:", formattedDate);
-    console.log("Confirm Password:", confirmPassword);
-  };
+    if (password !== confirmPassword) {
+      setErrorMessage("Mật khẩu và mật khẩu xác nhận không khớp!");
+      return;
+    }
   
+    try {
+      const response = await fetch("http://localhost:8080/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          gender,
+          birthdate: rawDate,
+          password,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        setErrorMessage(data.error || "Đăng ký thất bại.");
+        return;
+      }
+      setErrorMessage("");
+      setSuccessMessage("Đăng ký thành công! Vui lòng đăng nhập.");
+
+      setTimeout(() => {
+        setSuccessMessage("");
+        onSwitchToLogin();
+      }, 1500);
+    } catch (error) {
+      console.error("Lỗi khi gửi yêu cầu đăng ký:", error);
+      setErrorMessage("Không thể kết nối tới máy chủ.");
+    }
+  };  
 
   const handleDateChange = (e) => {
     const date = e.target.value;
@@ -83,6 +115,18 @@ const SignupComponent = ({ onClose, onSwitchToLogin }) => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>
+              <MdOutlineLocalPhone  />
+              Số điện thoại:
+            </label>
+            <input
+              type="text"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
               required
             />
           </div>
@@ -214,7 +258,8 @@ const SignupComponent = ({ onClose, onSwitchToLogin }) => {
               </span>
             </div>
           </div>
-
+          {successMessage && <div className="success-message">{successMessage}</div>}
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
           <button type="submit" className="signup-btn">
             Đăng ký
           </button>

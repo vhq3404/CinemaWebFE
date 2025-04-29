@@ -3,23 +3,57 @@ import React, { useState } from 'react';
 import './LoginComponent.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { MdOutlineEmail, MdLockOutline } from "react-icons/md";
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/actions';
 
 const LoginComponent = ({ onClose, onSwitchToSignup }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage('');
+    setIsLoading(true);
 
-    console.log('Email:', email);
-    console.log('Password:', password);
+    try {
+      setTimeout(async () => {
+      const response = await fetch('http://localhost:8080/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setErrorMessage(data.error || 'Đăng nhập thất bại');
+        setIsLoading(false);
+        return;
+      }
+
+      console.log('Token:', data.token);
+      console.log('User:', data.user);
+
+      dispatch(login(data.user, data.token));
+
+      onClose(); 
+    }, 1200);
+    } catch (error) {
+      console.error('Lỗi khi gửi yêu cầu:', error);
+      setErrorMessage('Lỗi kết nối đến server'); 
+      setIsLoading(false);
+    }
   };
-
+  
+  
   return (
     <div className="login-overlay">
       <div className="login-form">
@@ -66,13 +100,10 @@ const LoginComponent = ({ onClose, onSwitchToSignup }) => {
         </span>
       </div>
       </div>
-     
-          <button 
-          type="submit"
-          className="login-button"
-          >
-            Đăng nhập
-            </button>
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
+      <button type="submit" className="login-button" disabled={isLoading}>
+            {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+          </button>
           <button
           type="button"
           className="forgot-password-btn"

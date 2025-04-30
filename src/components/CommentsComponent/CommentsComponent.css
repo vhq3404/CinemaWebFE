@@ -1,0 +1,55 @@
+.comments-section {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.comments-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.comments-carousel {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 10px;
+}
+
+.comment-item {
+    flex: 0 0 400px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    text-align: center; /* Căn giữa nội dung */
+    word-wrap: break-word;
+}
+
+.comment-stars {
+    color: #FFD700;
+    font-size: 16px;
+    margin-bottom: 10px; /* Tạo khoảng cách giữa sao và tên */
+}
+
+.comment-header {
+    margin-bottom: 10px;
+}
+
+.comment-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.comment-text {
+    margin: 0;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.6;
+}

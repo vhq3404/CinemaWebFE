@@ -3,6 +3,7 @@ import "./HeaderComponent.css";
 import AuthModal from "../AuthModal/AuthModal";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/actions";
+import { Link } from "react-router-dom";
 
 const HeaderComponent = () => {
   const [showLoginForm, setShowLoginForm] = useState(false);

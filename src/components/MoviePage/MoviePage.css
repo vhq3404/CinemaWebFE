@@ -1,0 +1,75 @@
+.movie-page {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tabs {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.tabs button {
+    background: none;
+    border: none;
+    color: #000;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px 0;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.tabs button.active {
+    color: #0056b3;
+    font-weight: bold;
+}
+
+.tabs button.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #0056b3;
+    border-radius: 2px;
+}
+
+.tabs button:hover {
+    color: #0056b3;
+}
+
+.movies-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 phim mỗi hàng */
+    gap: 20px;
+}
+
+.movie-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+}
+
+.movie-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.movie-image {
+    width: 100%;
+    height: auto;
+}
+
+.movie-title {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #333;
+}

@@ -1,49 +1,26 @@
-.banner {
-    position: relative;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm hiệu ứng chuyển đổi */
+.banner-container {
+  width: 100%;
+  margin: auto;
+  padding-top: 20px;
 }
 
-.banner:hover {
-    transform: scale(1.05); /* Phóng to nhẹ khi hover */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Thêm bóng đổ */
+.banner-img {
+  width: 1600px;
+  height: 400px;
+  object-fit: contain;
+  transition: transform 0.5s ease, z-index 0.5s;
+  z-index: 1;
+  position: relative;
 }
 
-.banner-image {
-    width: 100%;
-    height: auto;
-    display: block;
+.banner-img:hover {
+  transform: scale(1.03);
+  z-index: 10;
 }
 
-.banner-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 18px;
-    z-index: 10;
-    display: none; /* Ẩn nút mặc định */
-}
-
-.banner-button.back {
-    left: 10px;
-}
-
-.banner-button.next {
-    right: 10px;
-}
-
-.banner:hover .banner-button {
-    display: block; /* Hiển thị nút khi hover */
-}
-
-.banner-button:hover {
-    background-color: rgba(0, 0, 0, 0.8);
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  overflow: visible; 
+  position: relative;
 }

@@ -10,10 +10,12 @@
     justify-content: center;
     align-items: center;
     z-index: 999;
+    font-family: monospace;
+    font-size: 20px;
   }
   
   .login-form {
-    background-color: #F8F2E5;
+    background-color: #ffffff;
     color: black;
     padding: 20px;
     border-radius: 10px;
@@ -21,6 +23,7 @@
     width: 100%;
     max-width: 400px; 
     position: relative;
+    font-family: monospace;
     margin: 0 auto;
   }
   
@@ -42,13 +45,14 @@
   .login-form label {
     display: flex;
     align-items: center;
+    font-size: 16px;
     font-weight: 500;
     margin-bottom: 10px;
     gap: 10px;
   }
 
   .login-form input {
-    background-color: #F8F2E5;
+    background-color: #ffffff;
     display: block;
     width: 100%;
     margin: 10px 0;
@@ -57,11 +61,14 @@
     border-radius: 5px;
     box-sizing: border-box;
     margin-bottom: 20px;
+    font-size: 16px;
+    font-family: monospace;
   }
   
   .login-button {
     background-color: #DBAD34;
-    font-size: 16px;
+    font-size: 18px;
+    font-family: monospace;
     font-weight: bold;
     color: white;
     padding: 10px;
@@ -80,12 +87,13 @@
     width: auto;
     background: none;
     border: none;
-    font-size: 14px;
+    font-size: 16px;
     text-decoration: none;
     cursor: pointer;
     margin-top: 16px;
     text-align: center;
     font-weight: 600;
+    font-family: monospace;
     float: right; /* Di chuyển button sang phía bên phải */
   }
   
@@ -111,8 +119,9 @@
   }
 
   .signup-button {
-    background-color: #F8F2E5;
-    font-size: 16px;
+    background-color: #ffffff;
+    font-size: 18px;
+    font-family: monospace;
     font-weight: bold;
     color: #DBAD34;
     padding: 10px;

@@ -8,6 +8,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     position: sticky;
     top: 0;
+    font-family: monospace;
     z-index: 100;
   }
   
@@ -81,10 +82,11 @@
 
   .nav-login_button {
     background: none;
+    font-family: monospace;
     border: none;
     color: #fff;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 21px;
     position: relative;
     cursor: pointer;
     padding: 0;

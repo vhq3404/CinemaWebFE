@@ -1,0 +1,32 @@
+.movie-age-badge {
+    padding: 4px 10px;
+    border-radius: 8px;
+    color: #ffffff; 
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 20px;
+    white-space: nowrap;
+  }
+  
+  /* Màu sắc theo độ tuổi */
+  .age-p {
+    background-color: #28a745; /* xanh lá */
+    padding: 5px 22px 5px 22px;
+  }
+  
+  .age-13 {
+    background-color: #ffc107; /* vàng cam */
+  }
+  
+  .age-16 {
+    background-color: #fd7e14; /* cam */
+  }
+  
+  .age-18 {
+    background-color: #dc3545; /* đỏ */
+  }
+  
+  .age-default {
+    background-color: gray;
+  }
+  

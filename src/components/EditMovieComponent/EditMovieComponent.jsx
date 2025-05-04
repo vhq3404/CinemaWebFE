@@ -13,6 +13,11 @@ const EditMovieComponent = ({ onClose, movie }) => {
     return `${day}/${month}/${year}`;
   };
 
+  const toInputDateFormat = (isoDateString) => {
+    if (!isoDateString) return "";
+    return new Date(isoDateString).toISOString().split("T")[0]; // yyyy-MM-dd
+  };
+
   const [title, setTitle] = useState(movie.title || "");
   const [description, setDescription] = useState(movie.description || "");
   const [status, setStatus] = useState(movie.status || "");
@@ -26,7 +31,7 @@ const EditMovieComponent = ({ onClose, movie }) => {
     movie?.poster ? `http://localhost:8080/${movie.poster}` : null
   );
   const [posterFile, setPosterFile] = useState(null);
-  const [rawDate, setRawDate] = useState(movie.releaseDate || "");
+  const [rawDate, setRawDate] = useState(toInputDateFormat(movie.releaseDate));
   const [formattedDate, setFormattedDate] = useState(
     movie.releaseDate ? formatDate(movie.releaseDate) : ""
   );
@@ -120,7 +125,7 @@ const EditMovieComponent = ({ onClose, movie }) => {
       if (posterFile) {
         formData.append("poster", posterFile);
       }
-      console.log("id", movieData._id)
+      console.log("id", movieData._id);
 
       const response = await fetch(
         `http://localhost:8080/api/movies/${movieData._id}`,
@@ -134,8 +139,8 @@ const EditMovieComponent = ({ onClose, movie }) => {
 
       if (response.ok) {
         console.log("Cập nhật thành công:", result);
-        window.location.reload();
         onClose();
+        window.location.reload();
       } else {
         console.error("Lỗi từ server:", result.error || result.message);
       }
@@ -143,13 +148,6 @@ const EditMovieComponent = ({ onClose, movie }) => {
       console.error("Lỗi cập nhật phim:", err);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleTitleChange = (e) => {
-    const value = e.target.value;
-    if (typeof value === "string" && value.trim().length > 0) {
-      setTitle(value);
     }
   };
 
@@ -221,7 +219,7 @@ const EditMovieComponent = ({ onClose, movie }) => {
           </div>
 
           {/* Cột phải - Form */}
-          <form onSubmit={handleUpdate} className="form-fields">
+          <form onSubmit={handleUpdate} className="form-fields" noValidate>
             <div>
               <label>
                 <span className="required">*</span>
@@ -403,9 +401,9 @@ const EditMovieComponent = ({ onClose, movie }) => {
                 Hủy
               </button>
               <button
+                type="submit"
                 className="submit-edit-movie-button"
                 disabled={isLoading}
-                onClick={handleUpdate}
               >
                 {isLoading ? "Đang cập nhật..." : "Cập nhật"}
               </button>

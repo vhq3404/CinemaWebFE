@@ -1,6 +1,5 @@
 import HomePage from "../pages/HomePage/HomePage";
-import MovieDetailPage from "../pages/HomePage/MovieDetailPage";
-import TrendingMoviesPage from "../pages/HomePage/TrendingMoviesPage";
+import MovieDetailPage from "../pages/MovieDetailPage/MovieDetailPage";
 import MoviePage from "../components/MoviePage/MoviePage";
 
 export const routes = [
@@ -17,11 +16,6 @@ export const routes = [
     {
         path: "/movie/:id",
         page: MovieDetailPage,
-        isShowHeader: true,
-    },
-    {
-        path: "/trending-movies",
-        page: TrendingMoviesPage,
         isShowHeader: true,
     },
 ];

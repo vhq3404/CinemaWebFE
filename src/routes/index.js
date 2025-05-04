@@ -1,6 +1,5 @@
 import HomePage from "../pages/HomePage/HomePage";
-import MovieDetailPage from "../pages/HomePage/MovieDetailPage";
-import TrendingMoviesPage from "../pages/HomePage/TrendingMoviesPage";
+import MovieDetailPage from "../pages/MovieDetailPage/MovieDetailPage";
 import MoviePage from "../components/MoviePage/MoviePage";
 import TheaterPage from "../components/TheaterPage/TheaterPage";
 import AdminTheaterManagement from "../components/AdminTheaterManagement/AdminTheaterManagement";

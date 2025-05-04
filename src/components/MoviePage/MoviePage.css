@@ -1,7 +1,12 @@
 .movie-page {
+  background-color:#ffffff;
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.movie-page.vertical {
+  max-width: 300px; /* hoặc bao nhiêu tùy bạn */
 }
 
 .tabs {
@@ -49,6 +54,10 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4 phim mỗi hàng */
   gap: 24px;
+}
+
+.movies-grid.vertical {
+  grid-template-columns: 1fr; /* 1 cột - xếp từ trên xuống */
 }
 
 .movie-card {
@@ -125,10 +134,26 @@
   background-color: #b52323;
 }
 
-.movie-image {
+.movie-poster {
   width: 100%;
   height: 400px;
 }
+
+.movie-image 
+{
+  position: relative; 
+  display: inline-block;
+  width: 100%;
+  height: 400px;
+}
+
+.overlay-badge {
+  position: absolute;
+  bottom: 65px; /* hoặc 10px tùy chỉnh */
+  right: 10px;
+  z-index: 10;
+}
+
 
 .movie-title {
   font-size: 16px;

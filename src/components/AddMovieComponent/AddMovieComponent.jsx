@@ -3,7 +3,6 @@ import React, { useState, useRef } from "react";
 import "./AddMovieComponent.css";
 import { FaRegTrashAlt, FaRegCalendarAlt } from "react-icons/fa";
 import { FiPlus } from "react-icons/fi";
-import { useDispatch } from "react-redux";
 
 const AddMovieComponent = ({ onClose }) => {
   const [title, setTitle] = useState("");
@@ -96,7 +95,7 @@ const AddMovieComponent = ({ onClose }) => {
         genres: genreList,
         nation,
         duration,
-        age,
+        age: age?.trim() || "unrated",
         trailer,
         releaseDate: rawDate,
       };

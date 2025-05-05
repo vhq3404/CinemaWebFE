@@ -4,6 +4,9 @@ import AuthModal from "../AuthModal/AuthModal";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/actions";
 import { Link } from "react-router-dom";
+import { MdLogout } from "react-icons/md";
+import { BsPersonBadge } from "react-icons/bs";
+import { HiOutlineTicket } from "react-icons/hi";
 
 const HeaderComponent = () => {
   const [showLoginForm, setShowLoginForm] = useState(false);
@@ -17,7 +20,7 @@ const HeaderComponent = () => {
   };
 
   const handleLogout = () => {
-    setIsLoading(true); 
+    setIsLoading(true);
 
     setTimeout(() => {
       localStorage.removeItem("token");
@@ -49,14 +52,29 @@ const HeaderComponent = () => {
           <nav className="nav">
             {user ? (
               <>
-                <span className="nav-user">{user.name}</span>
-                <button
-                  onClick={handleLogout}
-                  className="nav-logout_button"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Đăng xuất" : "Đăng xuất"}
-                </button>
+                <div className="nav-user-dropdown">
+                  <span className="nav-user">Xin chào, {user.name}</span>
+                  <div className="dropdown-menu">
+                    <Link to="/ticket" className="dropdown-item">
+                      <HiOutlineTicket />
+                      Vé của tôi
+                    </Link>
+
+                    <Link to="/profile" className="dropdown-item">
+                      <BsPersonBadge />
+                      Tài khoản
+                    </Link>
+
+                    <button
+                      onClick={handleLogout}
+                      className="dropdown-item"
+                      disabled={isLoading}
+                    >
+                      <MdLogout />
+                      {isLoading ? "Đang đăng xuất..." : "Đăng xuất"}
+                    </button>
+                  </div>
+                </div>
               </>
             ) : (
               <button onClick={toggleLoginForm} className="nav-login_button">

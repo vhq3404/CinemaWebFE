@@ -113,7 +113,7 @@ const MoviePage = ({ isVertical = false, excludeId = null}) => {
             Sắp chiếu
           </button>
         </div>
-        {user && user.role === "admin" && (
+        {user && user.role === "admin" && !isVertical && (
           <button onClick={toggleAddMovie} className="add-movie-button">
             Thêm phim
           </button>

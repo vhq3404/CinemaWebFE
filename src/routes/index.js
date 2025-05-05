@@ -20,11 +20,7 @@ export const routes = [
         page: MovieDetailPage,
         isShowHeader: true,
     },
-    {
-        path: "/trending-movies",
-        page: TrendingMoviesPage,
-        isShowHeader: true,
-    },
+    
     {
         path: "/theater",
         page: TheaterPage, 

@@ -4,6 +4,7 @@ import MoviePage from "../components/MoviePage/MoviePage";
 import TheaterPage from "../components/TheaterPage/TheaterPage";
 import AdminTheaterManagement from "../components/AdminTheaterManagement/AdminTheaterManagement";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
+import AdminVoucherManagement from "../pages/AdminVoucherManagement/AdminVoucherManagement";
 
 export const routes = [
     {
@@ -37,4 +38,9 @@ export const routes = [
         page: ProfilePage,
         isShowHeader: true,
     },
+    {
+        path: "/admin/voucher-management",
+        page: AdminVoucherManagement,
+        isShowHeader: true,
+      },
 ];

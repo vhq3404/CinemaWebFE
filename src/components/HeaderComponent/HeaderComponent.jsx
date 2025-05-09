@@ -65,6 +65,12 @@ const HeaderComponent = () => {
                       Tài khoản
                     </Link>
 
+                    {user.role === "admin" && (
+                      <Link to="/admin/voucher-management" className="dropdown-item">
+                        🎟️ Quản lý Voucher
+                      </Link>
+                    )}
+
                     <button
                       onClick={handleLogout}
                       className="dropdown-item"

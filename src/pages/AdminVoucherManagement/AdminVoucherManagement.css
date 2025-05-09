@@ -1,0 +1,76 @@
+.admin-voucher-management {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .admin-voucher-management h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #0056b3;
+  }
+  
+  .add-voucher {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .add-voucher h2 {
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .add-voucher input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .add-voucher button {
+    padding: 10px 20px;
+    background-color: #5cb85c;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .add-voucher button:hover {
+    background-color: #4cae4c;
+  }
+  
+  .voucher-list {
+    margin-top: 20px;
+  }
+  
+  .voucher-card {
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+  }
+  
+  .voucher-card p {
+    margin: 5px 0;
+  }
+  
+  .voucher-card button {
+    padding: 5px 10px;
+    background-color: #d9534f;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .voucher-card button:hover {
+    background-color: #c9302c;
+  }

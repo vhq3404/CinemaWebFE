@@ -3,6 +3,7 @@ import MovieDetailPage from "../pages/MovieDetailPage/MovieDetailPage";
 import MoviePage from "../components/MoviePage/MoviePage";
 import TheaterPage from "../components/TheaterPage/TheaterPage";
 import AdminTheaterManagement from "../components/AdminTheaterManagement/AdminTheaterManagement";
+import ProfilePage from "../pages/ProfilePage/ProfilePage";
 
 export const routes = [
     {
@@ -29,6 +30,11 @@ export const routes = [
     {
         path: "/management",
         page: AdminTheaterManagement, 
+        isShowHeader: true,
+    },
+    {
+        path: "/profile", 
+        page: ProfilePage,
         isShowHeader: true,
     },
 ];

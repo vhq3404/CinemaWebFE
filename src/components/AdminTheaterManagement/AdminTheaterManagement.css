@@ -49,9 +49,9 @@
     background-color: #4cae4c;
 }
 
-.theaters-grid {
+/* .theaters-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
 }
 
@@ -61,7 +61,7 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 15px;
     text-align: center;
-}
+} */
 
 .theater-actions button {
     margin: 5px;

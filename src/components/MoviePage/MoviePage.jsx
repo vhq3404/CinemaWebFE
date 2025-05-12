@@ -129,7 +129,7 @@ const MoviePage = ({ isVertical = false, excludeId = null}) => {
           >
             <div className="movie-poster">
               <img
-                src={`http://localhost:8080/${movie.poster}`}
+                src={`http://localhost:8080/movies/${movie.poster}`}
                 alt={movie.title}
                 className="movie-image"
               />

@@ -87,7 +87,7 @@ const MovieDetailPage = () => {
 
         {/* Thông tin phim */}
         <img
-          src={`http://localhost:8080/${movie.poster}`}
+          src={`http://localhost:8080/movies/${movie.poster}`}
           alt={`Poster của ${movie.title}`}
           className="movie-poster-overlay"
         />

@@ -1,0 +1,155 @@
+/* RoomsManagement.css */
+
+.room-container {
+  padding: 24px;
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 24px;
+  color: #2d2d2d;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.create-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: monospace;
+}
+
+.create-btn:hover {
+  background-color: #218838;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.room-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.room-table th,
+.room-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.room-table th {
+  background-color: #f9f9f9;
+  text-transform: uppercase;
+  color: #444;
+  font-size: 13px;
+}
+
+.room-type-row {
+  background-color: #e2e8f0;
+  font-weight: 600;
+}
+
+.button {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-right: 6px;
+}
+
+.edit-btn {
+  background-color: #facc15;
+}
+
+.delete-btn {
+  background-color: #ef4444;
+}
+
+.link-btn {
+  color: #2563eb;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.room-type-cell {
+  font-weight: bold;
+  color: #1e40af;
+  min-width: 60px;
+  white-space: nowrap;
+}
+
+.room-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.room-modal {
+  font-family: monospace;
+  background-color: white;
+  padding: 24px;
+  border-radius: 10px;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.room-modal input {
+  font-family: monospace;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.room-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.room-modal-buttons button {
+  font-family: monospace;
+  padding: 8px 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.room-modal-buttons button:first-child {
+  background-color: #28a745;
+  color: white;
+}
+
+.room-cancel-btn {
+  font-family: monospace;
+  background-color: #ccc;
+}

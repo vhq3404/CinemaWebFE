@@ -1,0 +1,205 @@
+.add-theater-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 999;
+  overflow-y: auto;
+}
+
+.input-column {
+  word-spacing: -4px;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 cột bằng nhau */
+  gap: 24px; /* khoảng cách giữa các cột */
+}
+
+.input-column label {
+  word-spacing: -4px;
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+  font-size: 16px;
+  font-family: monospace;
+}
+
+.input-column input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.input-column select {
+  padding: 8px 10px;
+  width: 100%;
+  font-size: 16px;
+  font-family: monospace;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: white;
+  box-sizing: border-box;
+}
+
+.input-column select:focus {
+  outline: none;
+  border-color: #000000;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+.add-theater-form {
+  background-color: #ffffff;
+  color: black;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  margin: 0 auto;
+  font-size: 16px;
+  font-family: monospace;
+  text-align: center;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #e28903;
+}
+
+.add-theater-form label {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-family: monospace;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.add-theater-form input {
+  background-color: #ffffff;
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  font-size: 16px;
+  font-family: monospace;
+  padding: 10px 10px 10px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+}
+
+.btn-column {
+  display: flex;
+  justify-content: flex-end; /* đẩy nút về bên phải */
+  gap: 20px; /* khoảng cách giữa hai nút */
+  margin-top: 20px; /* khoảng cách phía trên */
+}
+
+.submit-add-theater-button {
+  background-color: #ffb03b;
+  width: 30%;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: monospace;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.submit-add-theater-button:hover {
+  background-color: #e28903;
+}
+
+.cancel-add-theater-button {
+  background-color: #9e9c9c;
+  width: 30%;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: monospace;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-add-theater-button:hover {
+  background-color: #707070;
+}
+
+.theater-form-fields {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.theater-form-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  margin-top: 10px;
+}
+F .required {
+  margin-right: 5px;
+  font-weight: bold;
+}
+
+.form-error {
+  color: red;
+  font-size: 0.9rem;
+}
+
+.gallery-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.gallery-item {
+  position: relative;
+  display: inline-block;
+}
+
+.gallery-thumbnail {
+  width: 100px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.remove-gallery-btn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  cursor: pointer;
+}

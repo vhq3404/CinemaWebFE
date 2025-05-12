@@ -76,6 +76,7 @@
   font-family: Arial, sans-serif;
   color: #333;
   position: relative;
+  word-spacing: -4px;
 }
 
 .title-badge-container {

@@ -23,6 +23,7 @@
   font-size: 22px;
   font-weight: bold;
   font-family: monospace;
+  word-spacing: -5px;
   margin-right: 24px;
   cursor: pointer;
   padding: 10px 0;
@@ -72,6 +73,7 @@
   font-family: monospace;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
+  word-spacing: -2px;
 }
 
 .movie-card:hover {

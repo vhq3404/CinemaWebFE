@@ -14,7 +14,7 @@ const ProfilePage = () => {
     switch (activeTab) {
       case "profile":
         return (
-          <div className="tab-content">
+          <div className="profile-tab-content">
             <h2>Thông Tin Tài Khoản</h2>
             <p><strong>Tên:</strong> {user.name}</p>
             <p><strong>Email:</strong> {user.email}</p>
@@ -24,7 +24,7 @@ const ProfilePage = () => {
         );
       case "history":
         return (
-          <div className="tab-content">
+          <div className="profile-tab-content">
             <h2>Lịch Sử Giao Dịch</h2>
             <ul>
               <li>Giao dịch 1: Đặt vé Avengers - 200.000 VND - <span className="status success">Thành công</span></li>
@@ -35,7 +35,7 @@ const ProfilePage = () => {
         );
       case "vouchers":
         return (
-          <div className="tab-content">
+          <div className="profile-tab-content">
             <h2>Voucher Của Tôi</h2>
             <ul>
               <li>Mã: DISCOUNT10 - Giảm giá 10% - Hạn: 31/12/2025</li>
@@ -45,7 +45,7 @@ const ProfilePage = () => {
         );
       case "settings":
         return (
-          <div className="tab-content">
+          <div className="profile-tab-content">
             <h2>Cài Đặt</h2>
             <form>
               <label>
@@ -72,33 +72,33 @@ const ProfilePage = () => {
   return (
     <div className="profile-page">
       <h1>Thông Tin Tài Khoản</h1>
-      <div className="tabs">
+      <div className="profile-tabs">
         <button
-          className={`tab-button ${activeTab === "profile" ? "active" : ""}`}
+          className={`profile-tab-button ${activeTab === "profile" ? "active" : ""}`}
           onClick={() => setActiveTab("profile")}
         >
           Thông Tin Tài Khoản
         </button>
         <button
-          className={`tab-button ${activeTab === "history" ? "active" : ""}`}
+          className={`profile-tab-button ${activeTab === "history" ? "active" : ""}`}
           onClick={() => setActiveTab("history")}
         >
           Lịch Sử Giao Dịch
         </button>
         <button
-          className={`tab-button ${activeTab === "vouchers" ? "active" : ""}`}
+          className={`profile-tab-button ${activeTab === "vouchers" ? "active" : ""}`}
           onClick={() => setActiveTab("vouchers")}
         >
           Voucher Của Tôi
         </button>
         <button
-          className={`tab-button ${activeTab === "settings" ? "active" : ""}`}
+          className={`profile-tab-button ${activeTab === "settings" ? "active" : ""}`}
           onClick={() => setActiveTab("settings")}
         >
           Cài Đặt
         </button>
       </div>
-      <div className="tab-content-container">{renderTabContent()}</div>
+      <div className="profile-tab-content-container">{renderTabContent()}</div>
     </div>
   );
 };

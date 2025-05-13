@@ -1,5 +1,4 @@
 /* RoomsManagement.css */
-
 .room-container {
   padding: 24px;
   width: 1200px;
@@ -37,21 +36,23 @@
 
 .table-wrapper {
   overflow-x: auto;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border-top: 2px solid #0c47be;
+  border-right: 2px solid #0c47be;
+  border-bottom: 2px solid #0c47be;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .room-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 18px;
 }
 
 .room-table th,
 .room-table td {
+  border-left: 2px solid #0c47be;
   padding: 12px 16px;
-  border-bottom: 1px solid #eee;
-  text-align: left;
+  text-align: center;
 }
 
 .room-table th {
@@ -59,6 +60,7 @@
   text-transform: uppercase;
   color: #444;
   font-size: 13px;
+  text-align: left;
 }
 
 .room-type-row {
@@ -66,37 +68,70 @@
   font-weight: 600;
 }
 
-.button {
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 13px;
-  color: white;
-  border: none;
+.admin-room-actions {
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.delete-room-button {
+  right: 0;
+  padding: 9px 12px;
+  background-color: white;
+  color: #dc3545;
+  border: solid #dc3545 2px;
+  font-size: 20px;
+  border-radius: 30px;
   cursor: pointer;
-  margin-right: 6px;
 }
 
-.edit-btn {
-  background-color: #facc15;
+.delete-room-button:hover {
+  color: white;
+  background-color: #dc3545;
 }
 
-.delete-btn {
-  background-color: #ef4444;
+.update-room-button {
+  right: 0;
+  padding: 9px 12px;
+  background-color: white;
+  color: #ff9900;
+  border: solid #ff9900 2px;
+  font-size: 20px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.update-room-button:hover {
+  color: white;
+  background-color: #ff9900;
 }
 
 .link-btn {
-  color: #2563eb;
-  text-decoration: underline;
-  background: none;
-  border: none;
+  color: white;
+  background: #0c47be;
+  border: 1px solid #0c47be;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 16px;
+  font-family: monospace;
   cursor: pointer;
 }
 
 .room-type-cell {
+  vertical-align: middle;
+  text-align: center;
   font-weight: bold;
   color: #1e40af;
-  min-width: 60px;
+  font-size: 26px;
   white-space: nowrap;
+  text-align: left;
+}
+
+.group-divider td {
+  border-top: 2px solid #0c47be;
+  padding: 0;
+  background-color: #f0f0f0;
 }
 
 .room-modal-overlay {
@@ -124,6 +159,7 @@
 }
 
 .room-modal input {
+  border-radius: 6px;
   font-family: monospace;
   padding: 8px;
   font-size: 16px;
@@ -149,7 +185,39 @@
   color: white;
 }
 
+.room-modal-buttons button:first-child:hover {
+  background-color: #11852c;
+  color: white;
+}
+
 .room-cancel-btn {
   font-family: monospace;
   background-color: #ccc;
+}
+
+.room-cancel-btn:hover {
+  font-family: monospace;
+  background-color: #9e9e9e;
+}
+
+.room-modal select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 16px;
+  font-family: monospace;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  word-spacing: -4px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.room-modal select:focus {
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.room-modal option {
+  padding: 10px;
 }

@@ -78,9 +78,30 @@
   align-items: center;
   margin: 5px;
   background-color: #ffffff;
-  border: 1px solid #bcbcbc;
   cursor: pointer;
   transition: all 0.3s ease;
+}
+
+.empty-seat {
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  font-size: 12px;
+  font-family: monospace;
+  border-radius: 6px;
+  background-color: transparent;
+  border: 1px solid transparent;
+  pointer-events: none;
+  box-shadow: none;
+  cursor: default;
+}
+
+.seat.vip {
+  border: 1px solid #fc8004; /* Đường viền vàng */
+}
+
+.seat.regular {
+  border: 1px solid #bcbcbc;
 }
 
 .seats-container .seat:hover {
@@ -113,6 +134,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  pointer-events: none;
 }
 
 .seat-info-panel li {
@@ -128,21 +150,13 @@
 }
 
 .seat.selected {
+  color: #ffffff;
   background-color: #014db7;
   border: 1px solid #014db7;
 }
 
 .seat.booked {
   background-color: #d4d4d4;
-}
-
-.seat.type-regular {
-  background-color: #ffffff;
-  border: 1px solid #bcbcbc;
-}
-
-.seat.type-vip {
-  border: 1px solid #e07b00;
 }
 
 .adjustment-panel {
@@ -213,8 +227,9 @@
 .add-seats-button {
   display: block;
   align-self: flex-end;
+  font-weight: bold;
   font-family: monospace;
-  margin-top: 20px;
+  margin-bottom: 10px;
   margin-right: 20px;
   padding: 10px 20px;
   background-color: #014db7;
@@ -223,11 +238,86 @@
   border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
-  width: 40%;
+  width: 30%;
   text-align: center;
   transition: background-color 0.3s ease;
 }
 
 .add-seats-button:hover {
   background-color: #003c8f; /* Màu khi hover */
+}
+
+.no-layout-message {
+  word-spacing: -4px;
+  font-family: monospace;
+  text-align: center;
+  color: #888;
+  font-size: 20px;
+}
+
+.selected-seats-list {
+  word-spacing: -4px;
+  font-family: monospace;
+  margin-top: 10px;
+  background: #f9f9f9;
+  padding: 0px 20px;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.selected-seats-list h4 {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.selected-seats-list ul {
+  padding-left: 1rem;
+}
+
+.selected-seats-list li {
+  margin-bottom: 4px;
+}
+
+.seats-button-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.delete-seats-button,
+.vip-seats-button,
+.regular-seats-button {
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  font-family: monospace;
+}
+
+.vip-seats-button {
+  background-color: #fc8004;
+  color: white;
+}
+
+.regular-seats-button {
+  background-color: #bcbcbc;
+  color: white;
+}
+
+.delete-seats-button {
+  background-color: #cf0000;
+  color: white;
+}
+
+.loading-message {
+  height: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  word-spacing: -4px;
+  font-family: monospace;
+  font-size: 24px;
+  color: #a0a0a0;
 }

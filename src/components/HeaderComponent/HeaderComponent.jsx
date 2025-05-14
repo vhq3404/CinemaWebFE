@@ -44,7 +44,7 @@ const HeaderComponent = () => {
           <nav className="nav">
             <a href="/movies">Phim</a>
             <a href="/theater">Rạp</a>
-            <a href="/about">Giới thiệu</a>
+            {user && user.role === "admin" && <a href="/schedule">Lịch chiếu</a>}
             {user && user.role === "admin" && <a href="/management">Quản lý</a>}
           </nav>
         </div>
@@ -66,7 +66,10 @@ const HeaderComponent = () => {
                     </Link>
 
                     {user.role === "admin" && (
-                      <Link to="/admin/voucher-management" className="dropdown-item">
+                      <Link
+                        to="/admin/voucher-management"
+                        className="dropdown-item"
+                      >
                         🎟️ Quản lý Voucher
                       </Link>
                     )}

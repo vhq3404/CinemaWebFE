@@ -197,17 +197,21 @@ F .required {
 }
 
 .remove-gallery-btn {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background: red;
+  background: none;
   color: white;
   border: none;
-  border-radius: 50%;
   width: 20px;
   height: 20px;
-  font-size: 14px;
+  font-size: 18px;
   cursor: pointer;
+}
+
+.remove-gallery-btn:hover {
+  background: none;
+  color: white;
+  border: none;
+  box-shadow: none;
+  outline: none;
 }
 
 .gallery-item.deleted {

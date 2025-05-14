@@ -1,0 +1,108 @@
+/* AddShowtimeComponent.css */
+.add-showtime-container {
+  position: relative;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  width: 500px;
+  margin: 0 auto;
+  word-spacing: -4px;
+  font-family: monospace;
+  font-size: 16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.add-showtime-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+
+.add-showtime-container h2 {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #333;
+}
+
+form .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.2rem;
+}
+
+form label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #444;
+}
+
+form select,
+form input[type="date"],
+form input[type="time"] {
+  word-spacing: -4px;
+  font-family: monospace;
+  font-size: 16px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border 0.2s ease-in-out;
+}
+
+form select:focus,
+form input:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+form button {
+  word-spacing: -4px;
+  font-family: monospace;
+  font-size: 16px;
+  background-color: #2563eb;
+  color: #fff;
+  padding: 0.65rem 1.25rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+form button:hover {
+  background-color: #1e3a8a;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-message {
+  margin-top: 12px;
+  font-weight: bold;
+  color: #333;
+}
+
+.date-display {
+  display: block;
+  margin-top: 4px;
+  color: #555;
+  font-size: 0.85rem;
+}

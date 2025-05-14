@@ -32,6 +32,7 @@
   width: 100%;
   padding: 8px;
   box-sizing: border-box;
+  text-align: left;
 }
 
 .input-column select {

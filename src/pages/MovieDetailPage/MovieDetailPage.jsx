@@ -5,6 +5,7 @@ import "./MovieDetailPage.css";
 import { FaRegPlayCircle, FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import MovieAgeBadge from "../../components/MovieAgeBadge/MovieAgeBadge";
 import MoviePage from "../../components/MoviePage/MoviePage";
+import MovieShowtimes from "../../components/MovieShowtimes/MovieShowtimes";
 
 const MovieDetailPage = () => {
   const { id } = useParams(); // Lấy id từ URL
@@ -79,7 +80,7 @@ const MovieDetailPage = () => {
             backgroundImage: `url(${getYoutubeThumbnail(movie.trailer)})`,
           }}
         >
-           <div className="trailer-gradient-overlay"></div>
+          <div className="trailer-gradient-overlay"></div>
           <button className="play-button" onClick={() => setShowTrailer(true)}>
             <FaRegPlayCircle />
           </button>
@@ -139,18 +140,19 @@ const MovieDetailPage = () => {
                 allowFullScreen
               ></iframe>
             </div>
-            
           </div>
         )}
         <div className="movie-description">
           <label>Giới thiệu phim</label>
           <p>{movie.description}</p>
         </div>
+        <div className="movie-showtimes-container">
+          <MovieShowtimes key={id} movieId={id} />
+        </div>
         <div className="movies-list">
-        <MoviePage isVertical={true} excludeId={id} />
+          <MoviePage isVertical={true} excludeId={id} />
+        </div>
       </div>
-      </div>
-      
     </div>
   );
 };

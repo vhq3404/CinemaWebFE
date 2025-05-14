@@ -218,6 +218,15 @@ const RoomsManagement = ({ theaterId }) => {
       ) : (
         <div className="table-wrapper">
           <table className="room-table">
+            <thead>
+              <tr>
+                <th>Loại phòng</th>
+                <th>Tên phòng</th>
+                <th>Sơ đồ</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+
             <tbody>
               {["2D", "3D", "IMAX"].map((type, groupIndex, arr) => {
                 const roomsOfType = groupedRooms[type];

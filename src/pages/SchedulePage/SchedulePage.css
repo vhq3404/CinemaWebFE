@@ -1,0 +1,156 @@
+.schedule-page {
+  word-spacing: -3px;
+  font-family: monospace;
+  margin: 0px 50px;
+  padding: 20px;
+}
+
+.schedule-page h2 {
+  font-family: monospace;
+  font-size: 26px;
+}
+
+.schedule-page h3 {
+  font-family: monospace;
+  font-size: 20px;
+}
+
+.schedule-filter {
+  font-size: 16px;
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.schedule-filter label {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.schedule-filter-item {
+  width: 300px;
+}
+
+.schedule {
+  margin-top: 20px;
+}
+
+.schedule-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: fit-content;
+}
+
+.add-showtime-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-family: monospace;
+  word-spacing: -3px;
+  padding: 20px 15px;
+  background-color: #05a93c;
+  transition: background-color 0.3s ease;
+  color: #ffffff;
+  border: none;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.add-showtime-button:hover {
+  color: #ffffff;
+  background-color: #018901;
+}
+
+.view-chart-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-family: monospace;
+  word-spacing: -3px;
+  padding: 20px 15px;
+  transition: background-color 0.3s ease;
+  background-color: #ffffff;
+  color: #606060;
+  border: none;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.view-chart-button:hover {
+  color: #ffffff;
+  background-color: #b7b7b7;
+}
+
+.schedule-divider {
+  border: 2px solid #0c47be;
+  margin: 20px 0;
+}
+
+.movie {
+  margin-bottom: 20px;
+}
+
+table {
+  font-size: 16px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+.admin-showtime-actions {
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.delete-showtime-button {
+  right: 0;
+  padding: 8px 10px;
+  background-color: white;
+  color: #dc3545;
+  border: solid #dc3545 2px;
+  font-size: 16px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.delete-showtime-button:hover {
+  color: white;
+  background-color: #dc3545;
+}
+
+.update-showtime-button {
+  right: 0;
+  padding: 8px 10px;
+  background-color: white;
+  color: #ff9900;
+  border: solid #ff9900 2px;
+  font-size: 16px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.update-showtime-button:hover {
+  color: white;
+  background-color: #ff9900;
+}

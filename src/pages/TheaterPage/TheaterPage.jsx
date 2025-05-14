@@ -4,6 +4,7 @@ import AddTheaterComponent from "../../components/AddTheaterComponent/AddTheater
 import UpdateTheaterComponent from "../../components/UpdateTheaterComponent/UpdateTheaterComponent";
 import RoomsManagement from "../../components/RoomsManagement/RoomsManagement";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
+import { useSelector } from "react-redux";
 import "./TheaterPage.css";
 
 const TheaterPage = () => {
@@ -13,6 +14,8 @@ const TheaterPage = () => {
   const [showAddTheater, setShowAddTheater] = useState(false);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [loadingTheater, setLoadingTheater] = useState(false);
+  const user = useSelector((state) => state.user);
+  const isAdmin = user?.role === "admin";
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     city: "",
@@ -150,9 +153,11 @@ const TheaterPage = () => {
             ))}
           </select>
 
-          <button className="add-theater-button" onClick={toggleAddTheater}>
-            Thêm rạp
-          </button>
+          {isAdmin && (
+            <button className="add-theater-button" onClick={toggleAddTheater}>
+              Thêm rạp
+            </button>
+          )}
         </div>
 
         {loading ? (
@@ -179,20 +184,22 @@ const TheaterPage = () => {
             <div className="theater-header">
               <div className="theater-name">{selectedTheater.name}</div>
 
-              <div className="admin-theater-actions">
-                <button
-                  className="update-theater-button"
-                  onClick={() => setShowUpdateForm(true)}
-                >
-                  <MdOutlineEdit />
-                </button>
-                <button
-                  className="delete-theater-button"
-                  onClick={() => handleDeleteTheater(selectedTheater.id)}
-                >
-                  <MdDeleteOutline />
-                </button>
-              </div>
+              {isAdmin && (
+                <div className="admin-theater-actions">
+                  <button
+                    className="update-theater-button"
+                    onClick={() => setShowUpdateForm(true)}
+                  >
+                    <MdOutlineEdit />
+                  </button>
+                  <button
+                    className="delete-theater-button"
+                    onClick={() => handleDeleteTheater(selectedTheater.id)}
+                  >
+                    <MdDeleteOutline />
+                  </button>
+                </div>
+              )}
             </div>
 
             <TheaterGallery theater={selectedTheater} />
@@ -209,7 +216,7 @@ const TheaterPage = () => {
 
       {showAddTheater && <AddTheaterComponent onClose={toggleAddTheater} />}
 
-      <RoomsManagement theaterId={selectedTheater?.id} />
+      {isAdmin && <RoomsManagement theaterId={selectedTheater?.id} />}
     </div>
   );
 };

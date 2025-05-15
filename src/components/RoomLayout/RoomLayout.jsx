@@ -18,12 +18,24 @@ const createSeatLayout = (seats) => {
     .map((row) => layout[row]);
 };
 
-const RoomLayout = ({ room_id, initialSeats, onClose }) => {
+const RoomLayout = ({
+  room_id,
+  initialSeats,
+  onClose,
+  isOverlay = true,
+  onSelectedSeatsChange,
+}) => {
   const [seats, setSeats] = useState(initialSeats || []);
   const [rows, setRows] = useState(0);
   const [columns, setColumns] = useState(0);
   const [loading, setLoading] = useState(false);
   const [selectedSeats, setSelectedSeats] = useState([]);
+
+  useEffect(() => {
+    if (onSelectedSeatsChange) {
+      onSelectedSeatsChange(selectedSeats);
+    }
+  }, [selectedSeats, onSelectedSeatsChange]);
 
   const toggleSeatSelection = (seat) => {
     setSelectedSeats((prev) =>
@@ -84,6 +96,10 @@ const RoomLayout = ({ room_id, initialSeats, onClose }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setSeats(initialSeats || []);
+  }, [initialSeats]);
 
   const handleVIPSeats = async () => {
     setLoading(true);
@@ -184,55 +200,49 @@ const RoomLayout = ({ room_id, initialSeats, onClose }) => {
     }
   };
 
-  return (
-    <div className="room-overlay">
-      <div className="room-layout-modal">
-        {loading ? (
-          <div className="loading-message">Đang xử lý, vui lòng đợi...</div>
-        ) : (
-          <>
-            <div className="screen">MÀN HÌNH</div>
+  const renderLayoutContent = () =>
+    loading ? (
+      <div className="loading-message">Đang xử lý, vui lòng đợi...</div>
+    ) : (
+      <>
+        <div className="screen">MÀN HÌNH</div>
+        <div className="seats-container">
+          {layout.length === 0 ? (
+            <div className="no-layout-message">Chưa có sơ đồ ghế</div>
+          ) : (
+            layout.map((row, rowIndex) => (
+              <div key={rowIndex} className="seat-row">
+                <div className="row-label">
+                  {String.fromCharCode(65 + rowIndex)}
+                </div>
+                <div className="seats-wrapper">
+                  {row.map((seat, colIndex) => {
+                    const isSelected = selectedSeats.some(
+                      (s) => s.seat_number === seat?.seat_number
+                    );
 
-            <div className="seats-container">
-              {layout.length === 0 ? (
-                <div className="no-layout-message">Chưa có sơ đồ ghế</div>
-              ) : (
-                layout.map((row, rowIndex) => (
-                  <div key={rowIndex} className="seat-row">
-                    <div className="row-label">
-                      {String.fromCharCode(65 + rowIndex)}
-                    </div>
-                    <div className="seats-wrapper">
-                      {row.map((seat, colIndex) => {
-                        const isSelected = selectedSeats.some(
-                          (s) => s.seat_number === seat?.seat_number
-                        );
+                    if (seat?.status === "inactive") {
+                      return <div key={colIndex} className="seat empty-seat" />;
+                    }
 
-                        if (seat?.status === "inactive") {
-                          return (
-                            <div key={colIndex} className="seat empty-seat" />
-                          );
-                        }
-                        return (
-                          <div
-                            key={colIndex}
-                            className={`seat ${seat?.status || "available"} ${
-                              seat?.type === "vip" ? "vip" : "regular"
-                            } ${isSelected ? "selected" : ""}`}
-                            title={seat?.seat_number}
-                            onClick={() => seat && toggleSeatSelection(seat)}
-                          >
-                            {seat?.seat_number}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </>
-        )}
+                    return (
+                      <div
+                        key={colIndex}
+                        className={`seat ${seat?.status || "available"} ${
+                          seat?.type === "vip" ? "vip" : "regular"
+                        } ${isSelected ? "selected" : ""}`}
+                        title={seat?.seat_number}
+                        onClick={() => seat && toggleSeatSelection(seat)}
+                      >
+                        {seat?.seat_number}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
 
         <div className="seat-info-panel">
           <div className="seat-info-left">
@@ -263,69 +273,76 @@ const RoomLayout = ({ room_id, initialSeats, onClose }) => {
             </ul>
           </div>
         </div>
-      </div>
+      </>
+    );
 
-      {/* Thêm bảng điều chỉnh mới nằm bên phải */}
-      <div className="adjustment-panel">
-        <span className="close-btn" onClick={onClose}>
-          &times;
-        </span>
-        <h3>Chỉnh sửa sơ đồ</h3>
-        <div className="adjustment-controls">
-          <div>
-            <label htmlFor="rows">Số hàng ghế:</label>
-            <input
-              id="rows"
-              type="number"
-              min="1"
-              value={rows}
-              onChange={(e) => setRows(Number(e.target.value))}
-            />
-          </div>
-          <div>
-            <label htmlFor="cols">Số cột ghế:</label>
-            <input
-              id="cols"
-              type="number"
-              min="1"
-              value={columns}
-              onChange={(e) => setColumns(Number(e.target.value))}
-            />
-          </div>
+  const renderAdjustmentPanel = () => (
+    <div className="adjustment-panel">
+      <span className="close-btn" onClick={onClose}>
+        &times;
+      </span>
+      <h3>Chỉnh sửa sơ đồ</h3>
+      <div className="adjustment-controls">
+        <div>
+          <label htmlFor="rows">Số hàng ghế:</label>
+          <input
+            id="rows"
+            type="number"
+            min="1"
+            value={rows}
+            onChange={(e) => setRows(Number(e.target.value))}
+          />
         </div>
-        <button className="add-seats-button" onClick={handleAddSeats}>
-          Tạo ghế
-        </button>
-        {selectedSeats.length > 0 && (
+        <div>
+          <label htmlFor="cols">Số cột ghế:</label>
+          <input
+            id="cols"
+            type="number"
+            min="1"
+            value={columns}
+            onChange={(e) => setColumns(Number(e.target.value))}
+          />
+        </div>
+      </div>
+      <button className="add-seats-button" onClick={handleAddSeats}>
+        Tạo ghế
+      </button>
+
+      {selectedSeats.length > 0 && (
+        <>
           <div className="selected-seats-list">
             <h4>Ghế đang chọn ({selectedSeats.length}):</h4>
             <p>{selectedSeats.map((seat) => seat.seat_number).join(", ")}</p>
           </div>
-        )}
-        <div className="seats-button-group">
-          {selectedSeats.length > 0 && (
-            <>
-              <button className="vip-seats-button" onClick={handleVIPSeats}>
-                Ghế VIP
-              </button>
-              <button
-                className="regular-seats-button"
-                onClick={handleRegularSeats}
-              >
-                Ghế thường
-              </button>
-              <button
-                className="delete-seats-button"
-                onClick={handleDeleteSeats}
-              >
-                Xóa ghế
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+
+          <div className="seats-button-group">
+            <button className="vip-seats-button" onClick={handleVIPSeats}>
+              Ghế VIP
+            </button>
+            <button
+              className="regular-seats-button"
+              onClick={handleRegularSeats}
+            >
+              Ghế thường
+            </button>
+            <button className="delete-seats-button" onClick={handleDeleteSeats}>
+              Xóa ghế
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
-};
 
+  return isOverlay ? (
+    // === Overlay modal (giữ nguyên như hiện tại) ===
+    <div className="room-overlay">
+      <div className="room-layout-modal">{renderLayoutContent()}</div>
+      {renderAdjustmentPanel()}
+    </div>
+  ) : (
+    // === Hiển thị nội dung bình thường (trong BookingPage) ===
+    <div className="room-layout-container">{renderLayoutContent()}</div>
+  );
+};
 export default RoomLayout;

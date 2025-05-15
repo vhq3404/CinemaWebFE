@@ -51,7 +51,30 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
         const res = await fetch(
           `http://localhost:8080/api/rooms/theater/${formData.theaterId}`
         );
-        const data = await res.json();
+        let data = await res.json();
+
+        data.sort((a, b) => {
+          const nameA = a.room_name;
+          const nameB = b.room_name;
+
+          const numberA = parseInt(nameA.match(/\d+/));
+          const numberB = parseInt(nameB.match(/\d+/));
+
+          // So sánh theo số nếu cả hai có số
+          if (!isNaN(numberA) && !isNaN(numberB)) {
+            if (numberA !== numberB) return numberA - numberB;
+            // Nếu số bằng nhau, ưu tiên tên ngắn hơn (Phòng 3 < Phòng 3D)
+            return nameA.length - nameB.length;
+          }
+
+          // Nếu chỉ 1 trong 2 có số
+          if (!isNaN(numberA)) return -1;
+          if (!isNaN(numberB)) return 1;
+
+          // Nếu cả hai không có số, fallback so sánh chuỗi
+          return nameA.localeCompare(nameB);
+        });
+
         setRooms(data);
       } catch (err) {
         console.error("Lỗi khi lấy danh sách phòng:", err);
@@ -132,10 +155,6 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
   const openDatePicker = () => {
     hiddenDateRef.current.showPicker?.();
   };
-
-  // Điều kiện để hiển thị rạp và phòng chiếu chỉ khi ngày và giờ hợp lệ
-  const canSelectTheaterAndRoom =
-    formData.date && validateStartTime(formData.startTime);
 
   return (
     <div className="add-showtime-container">
@@ -223,43 +242,39 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
           </div>
         </div>
 
-        {canSelectTheaterAndRoom && (
-          <>
-            <div className="form-group">
-              <label>Rạp:</label>
-              <select
-                name="theaterId"
-                value={formData.theaterId}
-                onChange={handleChange}
-                required
-              >
-                <option value="">-- Chọn rạp --</option>
-                {theaters.map((theater) => (
-                  <option key={theater.id} value={theater.id}>
-                    {theater.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+        <div className="form-group">
+          <label>Rạp:</label>
+          <select
+            name="theaterId"
+            value={formData.theaterId}
+            onChange={handleChange}
+            required
+          >
+            <option value="">-- Chọn rạp --</option>
+            {theaters.map((theater) => (
+              <option key={theater.id} value={theater.id}>
+                {theater.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-            <div className="form-group">
-              <label>Phòng chiếu:</label>
-              <select
-                name="roomId"
-                value={formData.roomId}
-                onChange={handleChange}
-                required
-              >
-                <option value="">-- Chọn phòng --</option>
-                {rooms.map((room) => (
-                  <option key={room.id} value={room.id}>
-                    {room.room_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </>
-        )}
+        <div className="form-group">
+          <label>Phòng chiếu:</label>
+          <select
+            name="roomId"
+            value={formData.roomId}
+            onChange={handleChange}
+            required
+          >
+            <option value="">-- Chọn phòng --</option>
+            {rooms.map((room) => (
+              <option key={room.id} value={room.id}>
+                {room.room_name}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <button type="submit">Tạo suất chiếu</button>
       </form>

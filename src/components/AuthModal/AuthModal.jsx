@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import LoginComponent from '../LoginComponent/LoginComponent';
 import SignupComponent from '../SignupComponent/SignupComponent';
 
-const AuthModal = ({ onClose }) => {
+const AuthModal = ({ onClose, showtime, navigateAfterLogin }) => {
   const [currentForm, setCurrentForm] = useState('login');
 
   const handleClose = () => {
@@ -16,6 +16,8 @@ const AuthModal = ({ onClose }) => {
         <LoginComponent
           onClose={handleClose}
           onSwitchToSignup={() => setCurrentForm('signup')}
+          showtime={showtime}
+          navigateAfterLogin={navigateAfterLogin}
         />
       )}
       {currentForm === 'signup' && (

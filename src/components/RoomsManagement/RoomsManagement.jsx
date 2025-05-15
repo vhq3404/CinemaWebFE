@@ -60,7 +60,7 @@ const RoomsManagement = ({ theaterId }) => {
         `http://localhost:8080/api/seats/room/${room.id}`
       );
       const seats = seatsResponse.data.seats || [];
-
+      console.log("seat", seats);
       // Lưu thông tin ghế vào state
       setSelectedSeats({ seats, room_id: room.id });
       setIsOverlayVisible(true);
@@ -74,6 +74,10 @@ const RoomsManagement = ({ theaterId }) => {
     setIsOverlayVisible(false);
     setSelectedSeats(null);
   };
+
+  useEffect(() => {
+    console.log("selectedSeats thay đổi:", selectedSeats);
+  }, [selectedSeats]);
 
   const extractRoomNumber = (name) => {
     const match = name.match(/\d+/); // lấy số đầu tiên xuất hiện
@@ -292,6 +296,7 @@ const RoomsManagement = ({ theaterId }) => {
           room_id={selectedSeats.room_id}
           initialSeats={selectedSeats.seats}
           onClose={closeOverlay}
+          isOverlay={true}
         />
       )}
 

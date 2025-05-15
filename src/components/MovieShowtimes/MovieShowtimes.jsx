@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import DateFilter from "../../components/DateFilter/DateFilter";
+import AuthModal from "../../components/AuthModal/AuthModal";
+
 import "./MovieShowtimes.css";
 
 const MovieShowtimes = ({ movieId }) => {
@@ -7,6 +11,10 @@ const MovieShowtimes = ({ movieId }) => {
   const [availableDates, setAvailableDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [loading, setLoading] = useState(true);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [pendingShowtime, setPendingShowtime] = useState(null);
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchShowtimes = async () => {
@@ -63,6 +71,15 @@ const MovieShowtimes = ({ movieId }) => {
     fetchShowtimes();
   }, [movieId]);
 
+  const handleShowtimeClick = (showtime) => {
+    if (user) {
+      navigate("/booking", { state: { showtime } });
+    } else {
+      setPendingShowtime(showtime);
+      setShowLoginModal(true);
+    }
+  };
+
   const formatTime = (timeString) => {
     const date = new Date(timeString);
     return date.toLocaleTimeString("vi-VN", {
@@ -74,53 +91,60 @@ const MovieShowtimes = ({ movieId }) => {
   };
 
   return (
-    <div className="movie-showtimes-page">
-      {loading ? (
-        <p>Đang tải dữ liệu...</p>
-      ) : (
-        <>
-          <label>Lịch chiếu</label>
-          {availableDates.length > 0 ? (
-            <>
-              <DateFilter
-                showtimes={availableDates}
-                selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
-              />
-              <hr className="schedule-divider" />
-              <div className="showtimes-table">
-                {Object.entries(showtimesByTheater[selectedDate] || {}).map(
-                  ([theaterName, times], index) => (
-                    <div key={index} className="theater-row">
-                      <div className="theater-name-col">
-                        <div className="showtime-theater-name">
-                          {theaterName}
+    <div>
+      <div className="movie-showtimes-page">
+        {loading ? (
+          <p>Đang tải dữ liệu...</p>
+        ) : (
+          <>
+            <label>Lịch chiếu</label>
+            {availableDates.length > 0 ? (
+              <>
+                <DateFilter
+                  showtimes={availableDates}
+                  selectedDate={selectedDate}
+                  setSelectedDate={setSelectedDate}
+                />
+                <hr className="schedule-divider" />
+                <div className="showtimes-table">
+                  {Object.entries(showtimesByTheater[selectedDate] || {}).map(
+                    ([theaterName, times], index) => (
+                      <div key={index} className="theater-row">
+                        <div className="theater-name-col">
+                          <div className="showtime-theater-name">
+                            {theaterName}
+                          </div>
+                        </div>
+                        <div className="showtimes-col">
+                          <div className="showtimes">
+                            {times.map((showtime, idx) => (
+                              <span
+                                key={idx}
+                                className="showtime-badge"
+                                onClick={() => handleShowtimeClick(showtime)}
+                              >
+                                {formatTime(showtime.startTime)}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       </div>
-                      <div className="showtimes-col">
-                        <div className="showtimes">
-                          {times.map((showtime, idx) => (
-                            <span
-                              key={idx}
-                              className="showtime-badge"
-                              onClick={() =>
-                                console.log("Suất chiếu:", showtime)
-                              }
-                            >
-                              {formatTime(showtime.startTime)}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )
-                )}
-              </div>
-            </>
-          ) : (
-            <p>Chưa có lịch chiếu.</p>
-          )}
-        </>
+                    )
+                  )}
+                </div>
+              </>
+            ) : (
+              <p>Chưa có lịch chiếu.</p>
+            )}
+          </>
+        )}
+      </div>
+      {showLoginModal && (
+        <AuthModal
+          onClose={() => setShowLoginModal(false)}
+          showtime={pendingShowtime}
+          navigateAfterLogin={navigate}
+        />
       )}
     </div>
   );

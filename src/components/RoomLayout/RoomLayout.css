@@ -13,12 +13,19 @@
   padding: 20px;
 }
 
+.room-layout-container {
+  background: white;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 20px;
+}
+
 .room-layout-modal {
   background: white;
   padding: 20px 50px;
   border-radius: 8px;
   width: auto;
-  position: relative; /* Đảm bảo modal không quá rộng */
+  position: relative;
   min-width: 1000px;
   overflow: auto;
 }

@@ -28,7 +28,7 @@ const EditMovieComponent = ({ onClose, movie }) => {
   const [trailer, setTrailer] = useState(movie.trailer || "");
   const [isLoading, setIsLoading] = useState(false);
   const [posterPreview, setPosterPreview] = useState(
-    movie?.poster ? `http://localhost:8080/${movie.poster}` : null
+    movie?.poster ? `http://localhost:8080/movies/${movie.poster}` : null
   );
   const [posterFile, setPosterFile] = useState(null);
   const [rawDate, setRawDate] = useState(toInputDateFormat(movie.releaseDate));

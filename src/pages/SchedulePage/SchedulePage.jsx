@@ -198,7 +198,7 @@ const SchedulePage = () => {
                 onClick={toggleScheduleChart}
               >
                 <IoCalendarOutline />
-                Xem biểu đồ
+                Lịch phòng
               </button>
             </div>
 

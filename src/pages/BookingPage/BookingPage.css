@@ -1,0 +1,52 @@
+/* BookingPage.css */
+
+.booking-page-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+.booking-main {
+  width: 920px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.booking-detail-sidebar {
+  width: fit-content;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Title styling */
+.booking-page-container h2 {
+  width: 100%;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.booking-confirm-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.booking-confirm-button {
+  margin-top: 1.5rem;
+  width: 40%;
+  padding: 12px 0;
+  background-color: #0c47be;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.booking-confirm-button:hover {
+  background-color: #082c9a;
+}

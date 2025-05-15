@@ -5,6 +5,7 @@ import TheaterPage from "../pages/TheaterPage/TheaterPage";
 import AdminTheaterManagement from "../components/AdminTheaterManagement/AdminTheaterManagement";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import SchedulePage from "../pages/SchedulePage/SchedulePage";
+import BookingPage from "../pages/BookingPage/BookingPage"
 import AdminVoucherManagement from "../pages/AdminVoucherManagement/AdminVoucherManagement";
 
 export const routes = [
@@ -48,6 +49,12 @@ export const routes = [
   {
     path: "/schedule",
     page: SchedulePage,
+    isShowHeader: true,
+  },
+
+  {
+    path: "/booking", 
+    page: BookingPage,
     isShowHeader: true,
   },
 ];

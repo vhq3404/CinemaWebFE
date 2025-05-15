@@ -6,7 +6,7 @@ import { MdOutlineEmail, MdLockOutline } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/actions";
 
-const LoginComponent = ({ onClose, onSwitchToSignup }) => {
+const LoginComponent = ({ onClose, onSwitchToSignup, showtime, navigateAfterLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -46,6 +46,10 @@ const LoginComponent = ({ onClose, onSwitchToSignup }) => {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
+        if (showtime && navigateAfterLogin) {
+          navigateAfterLogin("/booking", { state: { showtime } });
+        }
+        onClose();
         onClose();
       }, 1200);
     } catch (error) {

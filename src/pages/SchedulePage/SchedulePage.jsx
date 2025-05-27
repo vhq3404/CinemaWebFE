@@ -20,7 +20,7 @@ const SchedulePage = () => {
   useEffect(() => {
     const fetchTheaters = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/theaters");
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/theaters`);
         const data = await response.json();
         setTheaters(data);
         if (data.length > 0) {
@@ -41,7 +41,7 @@ const SchedulePage = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/showtimes?theaterId=${selectedTheater.id}`
+        `${process.env.REACT_APP_API_URL}/api/showtimes?theaterId=${selectedTheater.id}`
       );
       const data = await response.json();
 
@@ -68,6 +68,8 @@ const SchedulePage = () => {
           start_time: showtime.startTime,
           end_time: showtime.endTime,
           room_name: showtime.room.roomName,
+          priceRegular: showtime.priceRegular,
+          priceVIP: showtime.priceVIP,
           theater_id: showtime.theater.theaterId,
         });
       }
@@ -112,7 +114,7 @@ const SchedulePage = () => {
     try {
       // Gọi API xóa
       const response = await fetch(
-        `http://localhost:8080/api/showtimes/${showtime._id}`, // _id phải được lưu từ lúc fetch showtimes
+        `${process.env.REACT_APP_API_URL}/api/showtimes/${showtime._id}`, // _id phải được lưu từ lúc fetch showtimes
         {
           method: "DELETE",
         }
@@ -221,6 +223,8 @@ const SchedulePage = () => {
                             <th>Giờ bắt đầu</th>
                             <th>Giờ kết thúc</th>
                             <th>Phòng chiếu</th>
+                            <th>Giá ghế thường</th>
+                            <th>Giá ghế VIP</th>
                             <th>Xóa</th>
                           </tr>
                         </thead>
@@ -238,6 +242,16 @@ const SchedulePage = () => {
                                   {formatTimeToVietnam(showtime.end_time)}
                                 </td>
                                 <td>{showtime.room_name}</td>
+
+                                <td>
+                                  {showtime.priceRegular.toLocaleString(
+                                    "vi-VN"
+                                  )}{" "}
+                                  đ
+                                </td>
+                                <td>
+                                  {showtime.priceVIP.toLocaleString("vi-VN")} đ
+                                </td>
                                 <td>
                                   <button
                                     className="delete-showtime-button"

@@ -15,12 +15,12 @@ const UpdateTheaterComponent = ({ onClose, theater }) => {
     const fetchExistingImages = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/theaters/${theater.id}/gallery`
+          `${process.env.REACT_APP_API_URL}/api/theaters/${theater.id}/gallery`
         );
         const data = await response.json();
         // Giả sử dữ liệu trả về là một mảng các URL ảnh
         const existingImages = data.map((img) => ({
-          url: `http://localhost:8080/theaters${img.image_url}`,
+          url: `${process.env.REACT_APP_API_URL}/theaters${img.image_url}`,
           isOld: true, // Đánh dấu ảnh cũ
         }));
         setGallery(existingImages);
@@ -94,7 +94,7 @@ const UpdateTheaterComponent = ({ onClose, theater }) => {
       });
 
       const response = await fetch(
-        `http://localhost:8080/api/theaters/${theater.id}`,
+        `${process.env.REACT_APP_API_URL}/api/theaters/${theater.id}`,
         {
           method: "PUT",
           body: formData,

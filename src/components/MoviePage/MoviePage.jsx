@@ -22,7 +22,7 @@ const MoviePage = ({ isVertical = false, excludeId = null}) => {
     const fetchMovies = async () => {
       try {
         const res = await fetch(
-          `http://localhost:8080/api/movies?status=${activeTab}`
+          `${process.env.REACT_APP_API_URL}/api/movies?status=${activeTab}`
         );
         const data = await res.json();
 
@@ -76,7 +76,7 @@ const MoviePage = ({ isVertical = false, excludeId = null}) => {
   const handleDeleteMovie = async (movieId) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa phim này không?")) {
       try {
-        const res = await fetch(`http://localhost:8080/api/movies/${movieId}`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/movies/${movieId}`, {
           method: "DELETE",
         });
 
@@ -129,7 +129,7 @@ const MoviePage = ({ isVertical = false, excludeId = null}) => {
           >
             <div className="movie-poster">
               <img
-                src={`http://localhost:8080/movies/${movie.poster}`}
+                src={`${process.env.REACT_APP_API_URL}/movies/${movie.poster}`}
                 alt={movie.title}
                 className="movie-image"
               />

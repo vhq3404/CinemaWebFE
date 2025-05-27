@@ -53,7 +53,7 @@ const TheaterPage = () => {
     const fetchTheaters = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:8080/api/theaters");
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/theaters`);
         const data = await response.json();
         setTheaters(data);
         setFilteredTheaters(data);
@@ -110,7 +110,7 @@ const TheaterPage = () => {
   const handleDeleteTheater = async (id) => {
     if (window.confirm("Bạn có chắc chắn muốn xoá rạp này không?")) {
       try {
-        await fetch(`http://localhost:8080/api/theaters/${id}`, {
+        await fetch(`${process.env.REACT_APP_API_URL}/api/theaters/${id}`, {
           method: "DELETE",
         });
         setSelectedTheater(null); // Ẩn chi tiết rạp

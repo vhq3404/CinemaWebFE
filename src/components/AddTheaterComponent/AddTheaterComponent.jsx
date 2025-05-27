@@ -44,7 +44,7 @@ const AddTheaterComponent = ({ onClose }) => {
         formData.append("gallery", file);
       });
 
-      const response = await fetch("http://localhost:8080/api/theaters", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/theaters`, {
         method: "POST",
         body: formData,
       });

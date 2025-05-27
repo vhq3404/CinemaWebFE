@@ -35,7 +35,7 @@ const RoomsManagement = ({ theaterId }) => {
     }
 
     try {
-      await axios.post("http://localhost:8080/api/rooms", {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/rooms`, {
         ...newRoom,
         theater_id: theaterId,
       });
@@ -43,7 +43,7 @@ const RoomsManagement = ({ theaterId }) => {
       setNewRoom({ room_name: "", room_type: "" });
       // Gọi lại API để load danh sách phòng mới
       const res = await axios.get(
-        `http://localhost:8080/api/rooms/theater/${theaterId}`
+        `${process.env.REACT_APP_API_URL}/api/rooms/theater/${theaterId}`
       );
       setRooms(res.data);
     } catch (error) {
@@ -57,7 +57,7 @@ const RoomsManagement = ({ theaterId }) => {
     try {
       // Gọi API để lấy danh sách ghế của phòng này mỗi lần mở modal
       const seatsResponse = await axios.get(
-        `http://localhost:8080/api/seats/room/${room.id}`
+        `${process.env.REACT_APP_API_URL}/api/seats/room/${room.id}`
       );
       const seats = seatsResponse.data.seats || [];
       console.log("seat", seats);
@@ -110,7 +110,7 @@ const RoomsManagement = ({ theaterId }) => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/rooms/theater/${theaterId}`
+          `${process.env.REACT_APP_API_URL}/api/rooms/theater/${theaterId}`
         );
         setRooms(response.data);
       } catch (error) {
@@ -141,14 +141,14 @@ const RoomsManagement = ({ theaterId }) => {
     }
 
     try {
-      await axios.put(`http://localhost:8080/api/rooms/${editingRoom.id}`, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/rooms/${editingRoom.id}`, {
         ...editForm,
         theater_id: theaterId,
       });
       setEditingRoom(null);
       // Reload danh sách phòng
       const res = await axios.get(
-        `http://localhost:8080/api/rooms/theater/${theaterId}`
+        `${process.env.REACT_APP_API_URL}/api/rooms/theater/${theaterId}`
       );
       setRooms(res.data);
     } catch (error) {
@@ -160,10 +160,10 @@ const RoomsManagement = ({ theaterId }) => {
   const handleDelete = async (id) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa phòng này không?")) {
       try {
-        await axios.delete(`http://localhost:8080/api/rooms/${id}`);
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/rooms/${id}`);
         // Load lại danh sách phòng
         const res = await axios.get(
-          `http://localhost:8080/api/rooms/theater/${theaterId}`
+          `${process.env.REACT_APP_API_URL}/api/rooms/theater/${theaterId}`
         );
         setRooms(res.data);
       } catch (error) {
@@ -219,6 +219,8 @@ const RoomsManagement = ({ theaterId }) => {
       </div>
       {loading ? (
         <p>Đang tải phòng chiếu...</p>
+      ) : rooms.length === 0 ? (
+        <p>Rạp hiện chưa có phòng chiếu nào.</p>
       ) : (
         <div className="table-wrapper">
           <table className="room-table">

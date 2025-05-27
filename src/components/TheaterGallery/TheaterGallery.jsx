@@ -14,7 +14,7 @@ const TheaterGallery = ({ theater }) => {
 
     const fetchGallery = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/theaters/${theater.id}/gallery`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/theaters/${theater.id}/gallery`);
         const data = await response.json();
         setGalleries(data);
       } catch (err) {
@@ -41,7 +41,7 @@ const TheaterGallery = ({ theater }) => {
           <SwiperSlide key={gallery.id}>
             <div className="slide-wrapper">
               <img
-                src={`http://localhost:8080/theaters${gallery.image_url}`}
+                src={`${process.env.REACT_APP_API_URL}/theaters${gallery.image_url}`}
                 alt={`Banner ${gallery.id}`}
                 className="gallery-img"
               />
@@ -55,7 +55,7 @@ const TheaterGallery = ({ theater }) => {
               <h3>Địa chỉ: {theater.address}</h3>
               <h3>Hotline: {theater.hotline}</h3>
             </div>
-            <button
+            {/* <button
               className="map-button"
               onClick={() =>
                 window.open(
@@ -67,7 +67,7 @@ const TheaterGallery = ({ theater }) => {
               }
             >
               Xem bản đồ
-            </button>
+            </button> */}
           </div>
         </div>
       </Swiper>

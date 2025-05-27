@@ -41,7 +41,7 @@ const SignupComponent = ({ onClose, onSwitchToLogin }) => {
     }
   
     try {
-      const response = await fetch("http://localhost:8080/api/signup", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

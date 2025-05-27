@@ -2,15 +2,25 @@ import React, { useEffect, useState } from "react";
 import MovieAgeBadge from "../../components/MovieAgeBadge/MovieAgeBadge";
 import "./BookingDetail.css";
 
-const BookingDetail = ({ showtime, selectedSeats }) => {
+const BookingDetail = ({ showtime, selectedSeats, onTotalPriceChange }) => {
   const [posterUrl, setPosterUrl] = useState(null);
   const [age, setAge] = useState(null);
+
+  useEffect(() => {
+    const totalPrice = selectedSeats.reduce(
+      (sum, seat) => sum + getSeatPrice(seat),
+      0
+    );
+    if (onTotalPriceChange) {
+      onTotalPriceChange(totalPrice);
+    }
+  }, [selectedSeats, showtime]);
 
   useEffect(() => {
     const fetchMovie = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/movies/${showtime.movie.movieId}`
+          `${process.env.REACT_APP_API_URL}/api/movies/${showtime.movie.movieId}`
         );
         const data = await response.json();
         console.log("movie", data);
@@ -63,13 +73,14 @@ const BookingDetail = ({ showtime, selectedSeats }) => {
       P: "Phim dành cho mọi đối tượng khán giả",
       T13: "Phim dành cho khán giả từ đủ 13 tuổi trở lên (13+)",
       T16: "Phim dành cho khán giả từ đủ 16 tuổi trở lên (16+)",
-      T18: "[Phim dành cho khán giả từ đủ 18 tuổi trở lên (18+)",
+      T18: "Phim dành cho khán giả từ đủ 18 tuổi trở lên (18+)",
     };
     return ageDescriptions[age] || "";
   };
 
   const getSeatPrice = (seat) => {
-    return seat.type === "vip" ? 100000 : 50000;
+    if (!showtime) return 0;
+    return seat.type === "vip" ? showtime.priceVIP : showtime.priceRegular;
   };
 
   const formatCurrency = (number) =>
@@ -86,7 +97,7 @@ const BookingDetail = ({ showtime, selectedSeats }) => {
       {posterUrl && (
         <div className="booking-movie-header">
           <img
-            src={`http://localhost:8080/movies/${posterUrl}`}
+            src={`${process.env.REACT_APP_API_URL}/movies/${posterUrl}`}
             alt="Poster phim"
             className="booking-movie-poster"
           />

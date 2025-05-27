@@ -45,7 +45,7 @@ const HeaderComponent = () => {
             <a href="/movies">Phim</a>
             <a href="/theater">Rạp</a>
             {user && user.role === "admin" && <a href="/schedule">Lịch chiếu</a>}
-            {user && user.role === "admin" && <a href="/management">Quản lý</a>}
+            {/* {user && user.role === "admin" && <a href="/management">Quản lý</a>} */}
           </nav>
         </div>
         <div className="header-right">
@@ -55,7 +55,7 @@ const HeaderComponent = () => {
                 <div className="nav-user-dropdown">
                   <span className="nav-user">Xin chào, {user.name}</span>
                   <div className="dropdown-menu">
-                    <Link to="/ticket" className="dropdown-item">
+                    {/* <Link to="/ticket" className="dropdown-item">
                       <HiOutlineTicket />
                       Vé của tôi
                     </Link>
@@ -63,16 +63,16 @@ const HeaderComponent = () => {
                     <Link to="/profile" className="dropdown-item">
                       <BsPersonBadge />
                       Tài khoản
-                    </Link>
+                    </Link> */}
 
-                    {user.role === "admin" && (
+                    {/* {user.role === "admin" && (
                       <Link
                         to="/admin/voucher-management"
                         className="dropdown-item"
                       >
                         🎟️ Quản lý Voucher
                       </Link>
-                    )}
+                    )} */}
 
                     <button
                       onClick={handleLogout}

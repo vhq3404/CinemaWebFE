@@ -42,7 +42,9 @@ form label {
   color: #444;
 }
 
+form input,
 form select,
+form input[type="number"],
 form input[type="date"],
 form input[type="time"] {
   word-spacing: -4px;

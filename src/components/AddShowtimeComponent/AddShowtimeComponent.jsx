@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import Select from "react-select";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import "./AddShowtimeComponent.css";
 
@@ -15,13 +16,15 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
     roomId: "",
     date: "",
     startTime: "",
+    priceRegular: "",
+    priceVIP: "",
   });
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/movies");
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/movies`);
         const data = await res.json();
         setMovies(data);
       } catch (err) {
@@ -34,7 +37,9 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
   useEffect(() => {
     const fetchTheaters = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/theaters");
+        const res = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/theaters`
+        );
         const data = await res.json();
         setTheaters(data);
       } catch (err) {
@@ -49,29 +54,21 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
       if (!formData.theaterId) return;
       try {
         const res = await fetch(
-          `http://localhost:8080/api/rooms/theater/${formData.theaterId}`
+          `${process.env.REACT_APP_API_URL}/api/rooms/theater/${formData.theaterId}`
         );
         let data = await res.json();
 
         data.sort((a, b) => {
           const nameA = a.room_name;
           const nameB = b.room_name;
-
           const numberA = parseInt(nameA.match(/\d+/));
           const numberB = parseInt(nameB.match(/\d+/));
-
-          // So sánh theo số nếu cả hai có số
           if (!isNaN(numberA) && !isNaN(numberB)) {
             if (numberA !== numberB) return numberA - numberB;
-            // Nếu số bằng nhau, ưu tiên tên ngắn hơn (Phòng 3 < Phòng 3D)
             return nameA.length - nameB.length;
           }
-
-          // Nếu chỉ 1 trong 2 có số
           if (!isNaN(numberA)) return -1;
           if (!isNaN(numberB)) return 1;
-
-          // Nếu cả hai không có số, fallback so sánh chuỗi
           return nameA.localeCompare(nameB);
         });
 
@@ -83,16 +80,9 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
     fetchRooms();
   }, [formData.theaterId]);
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
   const validateStartTime = (startTime) => {
     const [hour, minute] = startTime.split(":").map(Number);
-    if (hour < 9 || hour > 23 || (hour === 23 && minute > 45)) {
-      return false; // Thời gian không hợp lệ
-    }
-    return true; // Thời gian hợp lệ
+    return !(hour < 9 || hour > 23 || (hour === 23 && minute > 45));
   };
 
   const handleSubmit = async (e) => {
@@ -108,15 +98,16 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
       ...formData,
       theaterId: parseInt(formData.theaterId, 10),
       roomId: parseInt(formData.roomId, 10),
+      priceRegular: parseFloat(formData.priceRegular),
+      priceVIP: parseFloat(formData.priceVIP),
     };
 
     try {
-      const res = await fetch("http://localhost:8080/api/showtimes", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/showtimes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      console.log("data", formData);
       const result = await res.json();
 
       if (res.ok) {
@@ -127,6 +118,8 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
           roomId: "",
           date: "",
           startTime: "",
+          priceRegular: "",
+          priceVIP: "",
         });
         onAddSuccess?.();
         onClose();
@@ -135,7 +128,7 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
       }
     } catch (err) {
       console.error("Lỗi khi gửi yêu cầu tạo suất chiếu:", err);
-      setMessage(" Đã xảy ra lỗi không xác định.");
+      setMessage("Đã xảy ra lỗi không xác định.");
     }
   };
 
@@ -145,16 +138,28 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
     const [year, month, day] = date.split("-");
     if (year && month && day) {
       setFormattedDate(`${day}/${month}/${year}`);
-      setFormData((prev) => ({
-        ...prev,
-        date: date, // Cập nhật ngày vào formData
-      }));
+      setFormData((prev) => ({ ...prev, date }));
     }
   };
 
   const openDatePicker = () => {
     hiddenDateRef.current.showPicker?.();
   };
+
+  const movieOptions = movies.map((m) => ({
+    value: m._id,
+    label: m.title,
+  }));
+
+  const theaterOptions = theaters.map((t) => ({
+    value: t.id,
+    label: t.name,
+  }));
+
+  const roomOptions = rooms.map((r) => ({
+    value: r.id,
+    label: r.room_name,
+  }));
 
   return (
     <div className="add-showtime-container">
@@ -166,19 +171,14 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Phim:</label>
-          <select
-            name="movieId"
-            value={formData.movieId}
-            onChange={handleChange}
-            required
-          >
-            <option value="">-- Chọn phim --</option>
-            {movies.map((movie) => (
-              <option key={movie._id} value={movie._id}>
-                {movie.title}
-              </option>
-            ))}
-          </select>
+          <Select
+            options={movieOptions}
+            value={movieOptions.find((m) => m.value === formData.movieId)}
+            onChange={(selected) =>
+              setFormData((prev) => ({ ...prev, movieId: selected.value }))
+            }
+            placeholder="-- Chọn phim --"
+          />
         </div>
 
         <div className="form-row">
@@ -198,7 +198,6 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
                   borderRadius: "6px",
                 }}
               />
-
               <span
                 onClick={openDatePicker}
                 style={{
@@ -213,7 +212,6 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
                 <FaRegCalendarAlt />
               </span>
             </div>
-
             <input
               type="date"
               ref={hiddenDateRef}
@@ -233,9 +231,11 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
               type="time"
               name="startTime"
               value={formData.startTime}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, startTime: e.target.value }))
+              }
               required
-              step="900" // 15 phút
+              step="900"
               min="09:00"
               max="23:45"
             />
@@ -244,36 +244,59 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess }) => {
 
         <div className="form-group">
           <label>Rạp:</label>
-          <select
-            name="theaterId"
-            value={formData.theaterId}
-            onChange={handleChange}
-            required
-          >
-            <option value="">-- Chọn rạp --</option>
-            {theaters.map((theater) => (
-              <option key={theater.id} value={theater.id}>
-                {theater.name}
-              </option>
-            ))}
-          </select>
+          <Select
+            options={theaterOptions}
+            value={theaterOptions.find((t) => t.value === formData.theaterId)}
+            onChange={(selected) =>
+              setFormData((prev) => ({
+                ...prev,
+                theaterId: selected.value,
+                roomId: "", // reset room khi đổi rạp
+              }))
+            }
+            placeholder="-- Chọn rạp --"
+          />
         </div>
 
         <div className="form-group">
           <label>Phòng chiếu:</label>
-          <select
-            name="roomId"
-            value={formData.roomId}
-            onChange={handleChange}
-            required
-          >
-            <option value="">-- Chọn phòng --</option>
-            {rooms.map((room) => (
-              <option key={room.id} value={room.id}>
-                {room.room_name}
-              </option>
-            ))}
-          </select>
+          <Select
+            options={roomOptions}
+            value={roomOptions.find((r) => r.value === formData.roomId)}
+            onChange={(selected) =>
+              setFormData((prev) => ({ ...prev, roomId: selected.value }))
+            }
+            placeholder="-- Chọn phòng --"
+            isDisabled={!formData.theaterId}
+          />
+        </div>
+        <div className="form-row">
+          <div className="form-group">
+            <label>Giá ghế Thường:</label>
+            <input
+              type="number"
+              value={formData.priceRegular}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  priceRegular: e.target.value,
+                }))
+              }
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Giá ghế VIP:</label>
+            <input
+              type="number"
+              value={formData.priceVIP}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, priceVIP: e.target.value }))
+              }
+              required
+            />
+          </div>
         </div>
 
         <button type="submit">Tạo suất chiếu</button>

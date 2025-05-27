@@ -28,7 +28,7 @@ const EditMovieComponent = ({ onClose, movie }) => {
   const [trailer, setTrailer] = useState(movie.trailer || "");
   const [isLoading, setIsLoading] = useState(false);
   const [posterPreview, setPosterPreview] = useState(
-    movie?.poster ? `http://localhost:8080/movies/${movie.poster}` : null
+    movie?.poster ? `${process.env.REACT_APP_API_URL}/movies/${movie.poster}` : null
   );
   const [posterFile, setPosterFile] = useState(null);
   const [rawDate, setRawDate] = useState(toInputDateFormat(movie.releaseDate));
@@ -128,7 +128,7 @@ const EditMovieComponent = ({ onClose, movie }) => {
       console.log("id", movieData._id);
 
       const response = await fetch(
-        `http://localhost:8080/api/movies/${movieData._id}`,
+        `${process.env.REACT_APP_API_URL}/api/movies/${movieData._id}`,
         {
           method: "PUT",
           body: formData,

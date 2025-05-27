@@ -1,5 +1,74 @@
 /* BookingPage.css */
 
+.step-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  margin-bottom: 10px;
+  font-family: monospace;
+  user-select: none;
+}
+
+/* Mỗi bước */
+.step-item {
+  display: flex;
+  align-items: center;
+  cursor: default;
+  color: #999;
+  position: relative;
+}
+
+/* Số bước */
+.step-number {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px;
+  font-size: 14px;
+  flex-shrink: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.step-label {
+  margin-right: 12px;
+  white-space: nowrap;
+  font-size: 18px;
+}
+
+.step-separator {
+  width: 30px;
+  height: 2px;
+  background-color: #ccc;
+  margin-right: 12px;
+  flex-shrink: 0;
+  transition: background-color 0.3s ease;
+}
+
+.step-item.active .step-number {
+  background-color: #0c47be; 
+  color: white;
+  font-weight: bold;
+}
+
+.step-item.active .step-label {
+  color: #0c47be;
+}
+
+.step-item.completed .step-number {
+  background-color: #28a745; /* xanh lá */
+  color: white;
+}
+
+/* Nối bước hoàn thành đổi màu */
+.step-item.completed + .step-separator {
+  background-color: #28a745;
+}
+
 .booking-page-container {
   display: flex;
   flex-direction: row;
@@ -9,8 +78,12 @@
 }
 
 .booking-main {
-  width: 920px;
+  width: 1000px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.booking-main h3{
+  margin-left: 20px;
 }
 
 .booking-detail-sidebar {

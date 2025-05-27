@@ -25,7 +25,7 @@ const LoginComponent = ({ onClose, onSwitchToSignup, showtime, navigateAfterLogi
 
     try {
       setTimeout(async () => {
-        const response = await fetch("http://localhost:8080/api/login", {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
@@ -38,9 +38,6 @@ const LoginComponent = ({ onClose, onSwitchToSignup, showtime, navigateAfterLogi
           setIsLoading(false);
           return;
         }
-
-        console.log("Token:", data.token);
-        console.log("User:", data.user);
 
         dispatch(login(data.user, data.token));
         localStorage.setItem("token", data.token);

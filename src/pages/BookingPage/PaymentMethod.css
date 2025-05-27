@@ -1,0 +1,48 @@
+.payment-method-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 20px;
+  font-family: monospace;
+  word-spacing: -4px;
+}
+
+.payment-method-item input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+
+.payment-method-list {
+  list-style: none !important;
+  padding: 0;
+  margin: 0;
+}
+
+.payment-method-item:hover {
+  border-color: #999;
+  background-color: #f0f0f0;
+}
+
+.payment-method-item.selected {
+  border-color: #999;
+  background-color: #f0f0f0;
+}
+
+.payment-method-item input {
+  transform: scale(1.1);
+  margin-right: 10px;
+}
+
+.payment-icon {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}

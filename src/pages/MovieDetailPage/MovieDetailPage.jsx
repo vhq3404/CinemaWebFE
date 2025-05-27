@@ -17,7 +17,7 @@ const MovieDetailPage = () => {
     const fetchMovie = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/movies/${id}`
+          `${process.env.REACT_APP_API_URL}/api/movies/${id}`
         );
         setMovie(response.data);
       } catch (err) {
@@ -88,7 +88,7 @@ const MovieDetailPage = () => {
 
         {/* Thông tin phim */}
         <img
-          src={`http://localhost:8080/movies/${movie.poster}`}
+          src={`${process.env.REACT_APP_API_URL}/movies/${movie.poster}`}
           alt={`Poster của ${movie.title}`}
           className="movie-poster-overlay"
         />

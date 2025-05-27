@@ -62,7 +62,7 @@ const RoomLayout = ({
   const handleAddSeats = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8080/api/seats/generate", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/seats/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +82,7 @@ const RoomLayout = ({
         setColumns(columns);
 
         const seatsRes = await fetch(
-          `http://localhost:8080/api/seats/room/${room_id}`
+          `${process.env.REACT_APP_API_URL}/api/seats/room/${room_id}`
         );
         const seatsData = await seatsRes.json();
         setSeats(seatsData.seats || []);
@@ -106,7 +106,7 @@ const RoomLayout = ({
     try {
       // Lặp qua tất cả ghế đã chọn và cập nhật type thành 'vip'
       for (const seat of selectedSeats) {
-        await fetch(`http://localhost:8080/api/seats/${seat.id}/type`, {
+        await fetch(`${process.env.REACT_APP_API_URL}/api/seats/${seat.id}/type`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -119,7 +119,7 @@ const RoomLayout = ({
 
       // Cập nhật lại danh sách ghế
       const seatsRes = await fetch(
-        `http://localhost:8080/api/seats/room/${room_id}`
+        `${process.env.REACT_APP_API_URL}/api/seats/room/${room_id}`
       );
       const seatsData = await seatsRes.json();
       setSeats(seatsData.seats || []);
@@ -139,7 +139,7 @@ const RoomLayout = ({
     try {
       // Lặp qua tất cả ghế đã chọn và cập nhật type thành 'regular'
       for (const seat of selectedSeats) {
-        await fetch(`http://localhost:8080/api/seats/${seat.id}/type`, {
+        await fetch(`${process.env.REACT_APP_API_URL}/api/seats/${seat.id}/type`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -152,7 +152,7 @@ const RoomLayout = ({
 
       // Cập nhật lại danh sách ghế
       const seatsRes = await fetch(
-        `http://localhost:8080/api/seats/room/${room_id}`
+        `${process.env.REACT_APP_API_URL}/api/seats/room/${room_id}`
       );
       const seatsData = await seatsRes.json();
       setSeats(seatsData.seats || []);
@@ -172,7 +172,7 @@ const RoomLayout = ({
     try {
       // Lặp qua tất cả ghế đã chọn và đổi trạng thái thành 'inactive'
       for (const seat of selectedSeats) {
-        await fetch(`http://localhost:8080/api/seats/${seat.id}/status`, {
+        await fetch(`${process.env.REACT_APP_API_URL}/api/seats/${seat.id}/status`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -185,7 +185,7 @@ const RoomLayout = ({
 
       // Cập nhật lại danh sách ghế sau khi đổi trạng thái
       const seatsRes = await fetch(
-        `http://localhost:8080/api/seats/room/${room_id}`
+        `${process.env.REACT_APP_API_URL}/api/seats/room/${room_id}`
       );
       const seatsData = await seatsRes.json();
       setSeats(seatsData.seats || []);
@@ -228,11 +228,16 @@ const RoomLayout = ({
                     return (
                       <div
                         key={colIndex}
-                        className={`seat ${seat?.status || "available"} ${
-                          seat?.type === "vip" ? "vip" : "regular"
-                        } ${isSelected ? "selected" : ""}`}
+                        className={`seat 
+    ${seat?.status || "available"} 
+    ${seat?.type === "vip" ? "vip" : "regular"} 
+    ${isSelected ? "selected" : ""} 
+    ${seat?.isBooked ? "booked" : ""}
+  `}
                         title={seat?.seat_number}
-                        onClick={() => seat && toggleSeatSelection(seat)}
+                        onClick={() => {
+                          if (seat && !seat.isBooked) toggleSeatSelection(seat);
+                        }}
                       >
                         {seat?.seat_number}
                       </div>

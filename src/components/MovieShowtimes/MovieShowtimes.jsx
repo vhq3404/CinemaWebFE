@@ -21,7 +21,7 @@ const MovieShowtimes = ({ movieId }) => {
       setLoading(true);
       try {
         const response = await fetch(
-          `http://localhost:8080/api/showtimes?movieId=${movieId}`
+          `${process.env.REACT_APP_API_URL}/api/showtimes?movieId=${movieId}`
         );
         const data = await response.json();
 

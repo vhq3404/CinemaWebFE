@@ -5,6 +5,7 @@ import BookingDetail from "../../components/BookingDetail/BookingDetail";
 import RoomLayout from "../../components/RoomLayout/RoomLayout";
 import "./BookingPage.css";
 import PaymentMethod from "./PaymentMethod";
+import { MdOutlineAccessTime } from "react-icons/md";
 import { io } from "socket.io-client";
 
 const SOCKET_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
@@ -16,12 +17,32 @@ const BookingPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [qrCodeUrl, setQrCodeUrl] = useState(null);
+  const [countdown, setCountdown] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
   const { showtime } = location.state || {};
   const [bookingId, setBookingId] = useState(null);
   const user = useSelector((state) => state.user);
   const socketRef = useRef(null);
+
+  useEffect(() => {
+    if (countdown <= 0) return;
+
+    const timerId = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          alert("Hết thời gian giữ ghế. Giao dịch đã bị hủy.");
+          clearInterval(timerId);
+          handleCancelBooking();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timerId);
+  }, [countdown]);
 
   useEffect(() => {
     if (!showtime?._id) return;
@@ -44,40 +65,39 @@ const BookingPage = () => {
   }, [showtime._id]);
 
   useEffect(() => {
-  if (!showtime?.room?.roomId || !showtime?._id) return;
+    if (!showtime?.room?.roomId || !showtime?._id) return;
 
-  const fetchSeats = async () => {
-    try {
-      setIsLoading(true);
+    const fetchSeats = async () => {
+      try {
+        setIsLoading(true);
 
-      const seatRes = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/seats/room/${showtime.room.roomId}`
-      );
-      const seatData = await seatRes.json();
-      const allSeats = seatData.seats || [];
+        const seatRes = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/seats/room/${showtime.room.roomId}`
+        );
+        const seatData = await seatRes.json();
+        const allSeats = seatData.seats || [];
 
-      const lockedRes = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/bookings/locked-seats/${showtime._id}`
-      );
-      const lockedData = await lockedRes.json();
-      const lockedSeatIds = new Set(lockedData.locked_seat_ids);
+        const lockedRes = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/bookings/locked-seats/${showtime._id}`
+        );
+        const lockedData = await lockedRes.json();
+        const lockedSeatIds = new Set(lockedData.locked_seat_ids);
 
-      const processedSeats = allSeats.map((seat) => ({
-        ...seat,
-        isBooked: lockedSeatIds.has(seat.id),
-      }));
+        const processedSeats = allSeats.map((seat) => ({
+          ...seat,
+          isBooked: lockedSeatIds.has(seat.id),
+        }));
 
-      setSeats(processedSeats);
-    } catch (error) {
-      console.error("Lỗi khi lấy danh sách ghế:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        setSeats(processedSeats);
+      } catch (error) {
+        console.error("Lỗi khi lấy danh sách ghế:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  fetchSeats();
-}, [showtime._id, showtime.room.roomId]);
-
+    fetchSeats();
+  }, [showtime._id, showtime.room.roomId]);
 
   if (!showtime) {
     return (
@@ -133,13 +153,16 @@ const BookingPage = () => {
     };
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/bookings`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bookingData),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/bookings`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(bookingData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Tạo booking thất bại");
@@ -149,6 +172,8 @@ const BookingPage = () => {
       setBookingId(result.booking_id);
 
       setCurrentStep(2);
+      setCountdown(600);
+      setPaymentMethod("vietQR");
     } catch (error) {
       alert("Đã xảy ra lỗi khi đặt vé: " + error.message);
     }
@@ -158,9 +183,12 @@ const BookingPage = () => {
   const handleBackToSeatSelection = async () => {
     if (bookingId) {
       try {
-        await fetch(`${process.env.REACT_APP_API_URL}/api/bookings/${bookingId}`, {
-          method: "DELETE",
-        });
+        await fetch(
+          `${process.env.REACT_APP_API_URL}/api/bookings/${bookingId}`,
+          {
+            method: "DELETE",
+          }
+        );
         setBookingId(null);
       } catch (error) {
         console.error("Xóa booking thất bại:", error);
@@ -169,39 +197,49 @@ const BookingPage = () => {
     setCurrentStep(1);
   };
 
-  // Xử lý cập nhật booking thành PAID khi ấn "Thanh toán"
   const handlePayment = async () => {
     if (!paymentMethod) {
       alert("Vui lòng chọn phương thức thanh toán!");
       return;
     }
-
     if (!bookingId) {
       alert("Không tìm thấy booking để thanh toán.");
       return;
     }
 
     try {
+      // Tạo paymentCode (backend có thể tự tạo, nhưng bạn vẫn tạo frontend để gửi)
+      const paymentCode = `PMT-${bookingId}-${Date.now()}`;
+      const movieTitle = showtime?.movie?.title;
+
+      // Gửi request tạo mã QR (chỉ lấy QR, không lưu payment)
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/bookings/${bookingId}/status`,
+        `${process.env.REACT_APP_QR_URL}/api/payments/qr`,
         {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ status: "PAID" }),
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            paymentCode,
+            paymentMethod,
+            movieTitle,
+            totalPrice,
+          }),
         }
       );
 
       if (!response.ok) {
-        throw new Error("Thanh toán thất bại");
+        throw new Error("Tạo mã QR thất bại");
       }
 
-      const result = await response.json();
-      alert("Thanh toán thành công!");
+      const data = await response.json();
+
+      // Lưu URL mã QR để hiển thị
+      setQrCodeUrl(data.data.qrCodeUrl);
+
+      // Ví dụ cập nhật bước xử lý
       setCurrentStep(3);
     } catch (error) {
-      alert("Đã xảy ra lỗi khi thanh toán: " + error.message);
+      alert("Đã xảy ra lỗi khi tạo mã QR: " + error.message);
     }
   };
 
@@ -212,9 +250,37 @@ const BookingPage = () => {
       socketRef.current.emit("lockSeats", {
         showtimeId: showtime._id,
         seatIds: newSelectedSeats.map((seat) => seat.id),
-        userId: user.id, // nên gửi thêm user ID để server xử lý timeout hoặc unlock đúng người
+        userId: user.id,
       });
     }
+  };
+
+  const handleCancelBooking = async () => {
+    if (!bookingId) return;
+
+    try {
+      await fetch(
+        `${process.env.REACT_APP_API_URL}/api/bookings/${bookingId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      setBookingId(null);
+      setQrCodeUrl(null);
+      setSelectedSeats([]);
+
+      navigate("/");
+    } catch (err) {
+      console.error("Lỗi khi hủy booking:", err);
+      alert("Không thể hủy booking. Vui lòng thử lại.");
+    }
+  };
+
+  const handleManualCancel = () => {
+    const confirmCancel = window.confirm("Bạn có chắc muốn hủy giao dịch?");
+    if (!confirmCancel) return;
+    handleCancelBooking();
   };
 
   return (
@@ -232,14 +298,37 @@ const BookingPage = () => {
               onClose={() => {}}
               isOverlay={false}
             />
-          ) : (
+          ) : currentStep === 2 ? (
             <PaymentMethod
               selectedMethod={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value)}
             />
-          )}
+          ) : currentStep === 3 && qrCodeUrl ? (
+            <div className="qr-code-container">
+              <h3>Quét mã QR để thanh toán</h3>
+              <img src={qrCodeUrl} alt="QR Code" className="qr-code" />
+              <button
+                className="booking-cancel-button"
+                onClick={handleManualCancel}
+              >
+                Hủy giao dịch
+              </button>
+            </div>
+          ) : null}
         </div>
+
         <div>
+          {(currentStep === 2 || currentStep === 3) && (
+            <div className="countdown-timer">
+              <MdOutlineAccessTime />
+              Thời gian giữ ghế còn:{" "}
+              {Math.floor(countdown / 60)
+                .toString()
+                .padStart(2, "0")}
+              :{(countdown % 60).toString().padStart(2, "0")}
+            </div>
+          )}
+
           <div className="booking-detail-sidebar">
             <BookingDetail
               showtime={showtime}
@@ -257,7 +346,6 @@ const BookingPage = () => {
               </button>
             </div>
           )}
-
           {currentStep === 2 && (
             <div
               className="booking-confirm-wrapper"

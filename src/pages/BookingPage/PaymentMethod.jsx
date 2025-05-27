@@ -1,15 +1,13 @@
 import React from "react";
 import "./PaymentMethod.css";
 
-import momoIcon from "../../assets/MoMo_Logo.png";
+import vietQRIcon from "../../assets/434x0w.webp";
 import shopeePayIcon from "../../assets/Logo-ShopeePay-V.webp";
 import zaloPayIcon from "../../assets/Logo-ZaloPay-Square.webp";
 
 const PaymentMethod = ({ selectedMethod, onChange }) => {
   const methods = [
-    { label: "Ví MoMo", value: "momo", icon: momoIcon },
-    { label: "Shopee Pay", value: "shopee", icon: shopeePayIcon },
-    { label: "Zalo Pay", value: "zalo", icon: zaloPayIcon },
+    { label: "QR thanh toán", value: "vietQR", icon: vietQRIcon },
   ];
 
   return (

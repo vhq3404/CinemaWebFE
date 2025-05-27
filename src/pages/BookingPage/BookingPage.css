@@ -50,7 +50,7 @@
 }
 
 .step-item.active .step-number {
-  background-color: #0c47be; 
+  background-color: #0c47be;
   color: white;
   font-weight: bold;
 }
@@ -60,7 +60,7 @@
 }
 
 .step-item.completed .step-number {
-  background-color: #28a745; /* xanh lá */
+  background-color: #ccc;
   color: white;
 }
 
@@ -82,7 +82,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.booking-main h3{
+.booking-main h3 {
   margin-left: 20px;
 }
 
@@ -122,4 +122,60 @@
 
 .booking-confirm-button:hover {
   background-color: #082c9a;
+}
+
+.qr-code-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px;
+}
+
+.qr-code-container h3 {
+  font-family: monospace;
+  font-size: 24px;
+  font-weight: bold;
+  word-spacing: -3px;
+}
+
+.qr-code {
+  width: 40%;
+  height: 40%;
+}
+
+.booking-cancel-button {
+  margin-top: 24px;
+  padding: 10px 20px;
+  background-color: #dd0f00;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 20px;
+  font-family: monospace;
+  font-weight: bold;
+  word-spacing: -3px;
+  transition: background-color 0.3s ease;
+}
+
+.booking-cancel-button:hover {
+  background-color: #ae0303;
+}
+
+.countdown-timer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #0c47be;
+  font-size: 20px;
+  font-family: monospace;
+  background-color: #e3edfe;
+  padding: 10px 20px;
+  border-radius: 10px;
+  word-spacing: -3px;
+  width: fit-content;
+  user-select: none;
 }

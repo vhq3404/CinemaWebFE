@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { MdLogout } from "react-icons/md";
 import { BsPersonBadge } from "react-icons/bs";
 import { HiOutlineTicket } from "react-icons/hi";
+import logo from "../../assets/Infinity.png";
 
 const HeaderComponent = () => {
   const [showLoginForm, setShowLoginForm] = useState(false);
@@ -37,7 +38,7 @@ const HeaderComponent = () => {
       <header className="header">
         <div className="header-left">
           <a href="/" className="logo">
-            🎥 CinemaHub
+              <img src={logo} alt="CinemaHub logo" className="logo-image" />
           </a>
         </div>
         <div className="header-center">
@@ -55,7 +56,7 @@ const HeaderComponent = () => {
                 <div className="nav-user-dropdown">
                   <span className="nav-user">Xin chào, {user.name}</span>
                   <div className="dropdown-menu">
-                    {/* <Link to="/ticket" className="dropdown-item">
+                     <Link to="/profile/ticket" className="dropdown-item">
                       <HiOutlineTicket />
                       Vé của tôi
                     </Link>
@@ -63,16 +64,16 @@ const HeaderComponent = () => {
                     <Link to="/profile" className="dropdown-item">
                       <BsPersonBadge />
                       Tài khoản
-                    </Link> */}
+                    </Link> 
 
-                    {/* {user.role === "admin" && (
+                     {user.role === "admin" && (
                       <Link
                         to="/admin/voucher-management"
                         className="dropdown-item"
                       >
-                        🎟️ Quản lý Voucher
+                       Quản lý Voucher
                       </Link>
-                    )} */}
+                    )} 
 
                     <button
                       onClick={handleLogout}

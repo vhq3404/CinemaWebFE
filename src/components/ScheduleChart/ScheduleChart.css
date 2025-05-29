@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7); /* Nền mờ */
+  background: rgba(0, 0, 0, 0.5); /* Nền mờ */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,6 +20,7 @@
   width: auto;
   min-width: 1000px;
   overflow: auto;
+  position: relative;
 }
 
 .schedule-chart {

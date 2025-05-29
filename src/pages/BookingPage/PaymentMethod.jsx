@@ -2,12 +2,10 @@ import React from "react";
 import "./PaymentMethod.css";
 
 import vietQRIcon from "../../assets/434x0w.webp";
-import shopeePayIcon from "../../assets/Logo-ShopeePay-V.webp";
-import zaloPayIcon from "../../assets/Logo-ZaloPay-Square.webp";
 
 const PaymentMethod = ({ selectedMethod, onChange }) => {
   const methods = [
-    { label: "QR thanh toán", value: "vietQR", icon: vietQRIcon },
+    { label: "QR thanh toán", value: "payos", icon: vietQRIcon },
   ];
 
   return (

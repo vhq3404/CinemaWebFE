@@ -20,7 +20,9 @@ const SchedulePage = () => {
   useEffect(() => {
     const fetchTheaters = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/theaters`);
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/theaters`
+        );
         const data = await response.json();
         setTheaters(data);
         if (data.length > 0) {
@@ -89,7 +91,7 @@ const SchedulePage = () => {
       setShowtimes([]);
       setSelectedDate("");
     }
-  }, [selectedTheater]); // Tái gọi mỗi khi selectedTheater thay đổi
+  }, [selectedTheater]);
 
   useEffect(() => {
     fetchShowtimes();
@@ -292,6 +294,7 @@ const SchedulePage = () => {
                 theaterId={selectedTheater?.id}
                 onClose={toggleAddShowtimeModal}
                 onAddSuccess={fetchShowtimes}
+                scheduleMovies={filteredMovies}
               />
             </div>
           )}

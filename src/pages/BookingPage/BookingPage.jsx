@@ -9,7 +9,7 @@ import { MdOutlineAccessTime } from "react-icons/md";
 import { io } from "socket.io-client";
 
 const SOCKET_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
-console.log("SOCKET_SERVER_URL:", SOCKET_SERVER_URL);
+
 const BookingPage = () => {
   const [seats, setSeats] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
@@ -17,14 +17,51 @@ const BookingPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [qrCodeUrl, setQrCodeUrl] = useState(null);
   const [countdown, setCountdown] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
   const { showtime } = location.state || {};
+
   const [bookingId, setBookingId] = useState(null);
   const user = useSelector((state) => state.user);
   const socketRef = useRef(null);
+
+  const handlePayOSPayment = async () => {
+    if (!bookingId) {
+      alert("Không tìm thấy mã đặt vé");
+      return;
+    }
+
+    const paymentCode = `PMT-${bookingId}-${Date.now()}`;
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_QR_URL}/api/payments/payos`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: totalPrice,
+            paymentCode,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        alert("Không thể tạo link thanh toán");
+
+        return;
+      }
+
+      const result = await response.json();
+      localStorage.setItem("bookingId", bookingId);
+      window.location.href = result.checkoutUrl;
+    } catch (error) {
+      console.error("Lỗi khi tạo link thanh toán:", error);
+      alert("Có lỗi xảy ra khi tạo link thanh toán");
+    } finally {
+    }
+  };
 
   useEffect(() => {
     if (countdown <= 0) return;
@@ -173,7 +210,7 @@ const BookingPage = () => {
 
       setCurrentStep(2);
       setCountdown(600);
-      setPaymentMethod("vietQR");
+      setPaymentMethod("payos");
     } catch (error) {
       alert("Đã xảy ra lỗi khi đặt vé: " + error.message);
     }
@@ -195,52 +232,6 @@ const BookingPage = () => {
       }
     }
     setCurrentStep(1);
-  };
-
-  const handlePayment = async () => {
-    if (!paymentMethod) {
-      alert("Vui lòng chọn phương thức thanh toán!");
-      return;
-    }
-    if (!bookingId) {
-      alert("Không tìm thấy booking để thanh toán.");
-      return;
-    }
-
-    try {
-      // Tạo paymentCode (backend có thể tự tạo, nhưng bạn vẫn tạo frontend để gửi)
-      const paymentCode = `PMT-${bookingId}-${Date.now()}`;
-      const movieTitle = showtime?.movie?.title;
-
-      // Gửi request tạo mã QR (chỉ lấy QR, không lưu payment)
-      const response = await fetch(
-        `${process.env.REACT_APP_QR_URL}/api/payments/qr`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            paymentCode,
-            paymentMethod,
-            movieTitle,
-            totalPrice,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Tạo mã QR thất bại");
-      }
-
-      const data = await response.json();
-
-      // Lưu URL mã QR để hiển thị
-      setQrCodeUrl(data.data.qrCodeUrl);
-
-      // Ví dụ cập nhật bước xử lý
-      setCurrentStep(3);
-    } catch (error) {
-      alert("Đã xảy ra lỗi khi tạo mã QR: " + error.message);
-    }
   };
 
   const handleSelectedSeatsChange = (newSelectedSeats) => {
@@ -267,7 +258,7 @@ const BookingPage = () => {
       );
 
       setBookingId(null);
-      setQrCodeUrl(null);
+
       setSelectedSeats([]);
 
       navigate("/");
@@ -275,12 +266,6 @@ const BookingPage = () => {
       console.error("Lỗi khi hủy booking:", err);
       alert("Không thể hủy booking. Vui lòng thử lại.");
     }
-  };
-
-  const handleManualCancel = () => {
-    const confirmCancel = window.confirm("Bạn có chắc muốn hủy giao dịch?");
-    if (!confirmCancel) return;
-    handleCancelBooking();
   };
 
   return (
@@ -303,17 +288,6 @@ const BookingPage = () => {
               selectedMethod={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value)}
             />
-          ) : currentStep === 3 && qrCodeUrl ? (
-            <div className="qr-code-container">
-              <h3>Quét mã QR để thanh toán</h3>
-              <img src={qrCodeUrl} alt="QR Code" className="qr-code" />
-              <button
-                className="booking-cancel-button"
-                onClick={handleManualCancel}
-              >
-                Hủy giao dịch
-              </button>
-            </div>
           ) : null}
         </div>
 
@@ -361,7 +335,7 @@ const BookingPage = () => {
               <button
                 className="booking-confirm-button"
                 style={{ width: "48%" }}
-                onClick={handlePayment}
+                onClick={handlePayOSPayment}
               >
                 Thanh toán
               </button>

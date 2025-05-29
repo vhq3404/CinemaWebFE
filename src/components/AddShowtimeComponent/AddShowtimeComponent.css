@@ -1,15 +1,28 @@
 /* AddShowtimeComponent.css */
+.add-showtime-wrapper {
+  display: flex;
+  align-items: flex-start; /* căn top */
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+  padding: 0px 20px;
+  box-sizing: border-box;
+}
+
 .add-showtime-container {
   position: relative;
   padding: 20px;
   background: white;
   border-radius: 10px;
-  width: 500px;
-  margin: 0 auto;
+  max-width: 500px;
   word-spacing: -4px;
   font-family: monospace;
   font-size: 16px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-wrapper {
+  flex: 2;
 }
 
 .add-showtime-close-btn {
@@ -59,7 +72,7 @@ form input[type="time"] {
 
 form select:focus,
 form input:focus {
-  border-color: #2563eb;
+  border-color: #0c47be;
   outline: none;
 }
 
@@ -67,7 +80,7 @@ form button {
   word-spacing: -4px;
   font-family: monospace;
   font-size: 16px;
-  background-color: #2563eb;
+  background-color: #0c47be;
   color: #fff;
   padding: 0.65rem 1.25rem;
   border: none;
@@ -107,4 +120,17 @@ form button:hover {
   margin-top: 4px;
   color: #555;
   font-size: 0.85rem;
+}
+
+.add-showtime-content {
+  display: flex;
+  flex-direction: row;
+  gap: 40px; /* khoảng cách giữa form và ScheduleChart */
+  align-items: flex-start; /* canh top */
+}
+
+/* Tuỳ chỉnh chiều rộng theo nhu cầu */
+.add-showtime-form {
+  flex: 1;
+  max-width: 500px;
 }

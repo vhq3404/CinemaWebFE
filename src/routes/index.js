@@ -6,9 +6,16 @@ import AdminTheaterManagement from "../components/AdminTheaterManagement/AdminTh
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import SchedulePage from "../pages/SchedulePage/SchedulePage";
 import BookingPage from "../pages/BookingPage/BookingPage"
+import PaymentSuccessPage from "../pages/PaymentSuccessPage/PaymentSuccessPage"
+import ProductDisplay from "../pages/testpage/test"
 import AdminVoucherManagement from "../pages/AdminVoucherManagement/AdminVoucherManagement";
 
 export const routes = [
+   {
+    path: "/test",
+    page: ProductDisplay,
+    isShowHeader: true,
+  },
   {
     path: "/",
     page: HomePage,
@@ -36,7 +43,7 @@ export const routes = [
     isShowHeader: true,
   },
   {
-    path: "/profile",
+    path: "/profile/:tab?",
     page: ProfilePage,
     isShowHeader: true,
   },
@@ -55,6 +62,11 @@ export const routes = [
   {
     path: "/booking", 
     page: BookingPage,
+    isShowHeader: true,
+  },
+   {
+    path: "/payment-success",
+    page: PaymentSuccessPage,
     isShowHeader: true,
   },
 ];

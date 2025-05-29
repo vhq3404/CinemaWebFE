@@ -1,15 +1,57 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./AddTheaterComponent.css";
 
 const AddTheaterComponent = ({ onClose }) => {
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
   const [district, setDistrict] = useState("");
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
   const [address, setAddress] = useState("");
   const [hotline, setHotline] = useState("");
   const [status, setStatus] = useState("");
   const [gallery, setGallery] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const selectedCity = provinces.find((p) => p.id === city)?.name || "";
+  
+  console.log("city", city);
+
+  useEffect(() => {
+    axios
+      .get("https://esgoo.net/api-tinhthanh/1/0.htm")
+      .then((res) => {
+        if (res.data?.error === 0 && Array.isArray(res.data?.data)) {
+          setProvinces(res.data.data);
+        } else {
+          console.error("Lỗi dữ liệu:", res.data?.error_text);
+        }
+      })
+      .catch((err) => console.error("Fetch lỗi:", err));
+  }, []);
+
+  useEffect(() => {
+    if (!city) {
+      setDistricts([]);
+      setDistrict("");
+      return;
+    }
+
+    axios
+      .get(`https://esgoo.net/api-tinhthanh/2/${city}.htm`)
+      .then((res) => {
+        if (res.data?.error === 0 && Array.isArray(res.data?.data)) {
+          setDistricts(res.data.data);
+        } else {
+          console.error("Lỗi dữ liệu quận/huyện:", res.data?.error_text);
+          setDistricts([]);
+        }
+      })
+      .catch((err) => {
+        console.error("Lỗi lấy quận/huyện:", err);
+        setDistricts([]);
+      });
+  }, [city]);
 
   const handleImageChange = (e) => {
     setGallery([...gallery, ...Array.from(e.target.files)]);
@@ -30,7 +72,7 @@ const AddTheaterComponent = ({ onClose }) => {
 
       const theaterData = {
         name,
-        city,
+        city: selectedCity,
         district,
         address,
         hotline,
@@ -44,10 +86,13 @@ const AddTheaterComponent = ({ onClose }) => {
         formData.append("gallery", file);
       });
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/theaters`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/theaters`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const result = await response.json();
 
@@ -76,8 +121,7 @@ const AddTheaterComponent = ({ onClose }) => {
           <form onSubmit={handleSubmit} className="theater-form-fields">
             <div>
               <label>
-                <span className="required">*</span>
-                Tên rạp:
+                <span className="required">*</span> Tên rạp:
               </label>
               <input
                 type="text"
@@ -90,34 +134,46 @@ const AddTheaterComponent = ({ onClose }) => {
             <div className="input-column">
               <div>
                 <label>
-                  <span className="required">*</span>
-                  Tỉnh / Thành phố:
+                  <span className="required">*</span> Tỉnh / Thành phố:
                 </label>
-                <input
-                  type="text"
+                <select
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   required
-                />
+                >
+                  <option value="">-- Chọn tỉnh/thành --</option>
+                  {provinces.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
               </div>
+
               <div>
                 <label>
-                  <span className="required">*</span>
-                  Quận / Huyện:
+                  <span className="required">*</span> Quận / Huyện:
                 </label>
-                <input
-                  type="text"
+                <select
                   value={district}
                   onChange={(e) => setDistrict(e.target.value)}
                   required
-                />
+                  disabled={!districts.length}
+                >
+                  <option value="">-- Chọn quận/huyện --</option>
+                  {districts.map((d) => (
+                    <option key={d.id} value={d.name}>
+                      {d.name}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
+            {/* Phần còn lại giữ nguyên */}
             <div>
               <label>
-                <span className="required">*</span>
-                Địa chỉ:
+                <span className="required">*</span> Địa chỉ:
               </label>
               <input
                 type="text"
@@ -130,8 +186,7 @@ const AddTheaterComponent = ({ onClose }) => {
             <div className="input-column">
               <div>
                 <label>
-                  <span className="required">*</span>
-                  Hotline:
+                  <span className="required">*</span> Hotline:
                 </label>
                 <input
                   type="text"

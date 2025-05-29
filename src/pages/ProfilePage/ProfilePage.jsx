@@ -1,14 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import "./ProfilePage.css";
 import { useSelector } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
+import UserTickets from "./UserTickets/UserTickets";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.user);
-  const [activeTab, setActiveTab] = useState("profile"); // Tab mặc định là "Thông tin tài khoản"
+  const { tab } = useParams(); // Lấy tab từ URL
+  const navigate = useNavigate();
+  const activeTab = tab || "profile";
 
   if (!user) {
     return <p>Bạn cần đăng nhập để xem thông tin tài khoản.</p>;
   }
+
+  const handleTabClick = (tabName) => {
+    navigate(`/profile/${tabName}`);
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -16,21 +24,25 @@ const ProfilePage = () => {
         return (
           <div className="profile-tab-content">
             <h2>Thông Tin Tài Khoản</h2>
-            <p><strong>Tên:</strong> {user.name}</p>
-            <p><strong>Email:</strong> {user.email}</p>
-            <p><strong>Số điện thoại:</strong> {user.phone || "Chưa cập nhật"}</p>
-            <p><strong>Vai trò:</strong> {user.role === "admin" ? "Quản trị viên" : "Khách hàng"}</p>
+            <p>
+              <strong>Tên:</strong> {user.name}
+            </p>
+            <p>
+              <strong>Email:</strong> {user.email}
+            </p>
+            <p>
+              <strong>Số điện thoại:</strong> {user.phone || "Chưa cập nhật"}
+            </p>
+            <p>
+              <strong>Vai trò:</strong>{" "}
+              {user.role === "admin" ? "Quản trị viên" : "Khách hàng"}
+            </p>
           </div>
         );
-      case "history":
+      case "ticket":
         return (
           <div className="profile-tab-content">
-            <h2>Lịch Sử Giao Dịch</h2>
-            <ul>
-              <li>Giao dịch 1: Đặt vé Avengers - 200.000 VND - <span className="status success">Thành công</span></li>
-              <li>Giao dịch 2: Đặt vé Spider-Man - 150.000 VND - <span className="status pending">Đang xử lý</span></li>
-              <li>Giao dịch 3: Đặt vé Batman - 180.000 VND - <span className="status failed">Thất bại</span></li>
-            </ul>
+            <UserTickets userId={user.id} />
           </div>
         );
       case "vouchers":
@@ -50,22 +62,22 @@ const ProfilePage = () => {
             <form>
               <label>
                 Mật khẩu cũ:
-                <input type="password" placeholder="Nhập mật khẩu cũ" />
+                <input type="password" />
               </label>
               <label>
                 Mật khẩu mới:
-                <input type="password" placeholder="Nhập mật khẩu mới" />
+                <input type="password" />
               </label>
               <label>
                 Xác nhận mật khẩu mới:
-                <input type="password" placeholder="Xác nhận mật khẩu mới" />
+                <input type="password" />
               </label>
               <button type="submit">Đổi mật khẩu</button>
             </form>
           </div>
         );
       default:
-        return null;
+        return <p>Không tìm thấy nội dung phù hợp.</p>;
     }
   };
 
@@ -74,26 +86,34 @@ const ProfilePage = () => {
       <h1>Thông Tin Tài Khoản</h1>
       <div className="profile-tabs">
         <button
-          className={`profile-tab-button ${activeTab === "profile" ? "active" : ""}`}
-          onClick={() => setActiveTab("profile")}
+          className={`profile-tab-button ${
+            activeTab === "profile" ? "active" : ""
+          }`}
+          onClick={() => handleTabClick("profile")}
         >
           Thông Tin Tài Khoản
         </button>
         <button
-          className={`profile-tab-button ${activeTab === "history" ? "active" : ""}`}
-          onClick={() => setActiveTab("history")}
+          className={`profile-tab-button ${
+            activeTab === "ticket" ? "active" : ""
+          }`}
+          onClick={() => handleTabClick("ticket")}
         >
           Lịch Sử Giao Dịch
         </button>
         <button
-          className={`profile-tab-button ${activeTab === "vouchers" ? "active" : ""}`}
-          onClick={() => setActiveTab("vouchers")}
+          className={`profile-tab-button ${
+            activeTab === "vouchers" ? "active" : ""
+          }`}
+          onClick={() => handleTabClick("vouchers")}
         >
           Voucher Của Tôi
         </button>
         <button
-          className={`profile-tab-button ${activeTab === "settings" ? "active" : ""}`}
-          onClick={() => setActiveTab("settings")}
+          className={`profile-tab-button ${
+            activeTab === "settings" ? "active" : ""
+          }`}
+          onClick={() => handleTabClick("settings")}
         >
           Cài Đặt
         </button>

@@ -1,0 +1,66 @@
+.payment-success-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  font-family: monospace;
+}
+
+.success-icon {
+  margin-top: 50px;
+  font-size: 100px;
+  color: #28a745;
+}
+
+.payment-success-container h1 {
+  font-size: 50px;
+  font-weight: bold;
+  margin-top: 16px;
+  margin-bottom: 10px;
+  word-spacing: -8px;
+  color: #28a745;
+}
+
+.payment-success-container p {
+  font-size: 20px;
+  margin-top: 0px;
+  margin-bottom: 2rem;
+}
+
+.success-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.back-home-button,
+.view-ticket-button {
+  border: none;
+  padding: 12px 24px;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: monospace;
+  word-spacing: -3px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.back-home-button {
+  background-color: #ccc;
+  color: #333;
+}
+
+.view-ticket-button {
+  background-color: #0c47be;
+  color: white;
+}
+
+.back-home-button:hover {
+  background-color: #a5a5a5;
+}
+
+.view-ticket-button:hover {
+  background-color: #0036a3;
+}

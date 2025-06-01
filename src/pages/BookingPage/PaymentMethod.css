@@ -1,3 +1,9 @@
+.payment-method-container {
+  font-size: 20px;
+  font-family: monospace;
+  word-spacing: -4px;
+}
+
 .payment-method-item {
   display: flex;
   align-items: center;
@@ -18,7 +24,6 @@
   transform: scale(1.2);
   cursor: pointer;
 }
-
 
 .payment-method-list {
   list-style: none !important;
@@ -45,4 +50,94 @@
   width: 80px;
   height: 80px;
   object-fit: contain;
+}
+
+.point-apply-box {
+  width: 100%;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 24px;
+  background-color: #ffffff;
+}
+
+.point-input-group {
+  width: 30%;
+  display: flex;
+  gap: 16px;
+  margin: 18px;
+}
+
+.point-input {
+  flex: 1;
+  padding: 8px;
+  font-family: monospace;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.available-point-info {
+  margin: 20px;
+}
+
+.apply-point-button {
+  padding: 8px 16px;
+  background-color: #0c47be;
+  font-family: monospace;
+  word-spacing: -4px;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.apply-point-button:hover {
+  background-color: #0056b3;
+}
+
+.apply-point-button {
+  padding: 8px 16px;
+  background-color: #0c47be;
+  font-family: monospace;
+  word-spacing: -4px;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.apply-point-button:hover {
+  background-color: rgb(2, 71, 145);
+}
+
+.cancel-point-button {
+  padding: 8px 16px;
+  background-color: #d82421;
+  font-family: monospace;
+  word-spacing: -4px;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancel-point-button:hover {
+  background-color: #b1120f;
+}
+
+.applied-point-info {
+  margin-top: 8px;
+  margin-left: 20px;
+  color: green;
+  font-weight: bold;
+}
+
+.point-note {
+  font-size: 16px;
+  color: #666;
+  word-spacing: -1px;
+  margin-top: 4px;
+  margin-left: 20px;
+}
+.point-note li {
+  margin-bottom: 8px;
 }

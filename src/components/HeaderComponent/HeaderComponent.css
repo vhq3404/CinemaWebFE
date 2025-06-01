@@ -128,9 +128,19 @@
 .nav-user {
   cursor: pointer;
   font-weight: bold;
-  font-size: 25px;
+  font-size: 20px;
   color: #f9f9f9;
   padding: 10px 12px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.user-points {
+  cursor: pointer;
+  font-weight: bold;
+  padding: 10px 12px;
+  font-size: 16px;
+  color: #f9f9f9;
   position: relative;
   transition: color 0.3s ease;
 }
@@ -139,6 +149,10 @@
   color: #0c47be;
 }
 
+.nav-user-info {
+  height: 100%;
+  cursor: pointer;
+}
 /* Menu xổ xuống */
 .dropdown-menu {
   position: absolute;
@@ -151,7 +165,6 @@
   display: none;
   flex-direction: column;
   min-width: 200px;
-  margin-top: 8px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
   z-index: 999;
   overflow: hidden;

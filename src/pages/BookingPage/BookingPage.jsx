@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import BookingDetail from "../../components/BookingDetail/BookingDetail";
@@ -17,6 +17,8 @@ const BookingPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [appliedPoints, setAppliedPoints] = useState(0);
+  const [actualAppliedPoints, setActualAppliedPoints] = useState(0);
   const [countdown, setCountdown] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
@@ -35,6 +37,19 @@ const BookingPage = () => {
     const paymentCode = `PMT-${bookingId}-${Date.now()}`;
 
     try {
+      const updateRes = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/bookings/${bookingId}/total_price`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ total_price: totalPrice }),
+        }
+      );
+
+      if (!updateRes.ok) {
+        throw new Error("Không thể cập nhật giá booking");
+      }
+
       const response = await fetch(
         `${process.env.REACT_APP_QR_URL}/api/payments/payos`,
         {
@@ -49,7 +64,6 @@ const BookingPage = () => {
 
       if (!response.ok) {
         alert("Không thể tạo link thanh toán");
-
         return;
       }
 
@@ -57,11 +71,30 @@ const BookingPage = () => {
       localStorage.setItem("bookingId", bookingId);
       window.location.href = result.checkoutUrl;
     } catch (error) {
-      console.error("Lỗi khi tạo link thanh toán:", error);
-      alert("Có lỗi xảy ra khi tạo link thanh toán");
-    } finally {
+      console.error("Lỗi khi xử lý thanh toán:", error);
+      alert("Có lỗi xảy ra khi thanh toán: " + error.message);
     }
   };
+
+  const handleCancelBooking = useCallback(async () => {
+    if (!bookingId) return;
+
+    try {
+      await fetch(
+        `${process.env.REACT_APP_API_URL}/api/bookings/${bookingId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      setBookingId(null);
+      setSelectedSeats([]);
+      navigate("/");
+    } catch (err) {
+      console.error("Lỗi khi hủy booking:", err);
+      alert("Không thể hủy booking. Vui lòng thử lại.");
+    }
+  }, [bookingId, navigate]);
 
   useEffect(() => {
     if (countdown <= 0) return;
@@ -71,7 +104,7 @@ const BookingPage = () => {
         if (prev <= 1) {
           alert("Hết thời gian giữ ghế. Giao dịch đã bị hủy.");
           clearInterval(timerId);
-          handleCancelBooking();
+          handleCancelBooking(); // an toàn vì đã được ổn định
           return 0;
         }
         return prev - 1;
@@ -79,7 +112,7 @@ const BookingPage = () => {
     }, 1000);
 
     return () => clearInterval(timerId);
-  }, [countdown]);
+  }, [countdown, handleCancelBooking]);
 
   useEffect(() => {
     if (!showtime?._id) return;
@@ -144,6 +177,10 @@ const BookingPage = () => {
       </div>
     );
   }
+
+  const handleAppliedPointsChange = (points) => {
+    setAppliedPoints(points);
+  };
 
   const StepBar = ({ currentStep }) => {
     const steps = ["Chọn ghế", "Chọn Phương thức thanh toán", "Thanh toán"];
@@ -231,6 +268,9 @@ const BookingPage = () => {
         console.error("Xóa booking thất bại:", error);
       }
     }
+    setAppliedPoints(0);
+    setActualAppliedPoints(0);
+    setTotalPrice(0);
     setCurrentStep(1);
   };
 
@@ -243,28 +283,6 @@ const BookingPage = () => {
         seatIds: newSelectedSeats.map((seat) => seat.id),
         userId: user.id,
       });
-    }
-  };
-
-  const handleCancelBooking = async () => {
-    if (!bookingId) return;
-
-    try {
-      await fetch(
-        `${process.env.REACT_APP_API_URL}/api/bookings/${bookingId}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      setBookingId(null);
-
-      setSelectedSeats([]);
-
-      navigate("/");
-    } catch (err) {
-      console.error("Lỗi khi hủy booking:", err);
-      alert("Không thể hủy booking. Vui lòng thử lại.");
     }
   };
 
@@ -287,6 +305,8 @@ const BookingPage = () => {
             <PaymentMethod
               selectedMethod={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value)}
+              onAppliedPointsChange={handleAppliedPointsChange}
+              actualAppliedPoints={actualAppliedPoints}
             />
           ) : null}
         </div>
@@ -308,6 +328,8 @@ const BookingPage = () => {
               showtime={showtime}
               selectedSeats={selectedSeats}
               onTotalPriceChange={setTotalPrice}
+              appliedPoints={appliedPoints}
+              onActualAppliedPointsChange={setActualAppliedPoints}
             />
           </div>
           {currentStep === 1 && selectedSeats.length > 0 && (

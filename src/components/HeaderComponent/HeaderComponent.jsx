@@ -38,14 +38,16 @@ const HeaderComponent = () => {
       <header className="header">
         <div className="header-left">
           <a href="/" className="logo">
-              <img src={logo} alt="CinemaHub logo" className="logo-image" />
+            <img src={logo} alt="CinemaHub logo" className="logo-image" />
           </a>
         </div>
         <div className="header-center">
           <nav className="nav">
             <a href="/movies">Phim</a>
             <a href="/theater">Rạp</a>
-            {user && user.role === "admin" && <a href="/schedule">Lịch chiếu</a>}
+            {user && user.role === "admin" && (
+              <a href="/schedule">Lịch chiếu</a>
+            )}
             {/* {user && user.role === "admin" && <a href="/management">Quản lý</a>} */}
           </nav>
         </div>
@@ -54,9 +56,14 @@ const HeaderComponent = () => {
             {user ? (
               <>
                 <div className="nav-user-dropdown">
-                  <span className="nav-user">Xin chào, {user.name}</span>
+                  <div className="nav-user-info">
+                    <span className="nav-user">Xin chào, {user.name}</span>
+                    <div className="user-points">
+                      Điểm tích lũy: {user.points || 0}
+                    </div>
+                  </div>
                   <div className="dropdown-menu">
-                     <Link to="/profile/ticket" className="dropdown-item">
+                    <Link to="/profile/ticket" className="dropdown-item">
                       <HiOutlineTicket />
                       Vé của tôi
                     </Link>
@@ -64,16 +71,16 @@ const HeaderComponent = () => {
                     <Link to="/profile" className="dropdown-item">
                       <BsPersonBadge />
                       Tài khoản
-                    </Link> 
+                    </Link>
 
-                     {user.role === "admin" && (
+                    {user.role === "admin" && (
                       <Link
                         to="/admin/voucher-management"
                         className="dropdown-item"
                       >
-                       Quản lý Voucher
+                        Quản lý Voucher
                       </Link>
-                    )} 
+                    )}
 
                     <button
                       onClick={handleLogout}

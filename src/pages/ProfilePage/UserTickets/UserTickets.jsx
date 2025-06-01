@@ -4,11 +4,14 @@ import MovieAgeBadge from "../../../components/MovieAgeBadge/MovieAgeBadge";
 import TicketDetails from "../../../components/TicketDetails/TicketDetails";
 import "./UserTickets.css";
 
+const BOOKINGS_PER_PAGE = 5;
+
 const UserTickets = ({ userId }) => {
   const [bookings, setBookings] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchBookingsWithDetails = async () => {
@@ -32,7 +35,6 @@ const UserTickets = ({ userId }) => {
                   `${process.env.REACT_APP_API_URL}/api/movies/${showtime.movie.movieId}`
                 );
                 movie = movieRes.data;
-                console.log("movie", movie);
               } catch (err) {
                 console.warn(
                   `Không lấy được phim ${showtime.movie.movieId}`,
@@ -51,7 +53,14 @@ const UserTickets = ({ userId }) => {
           })
         );
 
-        setBookings(bookingsWithDetails);
+        // Sắp xếp từ mới nhất
+        const sorted = bookingsWithDetails.sort((a, b) => {
+          const dateA = new Date(a.createdAt || a.showtime?.startTime || 0);
+          const dateB = new Date(b.createdAt || b.showtime?.startTime || 0);
+          return dateB - dateA;
+        });
+
+        setBookings(sorted);
       } catch (err) {
         setError("Không thể tải danh sách vé.");
         console.error(err);
@@ -63,8 +72,11 @@ const UserTickets = ({ userId }) => {
     if (userId) fetchBookingsWithDetails();
   }, [userId]);
 
-  if (loading) return <div>Đang tải dữ liệu...</div>;
-  if (error) return <div className="error-message">{error}</div>;
+  const totalPages = Math.ceil(bookings.length / BOOKINGS_PER_PAGE);
+  const currentBookings = bookings.slice(
+    (currentPage - 1) * BOOKINGS_PER_PAGE,
+    currentPage * BOOKINGS_PER_PAGE
+  );
 
   const formatShowtime = (isoDateString) => {
     const date = new Date(isoDateString);
@@ -96,29 +108,39 @@ const UserTickets = ({ userId }) => {
     setSelectedBooking(booking);
   };
 
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  if (loading) return <div>Đang tải dữ liệu...</div>;
+  if (error) return <div className="error-message">{error}</div>;
+
   return (
     <div className="user-bookings-container">
       <h2>Danh sách vé đã đặt</h2>
       {bookings.length === 0 ? (
         <p>Bạn chưa đặt vé nào.</p>
       ) : (
-        <ul className="booking-list">
-          {bookings.map((booking) => (
-            <li
-              key={booking.id}
-              className="booking-item"
-              onClick={() => handleDetailClick(booking)}
-              style={{ cursor: "pointer" }}
-            >
-              {booking.showtime ? (
-                <>
+        <>
+          <ul className="booking-list">
+            {currentBookings.map((booking) => (
+              <li
+                key={booking.id}
+                className="booking-item"
+                onClick={() => handleDetailClick(booking)}
+                style={{ cursor: "pointer" }}
+              >
+                {booking.showtime ? (
                   <div className="movie-info-container">
                     <img
                       src={`${process.env.REACT_APP_API_URL}/movies/${booking.movie?.poster}`}
                       alt="Poster phim"
                       className="booking-detail-movie-poster"
                     />
-
                     <div className="movie-info-columns">
                       <div className="left-column">
                         <div className="movie-title">
@@ -140,22 +162,43 @@ const UserTickets = ({ userId }) => {
                         </div>
                         <button
                           className="booking-details-button"
-                          onClick={() => handleDetailClick(booking.id)}
+                          onClick={() => handleDetailClick(booking)}
                         >
                           Chi tiết
                         </button>
                       </div>
                     </div>
                   </div>
-                </>
-              ) : (
-                <div>
-                  <em>Không lấy được thông tin suất chiếu.</em>
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
+                ) : (
+                  <div>
+                    <em>Không lấy được thông tin suất chiếu.</em>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+
+          {/* PHÂN TRANG */}
+          <div className="pagination">
+            <button
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              className="pagination-button"
+            >
+              Trang trước
+            </button>
+            <span className="pagination-info">
+              Trang {currentPage} / {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className="pagination-button"
+            >
+              Trang sau
+            </button>
+          </div>
+        </>
       )}
       {selectedBooking && (
         <TicketDetails

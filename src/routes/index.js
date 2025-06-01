@@ -5,13 +5,13 @@ import TheaterPage from "../pages/TheaterPage/TheaterPage";
 import AdminTheaterManagement from "../components/AdminTheaterManagement/AdminTheaterManagement";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import SchedulePage from "../pages/SchedulePage/SchedulePage";
-import BookingPage from "../pages/BookingPage/BookingPage"
-import PaymentSuccessPage from "../pages/PaymentSuccessPage/PaymentSuccessPage"
-import ProductDisplay from "../pages/testpage/test"
+import BookingPage from "../pages/BookingPage/BookingPage";
+import PaymentSuccessPage from "../pages/PaymentSuccessPage/PaymentSuccessPage";
+import ProductDisplay from "../pages/testpage/test";
 import AdminVoucherManagement from "../pages/AdminVoucherManagement/AdminVoucherManagement";
 
 export const routes = [
-   {
+  {
     path: "/test",
     page: ProductDisplay,
     isShowHeader: true,
@@ -60,11 +60,12 @@ export const routes = [
   },
 
   {
-    path: "/booking", 
+    path: "/booking",
     page: BookingPage,
     isShowHeader: true,
   },
-   {
+  
+  {
     path: "/payment-success",
     page: PaymentSuccessPage,
     isShowHeader: true,

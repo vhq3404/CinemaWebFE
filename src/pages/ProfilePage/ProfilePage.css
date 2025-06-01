@@ -1,111 +1,113 @@
 .profile-page {
-    padding: 20px;
-    max-width: 1000px;
-    margin: 0 auto;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .profile-page h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #0056b3;
-  }
-  
-  .profile-tabs {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .profile-tab-button {
-    padding: 10px 20px;
-    margin: 0 5px;
-    background-color: #f1f1f1;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .profile-tab-button.active {
-    background-color: #0056b3;
-    color: #fff;
-    border-color: #0056b3;
-  }
-  
-  .profile-tab-button:hover {
-    background-color: #e0e0e0;
-  }
-  
-  .profile-tab-content-container {
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .profile-tab-content h2 {
-    margin-bottom: 10px;
-    color: #333;
-  }
-  
-  .profile-tab-content ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .profile-tab-content ul li {
-    margin-bottom: 10px;
-    font-size: 16px;
-  }
-  
-  .status {
-    font-weight: bold;
-  }
-  
-  .status.success {
-    color: green;
-  }
-  
-  .status.pending {
-    color: orange;
-  }
-  
-  .status.failed {
-    color: red;
-  }
-  
-  .profile-tab-content form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .profile-tab-content form label {
-    font-size: 16px;
-  }
-  
-  .profile-tab-content form input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .profile-tab-content form button {
-    padding: 10px 20px;
-    background-color: #0275d8;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .profile-tab-content form button:hover {
-    background-color: #025aa5;
-  }
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  font-family: monospace;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-page h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #0056b3;
+}
+
+.profile-tabs {
+  font-family: monospace;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.profile-tab-button {
+  padding: 10px 20px;
+  margin: 0 5px;
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  font-family: monospace;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.profile-tab-button.active {
+  background-color: #0056b3;
+  color: #fff;
+  border-color: #0056b3;
+}
+
+.profile-tab-button:hover {
+  background-color: #e0e0e0;
+}
+
+.profile-tab-content-container {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-tab-content h2 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.profile-tab-content ul {
+  list-style: none;
+  padding: 0;
+}
+
+.profile-tab-content ul li {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.status {
+  font-weight: bold;
+}
+
+.status.success {
+  color: green;
+}
+
+.status.pending {
+  color: orange;
+}
+
+.status.failed {
+  color: red;
+}
+
+.profile-tab-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.profile-tab-content form label {
+  font-size: 16px;
+}
+
+.profile-tab-content form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.profile-tab-content form button {
+  padding: 10px 20px;
+  background-color: #0275d8;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.profile-tab-content form button:hover {
+  background-color: #025aa5;
+}

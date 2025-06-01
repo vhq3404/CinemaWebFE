@@ -66,7 +66,7 @@
   }
   
   .login-button {
-    background-color: #DBAD34;
+    background-color: #0c47be;
     font-size: 18px;
     font-family: monospace;
     font-weight: bold;
@@ -79,7 +79,7 @@
   }
   
   .login-button:hover {
-    background-color: #e28903;
+    background-color: #0036a1;
   }
   
   .forgot-password-btn {
@@ -99,7 +99,8 @@
   
   
   .forgot-password-btn:hover {
-    color: #DBAD34;
+    background: none;
+    color: #0c47be;
   }
 
   .login-divider {
@@ -123,9 +124,9 @@
     font-size: 18px;
     font-family: monospace;
     font-weight: bold;
-    color: #DBAD34;
+    color: #0c47be;
     padding: 10px;
-    border: 2px solid #DBAD34;
+    border: 2px solid #0c47be;
     cursor: pointer;
     width: 100%;
     border-radius: 24px;
@@ -134,7 +135,7 @@
   }
   
   .signup-button:hover {
-    background-color: #DBAD34;
+    background-color: #0c47be;
     color: white;
   }
 

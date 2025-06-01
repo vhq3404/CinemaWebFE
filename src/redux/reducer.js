@@ -1,8 +1,14 @@
-import { LOGIN, LOGOUT } from './actions';
+import { LOGIN, LOGOUT, UPDATE_USER } from "./actions";
+
+const userFromStorage = localStorage.getItem("user")
+  ? JSON.parse(localStorage.getItem("user"))
+  : null;
+
+const tokenFromStorage = localStorage.getItem("token") || null;
 
 const initialState = {
-  user: null,
-  token: null,
+  user: userFromStorage,
+  token: tokenFromStorage,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -15,6 +21,15 @@ const authReducer = (state = initialState, action) => {
       };
     case LOGOUT:
       return initialState;
+    case UPDATE_USER:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.payload,
+        },
+      };
+
     default:
       return state;
   }

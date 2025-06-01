@@ -46,20 +46,7 @@ const TicketDetails = ({ booking, onClose }) => {
     }, ${fullDate}`;
   };
 
-  const qrData = JSON.stringify({
-    bookingId: booking.id,
-    movieTitle: booking.movie?.title,
-    showtime: booking.showtime.startTime,
-    theater: booking.showtime.theater.theaterName,
-    room: booking.showtime.room.roomName,
-    seats: seatDetails
-      .sort((a, b) => {
-        if (a.row_label === b.row_label) return a.column_index - b.column_index;
-        return a.row_label.localeCompare(b.row_label);
-      })
-      .map((seat) => seat.seat_number)
-      .join(","),
-  });
+  const qrData = String(booking.id);
 
   return (
     <div className="ticket-modal-overlay" onClick={onClose}>
@@ -129,9 +116,9 @@ const TicketDetails = ({ booking, onClose }) => {
                 .replace("₫", "")}
               <u>đ</u>
             </p>
-            <button className="ticket-cancel-button" onClick={() => alert("Hủy vé")}>
+            {/* <button className="ticket-cancel-button" onClick={() => alert("Hủy vé")}>
               Hủy vé
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

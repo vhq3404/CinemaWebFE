@@ -2,9 +2,43 @@ import React, { useEffect, useState } from "react";
 import MovieAgeBadge from "../../components/MovieAgeBadge/MovieAgeBadge";
 import "./BookingDetail.css";
 
-const BookingDetail = ({ showtime, selectedSeats, onTotalPriceChange }) => {
+const BookingDetail = ({
+  showtime,
+  selectedSeats,
+  onTotalPriceChange,
+  appliedPoints,
+  onActualAppliedPointsChange,
+}) => {
   const [posterUrl, setPosterUrl] = useState(null);
   const [age, setAge] = useState(null);
+
+  const getSeatPrice = (seat) => {
+    if (!showtime) return 0;
+    return seat.type === "vip" ? showtime.priceVIP : showtime.priceRegular;
+  };
+
+  const formatCurrency = (number) =>
+    number.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+
+  const totalPrice = selectedSeats.reduce(
+    (sum, seat) => sum + getSeatPrice(seat),
+    0
+  );
+
+  // Giới hạn số điểm tối đa có thể áp dụng = tổng tiền / 1000
+  const maxPoints =
+    totalPrice >= 10000
+      ? Math.min(appliedPoints || 0, Math.floor((totalPrice - 10000) / 1000))
+      : 0;
+
+  const discountAmount = maxPoints * 1000;
+  const finalPrice = totalPrice - discountAmount;
+
+  useEffect(() => {
+    if (onTotalPriceChange) {
+      onTotalPriceChange(finalPrice);
+    }
+  }, [finalPrice, onTotalPriceChange]);
 
   useEffect(() => {
     const totalPrice = selectedSeats.reduce(
@@ -15,6 +49,13 @@ const BookingDetail = ({ showtime, selectedSeats, onTotalPriceChange }) => {
       onTotalPriceChange(totalPrice);
     }
   }, [selectedSeats, showtime]);
+
+  useEffect(() => {
+  if (onActualAppliedPointsChange) {
+    onActualAppliedPointsChange(maxPoints);
+  }
+}, [maxPoints, onActualAppliedPointsChange]);
+
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -78,19 +119,6 @@ const BookingDetail = ({ showtime, selectedSeats, onTotalPriceChange }) => {
     return ageDescriptions[age] || "";
   };
 
-  const getSeatPrice = (seat) => {
-    if (!showtime) return 0;
-    return seat.type === "vip" ? showtime.priceVIP : showtime.priceRegular;
-  };
-
-  const formatCurrency = (number) =>
-    number.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
-
-  const totalPrice = selectedSeats.reduce(
-    (sum, seat) => sum + getSeatPrice(seat),
-    0
-  );
-
   return (
     <div className="booking-detail">
       <h3>Thông tin vé</h3>
@@ -140,9 +168,16 @@ const BookingDetail = ({ showtime, selectedSeats, onTotalPriceChange }) => {
           </ul>
           <hr className="booking-divider" />
           <div className="total-price">
+            <div className="total-price-row"></div>
+            {maxPoints > 0 && (
+              <div className="discount-price-row">
+                <h4>Điểm áp dụng: {maxPoints}</h4>
+                <div>-{formatCurrency(discountAmount)}</div>
+              </div>
+            )}
             <div className="total-price-row">
               <h4>Tổng cộng:</h4>
-              <div>{formatCurrency(totalPrice)}</div>
+              <div>{formatCurrency(finalPrice)}</div>
             </div>
           </div>
         </>

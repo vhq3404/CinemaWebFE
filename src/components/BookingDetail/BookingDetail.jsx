@@ -7,7 +7,9 @@ const BookingDetail = ({
   selectedSeats,
   onTotalPriceChange,
   appliedPoints,
+  selectedFoods,
   onActualAppliedPointsChange,
+  foodTotal = 0,
 }) => {
   const [posterUrl, setPosterUrl] = useState(null);
   const [age, setAge] = useState(null);
@@ -20,10 +22,12 @@ const BookingDetail = ({
   const formatCurrency = (number) =>
     number.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
 
-  const totalPrice = selectedSeats.reduce(
+  const totalSeatPrice = selectedSeats.reduce(
     (sum, seat) => sum + getSeatPrice(seat),
     0
   );
+
+  const totalPrice = totalSeatPrice + foodTotal;
 
   // Giới hạn số điểm tối đa có thể áp dụng = tổng tiền / 1000
   const maxPoints =
@@ -51,11 +55,10 @@ const BookingDetail = ({
   }, [selectedSeats, showtime]);
 
   useEffect(() => {
-  if (onActualAppliedPointsChange) {
-    onActualAppliedPointsChange(maxPoints);
-  }
-}, [maxPoints, onActualAppliedPointsChange]);
-
+    if (onActualAppliedPointsChange) {
+      onActualAppliedPointsChange(maxPoints);
+    }
+  }, [maxPoints, onActualAppliedPointsChange]);
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -167,6 +170,22 @@ const BookingDetail = ({
             ))}
           </ul>
           <hr className="booking-divider" />
+
+          {selectedFoods.length > 0 && (
+            <>
+              <h4>Bắp & Nước:</h4>
+              <ul>
+                {selectedFoods.map((food) => (
+                  <li key={food.id}>
+                    {food.name} x{food.quantity} -{" "}
+                    {formatCurrency(food.price * food.quantity)}
+                  </li>
+                ))}
+              </ul>
+              <hr className="booking-divider" />
+            </>
+          )}
+
           <div className="total-price">
             <div className="total-price-row"></div>
             {maxPoints > 0 && (

@@ -5,6 +5,7 @@ import BookingDetail from "../../components/BookingDetail/BookingDetail";
 import RoomLayout from "../../components/RoomLayout/RoomLayout";
 import "./BookingPage.css";
 import PaymentMethod from "./PaymentMethod";
+import FoodSelection from "./FoodSelection";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { io } from "socket.io-client";
 
@@ -13,9 +14,11 @@ const SOCKET_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
 const BookingPage = () => {
   const [seats, setSeats] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const [selectedFoods, setSelectedFoods] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [foodTotal, setFoodTotal] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("");
   const [appliedPoints, setAppliedPoints] = useState(0);
   const [actualAppliedPoints, setActualAppliedPoints] = useState(0);
@@ -27,6 +30,14 @@ const BookingPage = () => {
   const [bookingId, setBookingId] = useState(null);
   const user = useSelector((state) => state.user);
   const socketRef = useRef(null);
+
+  useEffect(() => {
+    const total = selectedFoods.reduce(
+      (sum, food) => sum + food.price * (food.quantity || 1),
+      0
+    );
+    setFoodTotal(total);
+  }, [selectedFoods]);
 
   const handlePayOSPayment = async () => {
     if (!bookingId) {
@@ -183,7 +194,13 @@ const BookingPage = () => {
   };
 
   const StepBar = ({ currentStep }) => {
-    const steps = ["Chọn ghế", "Chọn Phương thức thanh toán", "Thanh toán"];
+    const steps = [
+      "Chọn ghế",
+      "Chọn bắp & nước",
+      "Chọn phương thức thanh toán",
+      "Thanh toán",
+    ];
+
     return (
       <div className="step-bar">
         {steps.map((step, index) => {
@@ -253,7 +270,13 @@ const BookingPage = () => {
     }
   };
 
-  // Xử lý xóa booking khi ấn "Quay lại"
+  const handleBackToFoodSelection = async () => {
+    setAppliedPoints(0);
+    setActualAppliedPoints(0);
+    localStorage.removeItem("appliedPoints");
+    setCurrentStep(2);
+  };
+
   const handleBackToSeatSelection = async () => {
     if (bookingId) {
       try {
@@ -268,9 +291,12 @@ const BookingPage = () => {
         console.error("Xóa booking thất bại:", error);
       }
     }
+
     setAppliedPoints(0);
     setActualAppliedPoints(0);
+    setSelectedFoods([]);
     setTotalPrice(0);
+    setFoodTotal(0);
     setCurrentStep(1);
   };
 
@@ -302,9 +328,15 @@ const BookingPage = () => {
               isOverlay={false}
             />
           ) : currentStep === 2 ? (
+            <FoodSelection
+              selectedFoods={selectedFoods}
+              onChange={setSelectedFoods}
+            />
+          ) : currentStep === 3 ? (
             <PaymentMethod
               selectedMethod={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value)}
+              appliedPoints={appliedPoints}
               onAppliedPointsChange={handleAppliedPointsChange}
               actualAppliedPoints={actualAppliedPoints}
             />
@@ -327,9 +359,11 @@ const BookingPage = () => {
             <BookingDetail
               showtime={showtime}
               selectedSeats={selectedSeats}
+              selectedFoods={selectedFoods}
               onTotalPriceChange={setTotalPrice}
               appliedPoints={appliedPoints}
               onActualAppliedPointsChange={setActualAppliedPoints}
+              foodTotal={foodTotal}
             />
           </div>
           {currentStep === 1 && selectedSeats.length > 0 && (
@@ -351,6 +385,28 @@ const BookingPage = () => {
                 className="booking-confirm-button"
                 style={{ backgroundColor: "#ccc", color: "#333", width: "48%" }}
                 onClick={handleBackToSeatSelection}
+              >
+                Quay lại
+              </button>
+              <button
+                className="booking-confirm-button"
+                style={{ width: "48%" }}
+                onClick={() => setCurrentStep(3)}
+              >
+                Tiếp tục
+              </button>
+            </div>
+          )}
+
+          {currentStep === 3 && (
+            <div
+              className="booking-confirm-wrapper"
+              style={{ justifyContent: "space-between" }}
+            >
+              <button
+                className="booking-confirm-button"
+                style={{ backgroundColor: "#ccc", color: "#333", width: "48%" }}
+                onClick={handleBackToFoodSelection}
               >
                 Quay lại
               </button>

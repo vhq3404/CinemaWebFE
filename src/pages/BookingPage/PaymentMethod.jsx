@@ -11,6 +11,7 @@ const PaymentMethod = ({
   onChange,
   onAppliedPointsChange,
   actualAppliedPoints,
+  appliedPoints: appliedPointsProp,
 }) => {
   const [points, setPoints] = useState("");
   const [appliedPoints, setAppliedPoints] = useState(null);
@@ -44,6 +45,15 @@ const PaymentMethod = ({
       localStorage.removeItem(STORAGE_KEY);
     }
   }, [actualAppliedPoints, appliedPoints]);
+
+  useEffect(() => {
+    // Khi prop appliedPoints từ BookingPage thay đổi → cập nhật lại state
+    if (appliedPointsProp === 0) {
+      setAppliedPoints(null);
+      setPoints("");
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, [appliedPointsProp]);
 
   const handleApplyPoints = () => {
     const value = parseInt(points);
@@ -138,7 +148,7 @@ const PaymentMethod = ({
                 onChange={onChange}
                 disabled={appliedPoints !== null}
               />
-              
+
               {method.label}
             </label>
           </li>

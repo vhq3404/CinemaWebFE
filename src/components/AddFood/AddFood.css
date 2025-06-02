@@ -1,0 +1,150 @@
+.add-food-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.add-food-modal {
+  background-color: #fff;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  padding: 20px 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: fadeInScale 0.3s ease forwards;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.add-food-modal h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  text-align: center;
+  color: #333;
+}
+
+.error {
+  color: #d93025;
+  margin-bottom: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.add-food-modal input[type="text"],
+.add-food-modal input[type="number"],
+.add-food-modal textarea,
+.add-food-modal select,
+.add-food-modal input[type="file"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  margin-bottom: 15px;
+  border: 1.5px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+  resize: vertical;
+  display: block;
+}
+
+.add-food-modal input[name="name"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  margin-bottom: 15px;
+  border: 1.5px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: inherit;
+  display: block;
+}
+
+
+.add-food-modal input[type="text"]:focus,
+.add-food-modal input[type="number"]:focus,
+.add-food-modal textarea:focus,
+.add-food-modal select:focus,
+.add-food-modal input[type="file"]:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.add-food-modal label {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 15px;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.add-food-modal input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-actions button[type="submit"] {
+  background-color: #0c47be;
+  color: white;
+}
+
+.modal-actions button[type="submit"]:hover {
+  background-color: rgb(4, 73, 147);
+}
+
+.modal-actions button[type="button"] {
+  background-color: #ccc;
+  color: #333;
+}
+
+.modal-actions button[type="button"]:hover {
+  background-color: #999;
+}
+
+@media (max-width: 480px) {
+  .add-food-modal {
+    width: 90%;
+    padding: 15px 20px;
+  }
+}

@@ -1,0 +1,112 @@
+.food-selection {
+  width: 95%;
+  margin-left: 16px;
+  font-family: monospace;
+  text-align: left;
+}
+
+.food-type-heading {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  color: #222;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-left: 20px;
+  padding-bottom: 4px;
+}
+
+.food-selection-img {
+  width: 20%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.food-selection h3 {
+  text-align: left;
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 30px;
+  margin-left: 20px;
+}
+
+.food-selection ul {
+  list-style: none;
+  padding: 0;
+  margin-left: 20px;
+}
+
+.food-selection li {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  padding: 20px 12px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+/* Mỗi dòng món ăn */
+.food-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.food-name {
+  flex: 1;
+  font-size: 18px;
+  margin-left: 20px;
+  font-weight: bold;
+  color: #666;
+}
+
+.food-description {
+  flex: 2;
+  font-size: 16px;
+  color: #666;
+  margin-left: 20px;
+  margin-top: 10px;
+  word-spacing: -3px;
+  max-width: 80%;
+}
+
+.food-price {
+  width: 90px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: right;
+  color: #666;
+  margin-right: 16px;
+}
+
+/* Điều khiển số lượng */
+.quantity-controls {
+  display: flex;
+    font-size: 16px;
+  align-items: center;
+  gap: 10px;
+}
+
+.quantity-controls button {
+  width: 26px;
+  height: 26px;
+  font-size: 16px;
+  border: none;
+  background-color: #eee;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.quantity-controls button:hover {
+  background-color: #d6f0ff;
+}
+
+.quantity-controls span {
+  min-width: 18px;
+  text-align: center;
+}

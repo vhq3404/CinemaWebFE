@@ -73,6 +73,7 @@ const SchedulePage = () => {
           priceRegular: showtime.priceRegular,
           priceVIP: showtime.priceVIP,
           theater_id: showtime.theater.theaterId,
+          rawShowtime: showtime, // lưu bản gốc để log
         });
       }
 
@@ -107,19 +108,13 @@ const SchedulePage = () => {
     });
   };
 
-  const handleDeleteShowtime = async (movieIndex, showtimeIndex) => {
-    const updatedMovies = [...filteredMovies];
-    const showtime = updatedMovies[movieIndex].showtimes[showtimeIndex];
-
+  const handleDeleteShowtime = async (showtimeId) => {
     if (!window.confirm("Bạn có chắc muốn xoá suất chiếu này?")) return;
 
     try {
-      // Gọi API xóa
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/showtimes/${showtime._id}`, // _id phải được lưu từ lúc fetch showtimes
-        {
-          method: "DELETE",
-        }
+        `${process.env.REACT_APP_API_URL}/api/showtimes/${showtimeId}`,
+        { method: "DELETE" }
       );
 
       if (!response.ok) {
@@ -128,13 +123,13 @@ const SchedulePage = () => {
         return;
       }
 
-      // Xoá thành công => cập nhật UI
-      updatedMovies[movieIndex].showtimes.splice(showtimeIndex, 1);
-
-      // Nếu phim không còn showtime nào thì xoá cả phim đó khỏi danh sách
-      if (updatedMovies[movieIndex].showtimes.length === 0) {
-        updatedMovies.splice(movieIndex, 1);
-      }
+      // Cập nhật filteredMovies bằng cách lọc suất chiếu đã xoá
+      const updatedMovies = filteredMovies
+        .map((movie) => ({
+          ...movie,
+          showtimes: movie.showtimes.filter((s) => s._id !== showtimeId),
+        }))
+        .filter((movie) => movie.showtimes.length > 0);
 
       setFilteredMovies(updatedMovies);
       alert("Đã xoá suất chiếu thành công.");
@@ -258,10 +253,7 @@ const SchedulePage = () => {
                                   <button
                                     className="delete-showtime-button"
                                     onClick={() =>
-                                      handleDeleteShowtime(
-                                        movieIndex,
-                                        showtimeIndex
-                                      )
+                                      handleDeleteShowtime(showtime._id)
                                     }
                                   >
                                     <MdDeleteOutline />

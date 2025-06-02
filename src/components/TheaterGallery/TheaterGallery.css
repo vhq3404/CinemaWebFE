@@ -4,6 +4,8 @@
   margin: auto;
   padding-top: 20px;
   margin-bottom: 30px;
+  max-width: 1000px;
+  overflow: hidden;
 }
 
 .gallery-img {

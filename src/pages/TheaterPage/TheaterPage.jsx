@@ -7,15 +7,13 @@ import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { useSelector } from "react-redux";
 import "./TheaterPage.css";
 
-const TheaterPage = () => {
+const TheaterPage = ({ isAdmin = false }) => {
   const [theaters, setTheaters] = useState([]);
   const [filteredTheaters, setFilteredTheaters] = useState([]);
   const [selectedTheater, setSelectedTheater] = useState(null);
   const [showAddTheater, setShowAddTheater] = useState(false);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [loadingTheater, setLoadingTheater] = useState(false);
-  const user = useSelector((state) => state.user);
-  const isAdmin = user?.role === "admin";
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     city: "",
@@ -53,7 +51,9 @@ const TheaterPage = () => {
     const fetchTheaters = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/theaters`);
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/theaters`
+        );
         const data = await response.json();
         setTheaters(data);
         setFilteredTheaters(data);
@@ -216,7 +216,9 @@ const TheaterPage = () => {
 
       {showAddTheater && <AddTheaterComponent onClose={toggleAddTheater} />}
 
-      {isAdmin && <RoomsManagement theaterId={selectedTheater?.id} />}
+      {isAdmin && selectedTheater && (
+        <RoomsManagement theaterId={selectedTheater.id} />
+      )}
     </div>
   );
 };

@@ -14,6 +14,7 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess, scheduleMovies }) => {
   const [rawDate, setRawDate] = useState("");
   const [formattedDate, setFormattedDate] = useState("");
   const hiddenDateRef = useRef();
+  const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
     movieId: "",
     theaterId: "",
@@ -22,8 +23,17 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess, scheduleMovies }) => {
     startTime: "",
     priceRegular: "",
     priceVIP: "",
+    showtimeType: "",
   });
-  const [message, setMessage] = useState("");
+
+  const showtimeTypeOptions = [
+    { value: "2D Lồng tiếng", label: "2D Lồng tiếng" },
+    { value: "2D Phụ đề", label: "2D Phụ đề" },
+    { value: "3D Lồng tiếng", label: "3D Lồng tiếng" },
+    { value: "3D Phụ đề", label: "3D Phụ đề" },
+    { value: "IMAX Phụ đề", label: "IMAX Phụ đề" },
+    { value: "IMAX Lồng tiếng", label: "IMAX Lồng tiếng" },
+  ];
 
   useEffect(() => {
     if (scheduleMovies && Array.isArray(scheduleMovies)) {
@@ -178,6 +188,7 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess, scheduleMovies }) => {
           body: JSON.stringify(payload),
         }
       );
+      console.log("formData trước khi gửi:", formData);
       const result = await res.json();
 
       if (res.ok) {
@@ -190,6 +201,7 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess, scheduleMovies }) => {
           startTime: "",
           priceRegular: "",
           priceVIP: "",
+          showtimeType: "",
         });
         onAddSuccess?.();
         onClose();
@@ -249,6 +261,22 @@ const AddShowtimeComponent = ({ onClose, onAddSuccess, scheduleMovies }) => {
                   setFormData((prev) => ({ ...prev, movieId: selected.value }))
                 }
                 placeholder="-- Chọn phim --"
+              />
+            </div>
+            <div className="form-group">
+              <label>Loại suất chiếu:</label>
+              <Select
+                options={showtimeTypeOptions}
+                value={showtimeTypeOptions.find(
+                  (opt) => opt.value === formData.showtimeType
+                )}
+                onChange={(selected) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    showtimeType: selected.value,
+                  }))
+                }
+                placeholder="-- Chọn loại suất chiếu --"
               />
             </div>
 

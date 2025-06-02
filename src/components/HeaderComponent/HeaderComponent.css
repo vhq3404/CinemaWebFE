@@ -4,11 +4,11 @@
   align-items: center;
   background: #062564;
   color: #fff;
-  padding: 8px 40px 8px 40px;
-
+  border-bottom: 2px solid #ffffff;
+  padding: 6px 40px 6px 40px;
   position: sticky;
   top: 0;
-  height: 90px;
+  height: 60px;
   font-family: monospace;
   z-index: 100;
 }
@@ -37,6 +37,7 @@
 }
 
 .logo {
+  max-height: 60px;
   display: inline-block;
   line-height: 0;
   padding: 0;
@@ -46,8 +47,9 @@
 .logo-image {
   width: 180px;
   height: auto;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
+  transform: translateY(-124px);
 }
 
 .nav {
@@ -59,7 +61,7 @@
   color: #f9f9f9;
   text-decoration: none;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 20px;
   position: relative;
   transition: color 0.3s ease;
 }
@@ -91,7 +93,7 @@
   border: none;
   color: #f9f9f9;
   font-weight: 700;
-  font-size: 25px;
+  font-size: 20px;
   position: relative;
   cursor: pointer;
   padding: 0;
@@ -128,7 +130,7 @@
 .nav-user {
   cursor: pointer;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 18px;
   color: #f9f9f9;
   padding: 10px 12px;
   position: relative;

@@ -8,16 +8,21 @@ import EditMovieComponent from "../EditMovieComponent/EditMovieComponent";
 import MovieAgeBadge from "../MovieAgeBadge/MovieAgeBadge";
 import "./MoviePage.css";
 
-const MoviePage = ({ isVertical = false, excludeId = null}) => {
+const MoviePage = ({
+  isVertical = false,
+  excludeId = null,
+  isAdmin = false,
+  isHomePage = false,
+}) => {
   const [activeTab, setActiveTab] = useState("now_showing");
   const [showAddMovie, setShowAddMovie] = useState(false);
   const [showEditMovie, setShowEditMovie] = useState(false);
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [showAllMovies, setShowAllMovies] = useState(false);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
 
-  // Lấy danh sách phim khi tab thay đổi
   useEffect(() => {
     const fetchMovies = async () => {
       try {
@@ -33,12 +38,10 @@ const MoviePage = ({ isVertical = false, excludeId = null}) => {
         }
 
         if (activeTab === "now_showing") {
-          // Sắp xếp phim đang chiếu: ngày chiếu mới nhất lên đầu
           sortedData.sort(
             (a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)
           );
         } else if (activeTab === "coming_soon") {
-          // Sắp chiếu: phim có ngày chiếu xa nhất lên đầu
           sortedData.sort(
             (a, b) => new Date(a.releaseDate) - new Date(b.releaseDate)
           );
@@ -61,12 +64,13 @@ const MoviePage = ({ isVertical = false, excludeId = null}) => {
   };
 
   const handleEditMovieClick = (movie) => {
-    setSelectedMovie(movie); // Lưu phim đã chọn vào state
-    toggleEditMovie(); // Mở form chỉnh sửa
+    setSelectedMovie(movie);
+    toggleEditMovie();
   };
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
+    setShowAllMovies(false); // reset khi đổi tab
   };
 
   const handleMovieClick = (movieId) => {
@@ -76,14 +80,15 @@ const MoviePage = ({ isVertical = false, excludeId = null}) => {
   const handleDeleteMovie = async (movieId) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa phim này không?")) {
       try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/movies/${movieId}`, {
-          method: "DELETE",
-        });
+        const res = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/movies/${movieId}`,
+          {
+            method: "DELETE",
+          }
+        );
 
         if (res.ok) {
-          // Xóa thành công: cập nhật lại danh sách phim
           setMovies((prev) => prev.filter((movie) => movie._id !== movieId));
-          console.log("Xóa thành công");
         } else {
           const err = await res.json();
           console.error("Lỗi khi xóa:", err.message || err);
@@ -95,6 +100,12 @@ const MoviePage = ({ isVertical = false, excludeId = null}) => {
       }
     }
   };
+
+  const displayedMovies = isVertical
+    ? movies.slice(0, 3)
+    : isHomePage && !showAllMovies
+    ? movies.slice(0, 8)
+    : movies;
 
   return (
     <div className={`movie-page ${isVertical ? "vertical" : ""}`}>
@@ -113,7 +124,7 @@ const MoviePage = ({ isVertical = false, excludeId = null}) => {
             Sắp chiếu
           </button>
         </div>
-        {user && user.role === "admin" && !isVertical && (
+        {isAdmin && !isVertical && (
           <button onClick={toggleAddMovie} className="add-movie-button">
             Thêm phim
           </button>
@@ -121,7 +132,7 @@ const MoviePage = ({ isVertical = false, excludeId = null}) => {
       </div>
 
       <div className={`movies-grid ${isVertical ? "vertical" : ""}`}>
-        {movies.map((movie) => (
+        {displayedMovies.map((movie) => (
           <div
             key={movie._id}
             className="movie-card"
@@ -140,10 +151,10 @@ const MoviePage = ({ isVertical = false, excludeId = null}) => {
 
             <h3 className="movie-title">{movie.title}</h3>
 
-            {user && user.role === "admin" && (
+            {isAdmin && (
               <div
                 className="admin-controls"
-                onClick={(e) => e.stopPropagation()} // ngăn click vào card
+                onClick={(e) => e.stopPropagation()}
               >
                 <button
                   className="movie-edit-button"
@@ -162,6 +173,18 @@ const MoviePage = ({ isVertical = false, excludeId = null}) => {
           </div>
         ))}
       </div>
+
+      {/* Nút "Xem thêm" nếu là trang chủ và chưa hiển thị hết */}
+      {isHomePage && movies.length > 8 && !showAllMovies && (
+        <div className="see-more-container">
+          <button
+            className="see-more-button"
+            onClick={() => setShowAllMovies(true)}
+          >
+            Xem thêm
+          </button>
+        </div>
+      )}
 
       {showAddMovie && <AddMovieComponent onClose={toggleAddMovie} />}
       {showEditMovie && (

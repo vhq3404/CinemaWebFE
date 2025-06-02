@@ -4,16 +4,20 @@ import MoviePage from "../components/MoviePage/MoviePage";
 import TheaterPage from "../pages/TheaterPage/TheaterPage";
 import AdminTheaterManagement from "../components/AdminTheaterManagement/AdminTheaterManagement";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
-import SchedulePage from "../pages/SchedulePage/SchedulePage";
 import BookingPage from "../pages/BookingPage/BookingPage";
 import PaymentSuccessPage from "../pages/PaymentSuccessPage/PaymentSuccessPage";
 import ProductDisplay from "../pages/testpage/test";
-import AdminVoucherManagement from "../pages/AdminVoucherManagement/AdminVoucherManagement";
+import AdminDashboard from "../pages/AdminDashboard/AdminDashboard";
 
 export const routes = [
   {
     path: "/test",
     page: ProductDisplay,
+    isShowHeader: true,
+  },
+  {
+    path: "/admin/dashboard",
+    page: AdminDashboard,
     isShowHeader: true,
   },
   {
@@ -45,17 +49,6 @@ export const routes = [
   {
     path: "/profile/:tab?",
     page: ProfilePage,
-    isShowHeader: true,
-  },
-  {
-    path: "/admin/voucher-management",
-    page: AdminVoucherManagement,
-    isShowHeader: true,
-  },
-
-  {
-    path: "/schedule",
-    page: SchedulePage,
     isShowHeader: true,
   },
 

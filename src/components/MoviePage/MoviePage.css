@@ -1,5 +1,5 @@
 .movie-page {
-  background-color:#ffffff;
+  background-color: #ffffff;
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
@@ -67,7 +67,7 @@
   border-radius: 10px;
   width: 282px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  height: 450px;
+  height: 455px;
   overflow: hidden;
   cursor: pointer;
   font-family: monospace;
@@ -114,7 +114,7 @@
 .movie-delete-button {
   background-color: white;
   color: #d63737;
-  border: 2px solid #d63737; 
+  border: 2px solid #d63737;
   width: 90px;
   height: 50px;
   font-size: 30px;
@@ -141,9 +141,8 @@
   height: 400px;
 }
 
-.movie-image 
-{
-  position: relative; 
+.movie-image {
+  position: relative;
   display: inline-block;
   width: 100%;
   height: 400px;
@@ -155,7 +154,6 @@
   right: 10px;
   z-index: 10;
 }
-
 
 .movie-title {
   font-size: 16px;
@@ -178,4 +176,30 @@
 
 .add-movie-button:hover {
   background-color: #0846a2;
+}
+
+.see-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.see-more-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: 2px solid #0c47be;
+  background-color: #ffffff;
+  font-family: monospace;
+  font-weight: bold;
+  color: #0c47be;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.see-more-button:hover {
+  background-color: #0c47be;
+  border: 2px solid #0c47be;
+  color: #ffffff;
 }

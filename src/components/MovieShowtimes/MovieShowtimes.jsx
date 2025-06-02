@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import DateFilter from "../../components/DateFilter/DateFilter";
 import AuthModal from "../../components/AuthModal/AuthModal";
-
 import "./MovieShowtimes.css";
 
 const MovieShowtimes = ({ movieId }) => {
@@ -27,35 +26,24 @@ const MovieShowtimes = ({ movieId }) => {
 
         if (!response.ok) throw new Error(data.error || "Lỗi dữ liệu");
 
-        // Lọc và gom theo ngày và theo rạp
         const groupedByDate = {};
 
         for (const showtime of data.showtimes) {
-          const date = showtime.date.slice(0, 10); // yyyy-mm-dd
+          const date = showtime.date.slice(0, 10);
           const theaterName = showtime.theater.theaterName;
 
-          if (!groupedByDate[date]) {
-            groupedByDate[date] = {};
-          }
-
-          if (!groupedByDate[date][theaterName]) {
+          if (!groupedByDate[date]) groupedByDate[date] = {};
+          if (!groupedByDate[date][theaterName])
             groupedByDate[date][theaterName] = [];
-          }
 
           groupedByDate[date][theaterName].push(showtime);
         }
 
-        // const dates = Object.keys(groupedByDate).sort(
-        //   (a, b) => new Date(a) - new Date(b)
-        // );
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // reset về 00:00:00
+        today.setHours(0, 0, 0, 0);
 
         const dates = Object.keys(groupedByDate)
-          .filter((dateStr) => {
-            const date = new Date(dateStr);
-            return date >= today;
-          })
+          .filter((dateStr) => new Date(dateStr) >= today)
           .sort((a, b) => new Date(a) - new Date(b));
 
         setAvailableDates(dates);
@@ -106,30 +94,45 @@ const MovieShowtimes = ({ movieId }) => {
                   setSelectedDate={setSelectedDate}
                 />
                 <hr className="schedule-divider" />
-                <div className="showtimes-table">
+                <div className="showtimes-table-structured">
                   {Object.entries(showtimesByTheater[selectedDate] || {}).map(
-                    ([theaterName, times], index) => (
-                      <div key={index} className="theater-row">
-                        <div className="theater-name-col">
-                          <div className="showtime-theater-name">
-                            {theaterName}
-                          </div>
+                    ([theaterName, showtimes], index) => {
+                      const groupedByType = showtimes.reduce(
+                        (acc, showtime) => {
+                          const type = showtime.showtimeType || "Khác";
+                          if (!acc[type]) acc[type] = [];
+                          acc[type].push(showtime);
+                          return acc;
+                        },
+                        {}
+                      );
+
+                      const typeEntries = Object.entries(groupedByType);
+
+                      return (
+                        <div key={index} className="theater-group">
+                          {typeEntries.map(([type, times], i) => (
+                            <div key={`${index}-${i}`} className="showtimes-row">
+                              <div className="theater-name-cell">
+                                {i === 0 ? theaterName : ""}
+                              </div>
+                              <div className="format-type-cell">{type}</div>
+                              <div className="showtime-badges-cell">
+                                {times.map((showtime, idx) => (
+                                  <span
+                                    key={idx}
+                                    className="showtime-badge"
+                                    onClick={() => handleShowtimeClick(showtime)}
+                                  >
+                                    {formatTime(showtime.startTime)}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                        <div className="showtimes-col">
-                          <div className="showtimes">
-                            {times.map((showtime, idx) => (
-                              <span
-                                key={idx}
-                                className="showtime-badge"
-                                onClick={() => handleShowtimeClick(showtime)}
-                              >
-                                {formatTime(showtime.startTime)}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    )
+                      );
+                    }
                   )}
                 </div>
               </>

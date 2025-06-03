@@ -10,36 +10,44 @@ const PaymentSuccessPage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
-  const hasConfirmedRef = useRef(false); 
+  const hasConfirmedRef = useRef(false);
 
   useEffect(() => {
     const confirmPayment = async () => {
       if (hasConfirmedRef.current) return;
-      hasConfirmedRef.current = true; 
+      hasConfirmedRef.current = true;
 
       const bookingId = localStorage.getItem("bookingId");
+      const foodBookingId = localStorage.getItem("foodBookingId");
       const usedPoints = Number(localStorage.getItem("appliedPoints") || 0);
 
       if (!bookingId || !user?.id) return;
 
       try {
-        const response = await fetch( `${process.env.REACT_APP_API_URL}/api/payments/success`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            bookingId,
-            userId: user.id,
-            usedPoints,
-          }),
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/payments/success`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              bookingId,
+              foodBookingId,
+              userId: user.id,
+              usedPoints,
+            }),
+          }
+        );
 
         if (response.ok) {
           localStorage.removeItem("bookingId");
+          localStorage.removeItem("foodBookingId");
           localStorage.removeItem("appliedPoints");
 
-          const userResponse = await fetch( `${process.env.REACT_APP_API_URL}/api/users/${user.id}`);
+          const userResponse = await fetch(
+            `${process.env.REACT_APP_API_URL}/api/users/${user.id}`
+          );
           if (userResponse.ok) {
             const updatedUser = await userResponse.json();
             dispatch(updateUser(updatedUser));
@@ -67,7 +75,10 @@ const PaymentSuccessPage = () => {
         <button className="back-home-button" onClick={() => navigate("/")}>
           Về trang chủ
         </button>
-        <button className="view-ticket-button" onClick={() => navigate("/profile/ticket")}>
+        <button
+          className="view-ticket-button"
+          onClick={() => navigate("/profile/ticket")}
+        >
           Xem thông tin vé
         </button>
       </div>

@@ -10,11 +10,11 @@ function FoodList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [editingFood, setEditingFood] = useState(null); // 👈 Thêm state để sửa
+  const [editingFood, setEditingFood] = useState(null);
 
   const fetchFoods = () => {
     setLoading(true);
-    fetch("http://localhost:5007/api/foods")
+    fetch(`${process.env.REACT_APP_API_URL}/api/foods`)
       .then((res) => {
         if (!res.ok) throw new Error("Lỗi khi lấy danh sách món ăn");
         return res.json();
@@ -36,9 +36,12 @@ function FoodList() {
   const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc muốn xóa món ăn này?")) return;
     try {
-      const res = await fetch(`http://localhost:5007/api/foods/${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/foods/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (!res.ok) throw new Error("Xóa món ăn thất bại");
       fetchFoods();
     } catch (err) {
@@ -81,7 +84,7 @@ function FoodList() {
             <div className="food-card" key={food._id}>
               {food.imageUrl && (
                 <img
-                  src={`http://localhost:5007/foods/${food.imageUrl}`}
+                  src={`${process.env.REACT_APP_API_URL}/foods/${food.imageUrl}`}
                   alt={food.name}
                   className="food-img"
                 />
@@ -97,7 +100,10 @@ function FoodList() {
                 {food.isAvailable ? "Còn hàng" : "Hết hàng"}
               </p>
               <div className="food-action-buttons">
-                <button className="food-btn-edit" onClick={() => handleEdit(food)}>
+                <button
+                  className="food-btn-edit"
+                  onClick={() => handleEdit(food)}
+                >
                   Sửa
                 </button>
                 <button

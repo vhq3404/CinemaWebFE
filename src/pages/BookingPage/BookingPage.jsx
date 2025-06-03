@@ -28,9 +28,9 @@ const BookingPage = () => {
   const { showtime } = location.state || {};
 
   const [bookingId, setBookingId] = useState(null);
+  const [foodBookingId, setFoodBookingId] = useState(null);
   const user = useSelector((state) => state.user);
   const socketRef = useRef(null);
-
   useEffect(() => {
     const total = selectedFoods.reduce(
       (sum, food) => sum + food.price * (food.quantity || 1),
@@ -48,7 +48,8 @@ const BookingPage = () => {
     const paymentCode = `PMT-${bookingId}-${Date.now()}`;
 
     try {
-      const updateRes = await fetch(
+      // Cập nhật tổng giá booking vé
+      const updateBookingRes = await fetch(
         `${process.env.REACT_APP_API_URL}/api/bookings/${bookingId}/total_price`,
         {
           method: "PUT",
@@ -57,10 +58,26 @@ const BookingPage = () => {
         }
       );
 
-      if (!updateRes.ok) {
+      if (!updateBookingRes.ok) {
         throw new Error("Không thể cập nhật giá booking");
       }
 
+      if (foodBookingId) {
+        const updateFoodRes = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/food-bookings/${foodBookingId}/total_price`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ total_price: totalPrice }),
+          }
+        );
+
+        if (!updateFoodRes.ok) {
+          throw new Error("Không thể cập nhật giá food booking");
+        }
+      }
+
+      // Tạo link thanh toán PayOS
       const response = await fetch(
         `${process.env.REACT_APP_QR_URL}/api/payments/payos`,
         {
@@ -106,6 +123,39 @@ const BookingPage = () => {
       alert("Không thể hủy booking. Vui lòng thử lại.");
     }
   }, [bookingId, navigate]);
+
+  const handleCancelFood = useCallback(async () => {
+    if (!foodBookingId) {
+      alert("Không có đơn food booking để hủy");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/food-bookings/${foodBookingId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Không thể hủy food booking");
+      }
+
+      setFoodBookingId(null);
+      setAppliedPoints(0);
+      setActualAppliedPoints(0);
+      localStorage.removeItem("foodBookingId");
+      localStorage.removeItem("appliedPoints");
+      setCurrentStep(2);
+      //setSelectedFoods([]);
+    } catch (error) {
+      console.error("Lỗi khi hủy food booking:", error);
+      alert("Hủy đơn bắp nước thất bại. Vui lòng thử lại.");
+    }
+  }, [foodBookingId]);
+
+  //const handleBackToFoodSelection = async () => {};
 
   useEffect(() => {
     if (countdown <= 0) return;
@@ -193,6 +243,44 @@ const BookingPage = () => {
     setAppliedPoints(points);
   };
 
+  const createFoodBooking = async () => {
+    if (!bookingId || selectedFoods.length === 0) return;
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/food-bookings`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: user.id,
+            items: selectedFoods.map((food) => ({
+              food_id: food._id,
+              food_name: food.name,
+              quantity: food.quantity,
+              unit_price: food.price,
+            })),
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Tạo food booking thất bại");
+      }
+
+      const result = await response.json();
+      setFoodBookingId(result.food_booking_id);
+
+      // Lưu vào localStorage
+      localStorage.setItem("foodBookingId", result.food_booking_id);
+    } catch (error) {
+      console.error("Lỗi khi tạo food booking:", error);
+      alert("Không thể thêm bắp nước vào đơn hàng.");
+    }
+  };
+
   const StepBar = ({ currentStep }) => {
     const steps = [
       "Chọn ghế",
@@ -268,13 +356,6 @@ const BookingPage = () => {
     } catch (error) {
       alert("Đã xảy ra lỗi khi đặt vé: " + error.message);
     }
-  };
-
-  const handleBackToFoodSelection = async () => {
-    setAppliedPoints(0);
-    setActualAppliedPoints(0);
-    localStorage.removeItem("appliedPoints");
-    setCurrentStep(2);
   };
 
   const handleBackToSeatSelection = async () => {
@@ -391,7 +472,10 @@ const BookingPage = () => {
               <button
                 className="booking-confirm-button"
                 style={{ width: "48%" }}
-                onClick={() => setCurrentStep(3)}
+                onClick={async () => {
+                  await createFoodBooking();
+                  setCurrentStep(3);
+                }}
               >
                 Tiếp tục
               </button>
@@ -406,7 +490,7 @@ const BookingPage = () => {
               <button
                 className="booking-confirm-button"
                 style={{ backgroundColor: "#ccc", color: "#333", width: "48%" }}
-                onClick={handleBackToFoodSelection}
+                onClick={handleCancelFood}
               >
                 Quay lại
               </button>

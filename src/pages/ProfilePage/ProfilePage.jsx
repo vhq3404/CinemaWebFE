@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./ProfilePage.css";
 import { useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
@@ -34,37 +34,7 @@ const ProfilePage = () => {
             <UserTickets userId={user.id} />
           </div>
         );
-      case "vouchers":
-        return (
-          <div className="profile-tab-content">
-            <h2>Voucher Của Tôi</h2>
-            <ul>
-              <li>Mã: DISCOUNT10 - Giảm giá 10% - Hạn: 31/12/2025</li>
-              <li>Mã: FREESHIP - Miễn phí vận chuyển - Hạn: 30/11/2025</li>
-            </ul>
-          </div>
-        );
-      case "settings":
-        return (
-          <div className="profile-tab-content">
-            <h2>Cài Đặt</h2>
-            <form>
-              <label>
-                Mật khẩu cũ:
-                <input type="password" />
-              </label>
-              <label>
-                Mật khẩu mới:
-                <input type="password" />
-              </label>
-              <label>
-                Xác nhận mật khẩu mới:
-                <input type="password" />
-              </label>
-              <button type="submit">Đổi mật khẩu</button>
-            </form>
-          </div>
-        );
+
       default:
         return <p>Không tìm thấy nội dung phù hợp.</p>;
     }
@@ -89,22 +59,6 @@ const ProfilePage = () => {
           onClick={() => handleTabClick("ticket")}
         >
           Lịch Sử Giao Dịch
-        </button>
-        <button
-          className={`profile-tab-button ${
-            activeTab === "vouchers" ? "active" : ""
-          }`}
-          onClick={() => handleTabClick("vouchers")}
-        >
-          Voucher Của Tôi
-        </button>
-        <button
-          className={`profile-tab-button ${
-            activeTab === "settings" ? "active" : ""
-          }`}
-          onClick={() => handleTabClick("settings")}
-        >
-          Cài Đặt
         </button>
       </div>
       <div className="profile-tab-content-container">{renderTabContent()}</div>

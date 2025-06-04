@@ -1,0 +1,158 @@
+.revenue-container {
+  padding: 1rem;
+  width: 90%;
+  margin: 0 auto;
+  font-family: monospace;
+  color: #333;
+}
+
+.revenue-container h2 {
+  margin-bottom: 30px;
+  font-weight: bold;
+  font-size: 24px;
+  text-align: left;
+}
+
+.revenue-cards {
+  display: flex;
+  gap: 30px;
+  margin: 30px 0;
+  justify-content: center;
+}
+
+.revenue-card {
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+  border-radius: 10px;
+  padding: 20px 30px;
+  flex: 1 1 0;
+  justify-content: center;
+  text-align: center;
+  min-width: 180px;
+}
+
+.total-revenue-card {
+  background-color: #f0f8ff;
+  color: #007bff;
+}
+
+.movie-revenue-card {
+  background-color: #e6f7ff;
+  color: #0056b3;
+}
+
+.food-revenue-card {
+  background-color: #fff4e5;
+  color: #d2691e;
+}
+
+.revenue-card h4 {
+  margin-bottom: 0px;
+  font-size: 20px;
+}
+
+.revenue-card p {
+  font-size: 20px;
+  font-weight: bold;
+
+}
+
+.revenue-controls {
+  margin-bottom: 1rem;
+}
+
+.revenue-label {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.revenue-select {
+  font-family: monospace;
+  margin-left: 10px;
+  padding: 6px 12px;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.revenue-select:hover,
+.revenue-select:focus {
+  border-color: #3182ce;
+  outline: none;
+}
+
+.revenue-date-controls {
+  margin-bottom: 20px;
+}
+
+.revenue-date-label {
+  font-size: 18px;
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+.revenue-date-input {
+  margin-left: 10px;
+  padding: 6px 12px;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.revenue-date-input:hover,
+.revenue-date-input:focus {
+  border-color: #3182ce;
+  outline: none;
+}
+
+.revenue-date-label + .revenue-date-label {
+  margin-left: 1rem;
+}
+
+.revenue-total {
+  font-size: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.revenue-total span {
+  color: green;
+  font-weight: 700;
+}
+
+.revenue-subtitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 2rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.revenue-chart-wrapper {
+  width: 100%;
+  height: 400px;
+  margin-top: 0.5rem;
+}
+
+.revenue-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.revenue-table th,
+.revenue-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.revenue-table th {
+  background-color: #3182ce;
+  color: white;
+}
+
+.revenue-table tbody tr:hover {
+  background-color: #ebf8ff;
+}

@@ -326,6 +326,7 @@ const BookingPage = () => {
       user_id: user.id,
       showtime_id: showtime._id,
       room_id: showtime.room.roomId,
+      movie_id: showtime.movie.movieId,
       seat_ids: selectedSeats.map((seat) => seat.id),
       total_price: totalPrice,
       status: "PENDING",

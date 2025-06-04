@@ -37,12 +37,12 @@ const UserTickets = ({ userId }) => {
               let movie = null;
               try {
                 const movieRes = await axios.get(
-                  `${process.env.REACT_APP_API_URL}/api/movies/${showtime.movie.movieId}`
+                  `${process.env.REACT_APP_API_URL}/api/movies/${booking.movie_id}`
                 );
                 movie = movieRes.data;
               } catch (err) {
                 console.warn(
-                  `Không lấy được phim ${showtime.movie.movieId}`,
+                  `Không lấy được phim ${booking.movie_id}`,
                   err
                 );
               }

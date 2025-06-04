@@ -39,8 +39,8 @@ function AddFood({ onClose, onFoodAdded, editingFood }) {
     if (image) form.append("image", image);
 
     const url = editingFood
-      ? `http://localhost:5007/api/foods/${editingFood._id}`
-      : "http://localhost:5007/api/foods";
+      ?  `${process.env.REACT_APP_API_URL}/api/foods/${editingFood._id}`
+      :  `${process.env.REACT_APP_API_URL}/api/foods`;
 
     const method = editingFood ? "PUT" : "POST";
 

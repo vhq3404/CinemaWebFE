@@ -91,7 +91,7 @@ function FoodList() {
               )}
               <h4>{food.name}</h4>
               <p>{food.description}</p>
-              <p className="food-price">{formatCurrency(food.price)}</p>
+              <p className="food-list-price">{formatCurrency(food.price)}</p>
               <p
                 className={`status ${
                   food.isAvailable ? "available" : "unavailable"

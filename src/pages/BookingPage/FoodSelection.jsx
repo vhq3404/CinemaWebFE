@@ -5,7 +5,7 @@ const FoodSelection = ({ selectedFoods = [], onChange }) => {
   const [foods, setFoods] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5007/api/foods")
+    fetch(`${process.env.REACT_APP_API_URL}/api/foods`)
       .then((res) => {
         if (!res.ok) throw new Error("Lỗi khi lấy danh sách món ăn");
         return res.json();
@@ -62,7 +62,7 @@ const FoodSelection = ({ selectedFoods = [], onChange }) => {
                 <div className="food-item">
                   {food.imageUrl && (
                     <img
-                      src={`http://localhost:5007/foods/${food.imageUrl}`}
+                      src={`${process.env.REACT_APP_API_URL}/foods/${food.imageUrl}`}
                       alt={food.name}
                       className="food-selection-img"
                     />

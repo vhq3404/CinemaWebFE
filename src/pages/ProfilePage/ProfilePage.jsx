@@ -3,9 +3,11 @@ import "./ProfilePage.css";
 import { useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import UserTickets from "./UserTickets/UserTickets";
+import UserProfile from "./UserProfile/UserProfile";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.user);
+  const token = localStorage.getItem("token");
   const { tab } = useParams(); // Lấy tab từ URL
   const navigate = useNavigate();
   const activeTab = tab || "profile";
@@ -23,20 +25,7 @@ const ProfilePage = () => {
       case "profile":
         return (
           <div className="profile-tab-content">
-            <h2>Thông Tin Tài Khoản</h2>
-            <p>
-              <strong>Tên:</strong> {user.name}
-            </p>
-            <p>
-              <strong>Email:</strong> {user.email}
-            </p>
-            <p>
-              <strong>Số điện thoại:</strong> {user.phone || "Chưa cập nhật"}
-            </p>
-            <p>
-              <strong>Vai trò:</strong>{" "}
-              {user.role === "admin" ? "Quản trị viên" : "Khách hàng"}
-            </p>
+            <UserProfile userId={user.id} token={token} />
           </div>
         );
       case "ticket":

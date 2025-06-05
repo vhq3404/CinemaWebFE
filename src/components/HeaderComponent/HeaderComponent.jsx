@@ -50,6 +50,11 @@ const HeaderComponent = () => {
                 <a href="/admin/dashboard">Quản lý</a>
               </>
             )}
+            {user && user.role === "employee" && (
+              <>
+                <a href="/employee/dashboard">Quản lý</a>
+              </>
+            )}
           </nav>
         </div>
         <div className="header-right">
@@ -59,7 +64,7 @@ const HeaderComponent = () => {
                 <div className="nav-user-dropdown">
                   <div className="nav-user-info">
                     <span className="nav-user">Xin chào, {user.name}</span>
-                    {user.role !== "admin" && (
+                    {user.role === "user" && (
                       <div className="user-points">
                         Điểm tích lũy: {user.points || 0}
                       </div>
@@ -75,15 +80,6 @@ const HeaderComponent = () => {
                       <BsPersonBadge />
                       Tài khoản
                     </Link>
-
-                    {user.role === "admin" && (
-                      <Link
-                        to="/admin/voucher-management"
-                        className="dropdown-item"
-                      >
-                        Quản lý Voucher
-                      </Link>
-                    )}
 
                     <button
                       onClick={handleLogout}

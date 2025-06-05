@@ -1,0 +1,72 @@
+.booking-management {
+  padding: 20px;
+}
+
+.booking-tabs {
+  margin-bottom: 15px;
+}
+
+.booking-tab-button {
+  margin-right: 10px;
+  padding: 6px 12px;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.booking-details-btn {
+  font-family: monospace;
+  padding: 6px 12px;
+  font-weight: bold;
+  color: #0c47be;
+  border: 1px solid #0c47be;
+  background: #ffffff;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.booking-details-btn:hover {
+  color: #ffffff;
+  border: 1px solid #0c47be;
+  background: #0c47be;
+}
+
+.booking-tab-button.active {
+  background: #007bff;
+  color: white;
+}
+
+.booking-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.booking-table th,
+.booking-table td {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+}
+
+.booking-management-pagination {
+  font-family: monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.booking-management-pagination button {
+  padding: 6px 12px;
+  background-color: #0c47be;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.booking-management-pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

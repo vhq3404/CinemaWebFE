@@ -1,0 +1,160 @@
+.cancel-booking-container {
+  margin-left: 10px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  width: 45%;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  height: 89vh;
+  overflow-y: auto;
+}
+
+.cancel-booking-container h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.cancel-booking-container p {
+  margin: 8px 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.cancel-booking-error {
+  color: #d32f2f;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.cancel-booking-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cancel-booking-buttons button {
+  padding: 8px 16px;
+  font-family: monospace;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.cancel-booking-buttons button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cancel-booking-buttons button:first-child {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.cancel-booking-buttons button:first-child:hover:not(:disabled) {
+  background-color: #dcdcdc;
+}
+
+.cancel-booking-buttons button:last-child {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.cancel-booking-buttons button:last-child:hover:not(:disabled) {
+  background-color: #b71c1c;
+}
+.cancel-booking-policy {
+  background-color: #f9f9f9;
+  border-left: 4px solid #d32f2f;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 16px;
+  color: #333;
+}
+
+.cancel-booking-policy h4 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #d32f2f;
+}
+
+.cancel-booking-policy ul {
+  margin: 0;
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+.refund-tabs {
+  font-family: monospace;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.refund-tabs button {
+  font-family: monospace;
+  flex: 1;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 8px 12px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  cursor: pointer;
+  border-radius: 4px 4px 0 0;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.refund-tabs button.active {
+  background-color: white;
+  border-bottom: 1px solid white;
+  font-weight: 700;
+}
+
+.refund-tab-content {
+  font-family: monospace;
+  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 0 4px 4px 4px;
+  background-color: white;
+}
+
+.refund-tab-content label {
+  font-size: 18px;
+  font-family: monospace;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.refund-tab-content input {
+  font-size: 16px;
+  font-family: monospace;
+  width: 95%;
+  padding: 6px 8px;
+  margin-top: 4px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+}
+
+.refund-tab-content select {
+  font-size: 16px;
+  font-family: monospace;
+  width: 90%;
+  padding: 6px 8px;
+  margin-top: 4px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+}
+
+.cancel-policy-agree {
+  margin-top: 12px;
+  margin-bottom: 16px;
+  font-size: 16px;
+  color: #000000;
+}

@@ -6,7 +6,8 @@ import { MdLocalMovies } from "react-icons/md";
 import { GiTheater } from "react-icons/gi";
 import { GrSchedulePlay } from "react-icons/gr";
 import { FaUtensils } from "react-icons/fa";
-import { MdOutlineBarChart, MdOutlinePeopleAlt } from "react-icons/md";
+import { MdOutlinePeopleAlt } from "react-icons/md";
+import { FaChartLine } from "react-icons/fa6";
 import RevenueReportPage from "./RevenueReportPage/RevenueReportPage";
 import MoviePage from "../../components/MoviePage/MoviePage";
 import TheaterPage from "../TheaterPage/TheaterPage";
@@ -58,7 +59,7 @@ const AdminDashboard = () => {
             }`}
             onClick={() => setSelectedTab("revenue")}
           >
-            <MdOutlineBarChart /> Revenue
+            <FaChartLine /> Revenue
           </li>
           <li
             className={`sidebar-item ${

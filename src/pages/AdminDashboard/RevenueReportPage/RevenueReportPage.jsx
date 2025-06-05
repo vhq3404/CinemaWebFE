@@ -349,7 +349,7 @@ const RevenueReportPage = () => {
               chartData.some((d) => d[movie.title]) ? (
                 <Line
                   key={movie._id}
-                  type="monotone"
+                  type="linear"
                   dataKey={movie.title}
                   stroke={`#${Math.floor(Math.random() * 16777215).toString(
                     16
@@ -359,33 +359,6 @@ const RevenueReportPage = () => {
                 />
               ) : null
             )}
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-
-      <h4 className="revenue-subtitle">
-        Biểu đồ doanh thu đồ ăn theo từng món
-      </h4>
-      <div className="revenue-chart-wrapper">
-        <ResponsiveContainer>
-          <LineChart data={foodChartDataByItem}>
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {foodChartDataByItem.length > 0 &&
-              Object.keys(foodChartDataByItem[0])
-                .filter((key) => key !== "date")
-                .map((foodName, index) => (
-                  <Line
-                    key={foodName}
-                    type="monotone"
-                    dataKey={foodName}
-                    stroke={`hsl(${(index * 60) % 360}, 70%, 50%)`}
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                ))}
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -414,6 +387,34 @@ const RevenueReportPage = () => {
             ))}
         </tbody>
       </table>
+
+      <h4 className="revenue-subtitle">
+        Biểu đồ doanh thu đồ ăn theo từng món
+      </h4>
+      <div className="revenue-chart-wrapper">
+        <ResponsiveContainer>
+          <LineChart data={foodChartDataByItem}>
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            {foodChartDataByItem.length > 0 &&
+              Object.keys(foodChartDataByItem[0])
+                .filter((key) => key !== "date")
+                .map((foodName, index) => (
+                  <Line
+                    key={foodName}
+                    type="linear"
+                    dataKey={foodName}
+                    stroke={`hsl(${(index * 60) % 360}, 70%, 50%)`}
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                ))}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
       <h4 className="revenue-subtitle">Doanh thu theo từng món ăn</h4>
       <table className="revenue-table">
         <thead>

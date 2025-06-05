@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import MovieAgeBadge from "../MovieAgeBadge/MovieAgeBadge";
+import MovieAgeBadge from "../../../components/MovieAgeBadge/MovieAgeBadge";
 import { QRCodeSVG } from "qrcode.react";
-import CancelBooking from "./CancelBooking"; // import component CancelBooking
 import "./TicketDetails.css";
 
 const TicketDetails = ({ booking, onClose }) => {
   const [seatDetails, setSeatDetails] = useState([]);
-  const [showCancelBooking, setShowCancelBooking] = useState(false);
   const [refundInfo, setRefundInfo] = useState(null);
+  const [movieDetail, setMovieDetail] = useState(null); // Thêm state lưu movie chi tiết
 
   useEffect(() => {
+    // Lấy thông tin hoàn tiền nếu có
     const fetchRefundInfo = async () => {
       if (
         booking?.status !== "REFUND_REQUESTED" &&
@@ -32,23 +32,62 @@ const TicketDetails = ({ booking, onClose }) => {
   }, [booking]);
 
   useEffect(() => {
+    // Lấy thông tin ghế
     const fetchSeatDetails = async () => {
-      if (!booking?.seat_ids || booking.seat_ids.length === 0) return;
+      if (booking?.seat_ids && booking.seat_ids.length > 0) {
+        try {
+          const promises = booking.seat_ids.map((id) =>
+            axios.get(`${process.env.REACT_APP_API_URL}/api/seats/${id}`)
+          );
+          const responses = await Promise.all(promises);
+          const seats = responses.map((res) => res.data);
+          setSeatDetails(seats);
+        } catch (err) {
+          console.error("Lỗi khi lấy thông tin ghế:", err);
+        }
+      } else {
+        try {
+          const res = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/bookings/user/${booking.user_id}`
+          );
+          const allBookings = res.data;
 
-      try {
-        const promises = booking.seat_ids.map((id) =>
-          axios.get(`${process.env.REACT_APP_API_URL}/api/seats/${id}`)
-        );
-        const responses = await Promise.all(promises);
-        const seats = responses.map((res) => res.data);
-        setSeatDetails(seats);
-      } catch (err) {
-        console.error("Lỗi khi lấy thông tin ghế:", err);
+          const matched = allBookings.find((b) => b.id === booking.id);
+          if (matched && matched.seat_ids?.length > 0) {
+            const seatPromises = matched.seat_ids.map((id) =>
+              axios.get(`${process.env.REACT_APP_API_URL}/api/seats/${id}`)
+            );
+            const seatResponses = await Promise.all(seatPromises);
+            const seats = seatResponses.map((res) => res.data);
+            setSeatDetails(seats);
+          }
+        } catch (err) {
+          console.error("Lỗi khi lấy danh sách booking của user:", err);
+        }
       }
     };
 
     fetchSeatDetails();
   }, [booking]);
+
+  // --- THÊM useEffect lấy movie detail ---
+  useEffect(() => {
+    const fetchMovieDetail = async () => {
+      if (!booking?.movie_id) return;
+
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/movies/${booking.movie_id}`
+        );
+        setMovieDetail(res.data);
+      } catch (err) {
+        console.error("Lỗi khi lấy thông tin phim:", err);
+      }
+    };
+
+    fetchMovieDetail();
+  }, [booking?.movie_id]);
+  // --- Kết thúc ---
 
   if (!booking) return null;
 
@@ -72,21 +111,19 @@ const TicketDetails = ({ booking, onClose }) => {
 
   const qrData = String(booking.id);
 
-  const handleCancelRefundRequest = async () => {
-    const confirmCancel = window.confirm(
-      "Bạn có chắc muốn hủy yêu cầu hoàn tiền?"
-    );
-    if (!confirmCancel) return;
-
+  const handleConfirmRefund = async () => {
     try {
-      await axios.delete(
-        `${process.env.REACT_APP_API_URL}/api/bookings/${booking.id}/refund-cancel`
+      await axios.put(
+        `${process.env.REACT_APP_API_URL}/api/bookings/${booking.id}/status`,
+        { status: "CANCELLED" }
       );
-      alert("Đã hủy yêu cầu hoàn tiền.");
+
+      alert("Đã xác nhận hoàn tiền và hủy vé.");
       window.location.reload();
+      onClose();
     } catch (err) {
-      console.error("Lỗi khi hủy yêu cầu hoàn tiền:", err);
-      alert("Không thể hủy yêu cầu hoàn tiền. Vui lòng thử lại.");
+      console.error("Lỗi khi xác nhận hoàn tiền:", err);
+      alert("Xác nhận hoàn tiền thất bại. Vui lòng thử lại.");
     }
   };
 
@@ -95,7 +132,7 @@ const TicketDetails = ({ booking, onClose }) => {
       <div
         className="ticket-modal-content"
         onClick={(e) => e.stopPropagation()}
-        style={{ display: "flex", gap: "20px" }} // cho 2 component bên cạnh
+        style={{ display: "flex", gap: "20px" }}
       >
         <div style={{ flex: 1 }}>
           <button className="close-button" onClick={onClose}>
@@ -105,16 +142,20 @@ const TicketDetails = ({ booking, onClose }) => {
           <div className="ticket-modal-body">
             {/* Poster bên trái */}
             <img
-              src={`${process.env.REACT_APP_API_URL}/movies/${booking.movie?.poster}`}
+              src={
+                movieDetail
+                  ? `${process.env.REACT_APP_API_URL}/movies/${movieDetail.poster}`
+                  : ""
+              }
               alt="Poster"
               className="modal-movie-poster"
             />
 
             {/* Thông tin bên phải */}
             <div className="ticket-info">
-              <h3>{booking.movie?.title}</h3>
+              <h3>{movieDetail ? movieDetail.title : "Đang tải..."}</h3>
               <div className="ticket-movie-age-badge-wrapper">
-                <MovieAgeBadge age={booking.movie?.age} />
+                <MovieAgeBadge age={movieDetail?.age} />
               </div>
               <p>
                 <strong>Suất chiếu:</strong>{" "}
@@ -181,6 +222,7 @@ const TicketDetails = ({ booking, onClose }) => {
                 )}
               </div>
             )}
+
           <div className="ticket-divider"></div>
           <div className="qr-code-container">
             <QRCodeSVG value={qrData} level="L" size={200} />
@@ -215,35 +257,18 @@ const TicketDetails = ({ booking, onClose }) => {
                   .replace("₫", "")}
                 <u>đ</u>
               </p>
-              {booking.status === "REFUND_REQUESTED" ? (
+              {booking.status === "REFUND_REQUESTED" && refundInfo && (
                 <button
-                  className="ticket-cancel-button"
-                  onClick={handleCancelRefundRequest}
+                  className="refund-confirm-button"
+                  onClick={handleConfirmRefund}
                 >
-                  Hủy yêu cầu
-                </button>
-              ) : booking.status === "CANCELLED" ? null : (
-                <button
-                  className="ticket-cancel-button"
-                  onClick={() => setShowCancelBooking(true)}
-                >
-                  Hủy vé
+                  Xác nhận hoàn tiền
                 </button>
               )}
             </div>
           </div>
         </div>
       </div>
-      {showCancelBooking && (
-        <CancelBooking
-          booking={booking}
-          onClose={() => setShowCancelBooking(false)}
-          onCancelSuccess={() => {
-            setShowCancelBooking(false);
-            onClose(); // nếu muốn đóng luôn TicketDetails sau hủy
-          }}
-        />
-      )}
     </div>
   );
 };

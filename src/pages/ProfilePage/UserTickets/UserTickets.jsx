@@ -41,10 +41,7 @@ const UserTickets = ({ userId }) => {
                 );
                 movie = movieRes.data;
               } catch (err) {
-                console.warn(
-                  `Không lấy được phim ${booking.movie_id}`,
-                  err
-                );
+                console.warn(`Không lấy được phim ${booking.movie_id}`, err);
               }
 
               return { ...booking, showtime, movie };
@@ -58,7 +55,11 @@ const UserTickets = ({ userId }) => {
           })
         );
 
-        const sorted = bookingsWithDetails.sort((a, b) => {
+        const filteredBookings = bookingsWithDetails.filter(
+          (booking) => booking.status !== "PENDING"
+        );
+
+        const sorted = filteredBookings.sort((a, b) => {
           const dateA = new Date(a.createdAt || a.showtime?.startTime || 0);
           const dateB = new Date(b.createdAt || b.showtime?.startTime || 0);
           return dateB - dateA;
@@ -204,6 +205,28 @@ const UserTickets = ({ userId }) => {
                               <div className="showtime-info">
                                 {formatShowtime(booking.showtime.startTime)}
                               </div>
+                              {booking.status === "REFUND_REQUESTED" && (
+                                <div
+                                  style={{
+                                    marginTop: 6,
+                                    color: "#ff6600",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  Đang xử lý hoàn tiền
+                                </div>
+                              )}
+                              {booking.status === "CANCELLED" && (
+                                <div
+                                  style={{
+                                    marginTop: 6,
+                                    color: "red",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  Đã hủy vé
+                                </div>
+                              )}
                             </div>
                             <button
                               className="booking-details-button"

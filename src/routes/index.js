@@ -6,18 +6,18 @@ import AdminTheaterManagement from "../components/AdminTheaterManagement/AdminTh
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import BookingPage from "../pages/BookingPage/BookingPage";
 import PaymentSuccessPage from "../pages/PaymentSuccessPage/PaymentSuccessPage";
-import ProductDisplay from "../pages/testpage/test";
+import EmployeeDashboard from "../pages/EmployeeDashboard/EmployeeDashboard";
 import AdminDashboard from "../pages/AdminDashboard/AdminDashboard";
 
 export const routes = [
   {
-    path: "/test",
-    page: ProductDisplay,
+    path: "/admin/dashboard",
+    page: AdminDashboard,
     isShowHeader: true,
   },
   {
-    path: "/admin/dashboard",
-    page: AdminDashboard,
+    path: "/employee/dashboard",
+    page: EmployeeDashboard,
     isShowHeader: true,
   },
   {
@@ -57,7 +57,7 @@ export const routes = [
     page: BookingPage,
     isShowHeader: true,
   },
-  
+
   {
     path: "/payment-success",
     page: PaymentSuccessPage,

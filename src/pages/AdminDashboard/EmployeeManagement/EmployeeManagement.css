@@ -1,0 +1,122 @@
+.employee-management {
+  padding: 30px;
+}
+
+.employee-management h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.employee-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.employee-filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.employee-search-input,
+.employee-workplace-filter {
+  font-family: monospace;
+  word-spacing: -2px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.employee-workplace-filter {
+  min-width: 180px;
+  margin-bottom: 16px;
+}
+
+.employee-search-container {
+  flex: 1;
+}
+
+.employee-search-input {
+  padding: 8px 12px;
+  font-size: 14px;
+  width: 300px;
+  margin-bottom: 16px;
+
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.employee-add-button-container {
+  margin: 10px 0;
+}
+
+.employee-add-button {
+  font-family: monospace;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding: 8px 16px;
+  background-color: #06c559;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.employee-add-button:hover {
+  background-color: #039743;
+}
+
+.employee-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.employee-table thead tr {
+  background-color: #f2f2f2;
+}
+
+.employee-table th,
+.employee-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.employee-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.employee-action-button {
+  font-family: monospace;
+  font-weight: bold;
+  padding: 6px 12px;
+  margin-right: 8px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.employee-action-button.edit {
+  background-color: #e79212;
+  color: white;
+}
+
+.employee-action-button.edit:hover {
+  background-color: #db8605;
+}
+
+.employee-action-button.delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.employee-action-button.delete:hover {
+  background-color: #a71d2a;
+}

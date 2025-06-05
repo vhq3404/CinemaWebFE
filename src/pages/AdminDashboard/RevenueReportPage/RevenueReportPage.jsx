@@ -67,7 +67,7 @@ const RevenueReportPage = () => {
 
         // Đảm bảo có tất cả món ăn với giá trị 0 nếu không có doanh thu ngày đó
         allFoodNames.forEach((foodName) => {
-          dataForDay[foodName] = dateMap[dateStr]?.[foodName] || 0;
+          dataForDay[foodName] = dateMap[dateStr]?.[foodName] || null;
         });
 
         return dataForDay;
@@ -226,7 +226,7 @@ const RevenueReportPage = () => {
     const dataForDay = { date: dayStr };
 
     movies.forEach((movie) => {
-      dataForDay[movie.title] = 0;
+      dataForDay[movie.title] = null;
     });
 
     filteredBookings.forEach((booking) => {
@@ -235,7 +235,12 @@ const RevenueReportPage = () => {
         const movieId = booking.movie_id;
         const movie = movies.find((m) => m._id === movieId);
         if (movie) {
-          dataForDay[movie.title] += Number(booking.total_price);
+          // nếu hiện tại là null thì gán, nếu không thì cộng thêm
+          if (dataForDay[movie.title] === null) {
+            dataForDay[movie.title] = Number(booking.total_price);
+          } else {
+            dataForDay[movie.title] += Number(booking.total_price);
+          }
         }
       }
     });
@@ -328,9 +333,7 @@ const RevenueReportPage = () => {
         </div>
         <div className="revenue-card food-revenue-card">
           <h4>Tổng doanh thu đồ ăn</h4>
-          <p style={{ color: "orange" }}>
-            {formatCurrency(totalFoodRevenue)}
-          </p>
+          <p style={{ color: "orange" }}>{formatCurrency(totalFoodRevenue)}</p>
         </div>
       </div>
 

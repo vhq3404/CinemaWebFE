@@ -91,7 +91,7 @@ const AddMovieComponent = ({ onClose }) => {
         description,
         status: status === "now_showing" ? "now_showing" : "coming_soon",
         director,
-        actors: actorList,  
+        actors: actorList,
         genres: genreList,
         nation,
         duration,
@@ -105,10 +105,13 @@ const AddMovieComponent = ({ onClose }) => {
         formData.append("poster", posterFile);
       }
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/movies`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/movies`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const result = await response.json();
 
@@ -320,7 +323,7 @@ const AddMovieComponent = ({ onClose }) => {
                       onClick={() => handleRemoveActor(index)}
                       className="remove-actor-button"
                     >
-                      <FaRegTrashAlt />
+                      X
                     </button>
                   </li>
                 ))}
@@ -355,7 +358,7 @@ const AddMovieComponent = ({ onClose }) => {
                         onClick={() => handleRemoveGenre(index)}
                         className="remove-actor-button"
                       >
-                        <FaRegTrashAlt />
+                        X
                       </button>
                     </li>
                   ))}

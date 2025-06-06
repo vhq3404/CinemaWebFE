@@ -1,10 +1,10 @@
-// File: LoginComponent.jsx
 import React, { useState, useEffect } from "react";
 import "./LoginComponent.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdOutlineEmail, MdLockOutline } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/actions";
+import { toast } from "sonner";
 
 const LoginComponent = ({
   onClose,
@@ -25,7 +25,7 @@ const LoginComponent = ({
   const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [countdown, setCountdown] = useState(0);
-  const [otpSent, setOtpSent] = useState(false); // Để đổi nút
+  const [otpSent, setOtpSent] = useState(false);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -184,13 +184,19 @@ const LoginComponent = ({
       if (!response.ok) {
         setErrorMessage(data.error || "Đặt lại mật khẩu thất bại");
       } else {
-        alert("Mật khẩu đã được cập nhật thành công.");
-        // Reset form
+        toast.success(
+          "Mật khẩu đã được cập nhật thành công! Vui lòng đăng nhập lại"
+        );
         setIsResettingPassword(false);
         setIsForgotPassword(false);
         setOtp("");
         setEmail("");
+        setSuccessMessage("");
+        setErrorMessage("");
+        setPassword("");
         setNewPassword("");
+        setOtpSent(false);
+        setCountdown(0);
         setConfirmPassword("");
       }
     } catch (error) {
@@ -341,7 +347,10 @@ const LoginComponent = ({
                 <button
                   type="button"
                   className="signup-button"
-                  onClick={() => setIsForgotPassword(false)}
+                  onClick={() => {
+                    setIsForgotPassword(false);
+                    setPassword("");
+                  }}
                 >
                   Quay lại đăng nhập
                 </button>

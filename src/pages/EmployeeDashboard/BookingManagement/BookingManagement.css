@@ -70,3 +70,17 @@
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+.booking-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+.booking-filters input,
+.booking-filters select {
+  font-family: monospace;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
+}

@@ -142,6 +142,7 @@ const BookingDetail = ({
                 </span>
               </div>
             )}
+            <div className="movie-booking-showtimeType">{showtime.showtimeType}</div>
           </div>
         </div>
       )}

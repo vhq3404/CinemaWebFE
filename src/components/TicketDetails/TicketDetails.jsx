@@ -91,9 +91,9 @@ const TicketDetails = ({ booking, onClose }) => {
   };
 
   return (
-    <div className="ticket-modal-overlay" onClick={onClose}>
+    <div className="user-ticket-modal-overlay" onClick={onClose}>
       <div
-        className="ticket-modal-content"
+        className="user-ticket-modal-content"
         onClick={(e) => e.stopPropagation()}
         style={{ display: "flex", gap: "20px" }} // cho 2 component bên cạnh
       >
@@ -114,8 +114,9 @@ const TicketDetails = ({ booking, onClose }) => {
             <div className="ticket-info">
               <h3>{booking.movie?.title}</h3>
               <div className="ticket-movie-age-badge-wrapper">
-                <MovieAgeBadge age={booking.movie?.age} />
+                <MovieAgeBadge age={booking.movie?.age} />{" "}
               </div>
+              {booking.showtime.showtimeType}
               <p>
                 <strong>Suất chiếu:</strong>{" "}
                 {formatShowtime(booking.showtime.startTime)}

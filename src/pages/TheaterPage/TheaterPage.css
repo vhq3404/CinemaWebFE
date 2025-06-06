@@ -1,6 +1,6 @@
 .theater-page {
   font-family: monospace;
-  background-color: #f3f3f3;
+  background: white;
   min-height: 100vh;
 }
 
@@ -160,6 +160,9 @@
   color: #555;
 }
 
+.theater-showtimes {
+  padding: 50px;
+}
 /* @media (max-width: 768px) {
     .theaters-grid {
         grid-template-columns: repeat(2, 1fr);

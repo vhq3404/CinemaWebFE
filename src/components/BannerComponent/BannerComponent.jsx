@@ -1,40 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, Pagination } from "swiper/modules";
+import { useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./BannerComponent.css";
-import banner1 from "../../assets/happy T.png";
-import banner2 from "../../assets/u22.png";
-import banner3 from "../../assets/membership.png";
-
-const banners = [
-  {
-    id: 1,
-    image: banner1,
-  },
-  {
-    id: 2,
-    image: banner2,
-  },
-  {
-    id: 3,
-    image: banner3,
-  },
-
-  {
-    id: 4,
-    image: banner2,
-  },
-
-  {
-    id: 5,
-    image: banner1,
-  },
-];
 
 const BannerComponent = () => {
+  const [banners, setBanners] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchPromotions = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/promotions`
+        );
+        const sorted = response.data
+          .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)) // mới nhất lên đầu
+          .slice(0, 6) // lấy 6 cái đầu
+          .map((promo, index) => ({
+            id: promo._id || index,
+            image: `${process.env.REACT_APP_API_URL}/promotions/${promo.image}`,
+          }));
+        setBanners(sorted);
+      } catch (err) {
+        console.error("Lỗi khi tải banner khuyến mãi:", err);
+      }
+    };
+
+    fetchPromotions();
+  }, []);
+
   return (
     <div className="banner-container">
       <Swiper
@@ -58,6 +57,8 @@ const BannerComponent = () => {
               src={banner.image}
               alt={`Banner ${banner.id}`}
               className="banner-img"
+              onClick={() => navigate("/news")}
+              style={{ cursor: "pointer" }}
             />
           </SwiperSlide>
         ))}

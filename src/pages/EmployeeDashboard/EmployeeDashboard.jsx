@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import "./EmployeeDashboard.css";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { MdOutlinePeopleAlt } from "react-icons/md";
+import { MdOutlinePeopleAlt, MdOutlineDiscount } from "react-icons/md";
 import { HiOutlineTicket } from "react-icons/hi2";
 import BookingManagement from "./BookingManagement/BookingManagement";
 import UserManagement from "./UserManagement/UserManagement";
+import NewsPage from "../NewsPage/NewsPage";
 
 const EmployeeDashboard = () => {
   const user = useSelector((state) => state.user);
@@ -22,7 +23,8 @@ const EmployeeDashboard = () => {
 
       case "users":
         return <UserManagement />;
-
+      case "promotions":
+        return <NewsPage isAdminOrEmployee={true} />;
       default:
         return (
           <>
@@ -53,6 +55,14 @@ const EmployeeDashboard = () => {
             onClick={() => setSelectedTab("users")}
           >
             <MdOutlinePeopleAlt /> Users
+          </li>
+          <li
+            className={`sidebar-item ${
+              selectedTab === "promotions" ? "active" : ""
+            }`}
+            onClick={() => setSelectedTab("promotions")}
+          >
+            <MdOutlineDiscount /> Promotions
           </li>
         </ul>
       </aside>

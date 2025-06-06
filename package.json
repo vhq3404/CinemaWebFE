@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@payos/payos-checkout": "^1.0.8",
     "@react-google-maps/api": "^2.20.6",
     "@testing-library/dom": "^10.4.0",
@@ -28,6 +29,7 @@
     "redux": "^5.0.1",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
+    "sonner": "^2.0.5",
     "swiper": "^11.2.6",
     "web-vitals": "^2.1.4"
   },

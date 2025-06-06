@@ -1,0 +1,171 @@
+.movie-showtimes-page {
+  font-family: monospace;
+}
+.movie-showtimes-page label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  font-weight: bold;
+  font-size: 28px;
+  font-family: monospace;
+}
+
+.showtimes-table {
+  margin-top: 20px;
+}
+
+.theater-row {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid #ccc;
+  width: 100%;
+  min-height: 100px;
+}
+
+.theater-name-col {
+  display: flex;
+  align-items: center;
+}
+
+.showtime-theater-name {
+  font-size: 20px;
+}
+
+.showtimes-col {
+  display: flex;
+  align-items: center;
+}
+
+.showtimes {
+  color: #3d3d3d;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.showtime-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 2px solid #cccccc;
+  background-color: #ffffff;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.showtime-badge:hover {
+  background-color: #0c47be;
+  color: white;
+  border-color: #0c47be;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.schedule-divider {
+  border: 2px solid #0c47be;
+  margin: 20px 0;
+}
+
+.showtime-type-label {
+  font-weight: 600;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.showtime-type-group {
+  margin-bottom: 12px;
+}
+
+.showtimes-table-structured {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.showtimes-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.theater-group {
+  padding: 50px 0px;
+  border-bottom: 1px solid #ddd;
+}
+
+.theater-name-cell {
+  font-size: 20px;
+  font-weight: bold;
+  align-items: flex-start;
+  margin-right: 20px;
+  width: 240px;
+}
+
+.format-type-cell {
+  align-items: center;
+  width: 150px;
+  padding: 10px;
+  margin-bottom: 30px;
+}
+
+.showtime-badges-cell {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.theater-movie-info-row {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+}
+
+.theater-movie-poster {
+  width: 10%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.theater-movie-title {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.theater-group {
+  margin-bottom: 2rem;
+}
+
+.theater-movie-title {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 20px;
+  text-align: left; 
+}
+
+.movie-poster-showtimes-row {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.theater-movie-poster {
+  width: 150px; 
+  height: auto;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.theater-format-type-cell {
+  align-items: center;
+  width: 150px;
+  padding: 10px;
+  margin-bottom: 30px;
+  font-size: 20px;
+}
+
+
+

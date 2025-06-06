@@ -1,10 +1,11 @@
 import React, { Fragment, useEffect } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "./redux/actions"; // Đường dẫn đúng theo dự án của bạn
+import { login } from "./redux/actions"; 
 import DefaultComponent from "./components/DefaultComponent/DefaultComponent";
 import { routes } from "./routes";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; 
+import { Toaster } from "sonner";
 
 function App() {
   const dispatch = useDispatch();
@@ -19,17 +20,18 @@ function App() {
         if (decoded.exp * 1000 > Date.now()) {
           dispatch(login(JSON.parse(user), token));
         } else {
-          localStorage.clear(); // Token hết hạn thì xóa localStorage
+          localStorage.clear();
         }
       } catch (error) {
         console.error("Lỗi khi decode token:", error);
-        localStorage.clear(); // Nếu token lỗi, xóa luôn
+        localStorage.clear();
       }
     }
   }, [dispatch]);
 
   return (
-    <div>
+    <>
+      <Toaster position="top-right" richColors />
       <Router>
         <Routes>
           {routes.map((route) => {
@@ -49,7 +51,7 @@ function App() {
           })}
         </Routes>
       </Router>
-    </div>
+    </>
   );
 }
 

@@ -3,8 +3,8 @@ import TheaterGallery from "../../components/TheaterGallery/TheaterGallery";
 import AddTheaterComponent from "../../components/AddTheaterComponent/AddTheaterComponent";
 import UpdateTheaterComponent from "../../components/UpdateTheaterComponent/UpdateTheaterComponent";
 import RoomsManagement from "../../components/RoomsManagement/RoomsManagement";
+import TheaterShowtime from "../../components/MovieShowtimes/TheaterShowtime";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
-import { useSelector } from "react-redux";
 import "./TheaterPage.css";
 
 const TheaterPage = ({ isAdmin = false }) => {
@@ -203,6 +203,11 @@ const TheaterPage = ({ isAdmin = false }) => {
             </div>
 
             <TheaterGallery theater={selectedTheater} />
+            {!isAdmin && (
+              <div className="theater-showtimes">
+                <TheaterShowtime theaterId={selectedTheater.id} />
+              </div>
+            )}
           </>
         )
       )}

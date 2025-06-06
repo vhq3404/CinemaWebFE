@@ -157,6 +157,7 @@ const TicketDetails = ({ booking, onClose }) => {
               <div className="ticket-movie-age-badge-wrapper">
                 <MovieAgeBadge age={movieDetail?.age} />
               </div>
+              {booking.showtime.showtimeType}
               <p>
                 <strong>Suất chiếu:</strong>{" "}
                 {formatShowtime(booking.showtime.startTime)}

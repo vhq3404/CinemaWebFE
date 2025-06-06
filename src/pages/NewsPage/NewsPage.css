@@ -4,10 +4,18 @@
   margin: 0 auto;
 }
 
+.promotion-header {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+
 .promotion-title {
   font-size: 2rem;
   margin-bottom: 20px;
-  text-align: center;
+  text-align: start;
 }
 
 .promotion-list {
@@ -37,12 +45,20 @@
 
 .promotion-info {
   flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  position: relative;
 }
 
 .promotion-item-title {
   font-size: 1.4rem;
   margin-bottom: 8px;
-  color: #c62828;
+  color: #0c47be;
 }
 
 .promotion-item-description {
@@ -61,4 +77,99 @@
   text-align: center;
   font-size: 1.1rem;
   padding: 20px;
+}
+
+.create-promotion-button {
+  align-self: flex-end;
+  font-family: monospace;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding: 8px 16px;
+  background-color: #06c559;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.promotion-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.promotion-form-container {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+}
+
+.promotion-form-container h2 {
+  margin-bottom: 16px;
+}
+
+.promotion-form-container form input {
+  width: 94%;
+  margin-bottom: 12px;
+}
+
+.promotion-form-container form textarea {
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.promotion-form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.promotion-form-buttons [type="submit"] {
+  background: #0c47be;
+}
+
+.promotion-form-buttons [type="submit"]:hover {
+  background: #0136a0;
+}
+
+.promotion-form-buttons [type="button"] {
+  background: #c3c3c3;
+}
+
+.promotion-form-buttons [type="button"]:hover {
+  background: #a8a8a8;
+}
+
+.promotion-buttons {
+  margin-top: auto;
+  align-self: flex-end;
+  display: flex;
+  gap: 10px;
+}
+
+.promotion-buttons button {
+  font-family: monospace;
+  font-size: 16px;
+  padding: 6px 12px;
+  border: none;
+  background-color: #e72a23;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.promotion-buttons button:first-child {
+  background-color: #fb9119;
+}
+
+.promotion-buttons button:hover {
+  opacity: 0.85;
 }

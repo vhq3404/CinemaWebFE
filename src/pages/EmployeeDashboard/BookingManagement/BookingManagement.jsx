@@ -12,13 +12,32 @@ const BookingManagement = () => {
   const [activeTab, setActiveTab] = useState("REFUND_REQUESTED");
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [error, setError] = useState(null);
+  const [theaters, setTheaters] = useState([]);
+  const [searchMovie, setSearchMovie] = useState("");
+  const [searchUser, setSearchUser] = useState("");
+  const [filterTheater, setFilterTheater] = useState("");
+  const [filterShowtime, setFilterShowtime] = useState("");
+  const today = new Date().toISOString().split("T")[0];
+  const [filterDate, setFilterDate] = useState(today);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const normalize = (str) =>
+    str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
+
+        // Fetch theaters
+        const resTheaters = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/theaters`
+        );
+        const theaterList = await resTheaters.json();
+        setTheaters(theaterList);
 
         // Fetch bookings
         const resBookings = await fetch(
@@ -157,7 +176,33 @@ const BookingManagement = () => {
     };
   }, []);
 
-  const filtered = bookings.filter((b) => b.status === activeTab);
+  const filtered = bookings.filter((b) => {
+    if (b.status !== activeTab) return false;
+
+    const movieTitle = movies[b.movie_id] || "";
+    const userName = users[b.user_id] || "";
+
+    const matchMovie =
+      !searchMovie || normalize(movieTitle).includes(normalize(searchMovie));
+    const matchUser =
+      !searchUser || normalize(userName).includes(normalize(searchUser));
+
+    const matchTheater =
+      !filterTheater ||
+      showtimes[b.showtime_id]?.theater.theaterName === filterTheater;
+
+    const matchShowtime = !filterShowtime || b.showtime_id === filterShowtime;
+
+    const matchDate = filterDate
+      ? new Date(b.created_at).toDateString() ===
+        new Date(filterDate).toDateString()
+      : true;
+
+    return (
+      matchMovie && matchUser && matchTheater && matchShowtime && matchDate
+    );
+  });
+
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
   const paginatedBookings = filtered.slice(
     (currentPage - 1) * itemsPerPage,
@@ -193,6 +238,51 @@ const BookingManagement = () => {
             {tab === "CANCELLED" && "Đã hủy"}
           </button>
         ))}
+      </div>
+
+      <div className="booking-filters">
+        <input
+          type="text"
+          placeholder="Tìm tên khách hàng"
+          value={searchUser}
+          onChange={(e) => setSearchUser(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Tìm tên phim"
+          value={searchMovie}
+          onChange={(e) => setSearchMovie(e.target.value)}
+        />
+
+        <select
+          value={filterTheater}
+          onChange={(e) => setFilterTheater(e.target.value)}
+        >
+          <option value="">Tất cả rạp</option>
+          {theaters.map((t) => (
+            <option key={t._id} value={t._id}>
+              {t.name}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={filterShowtime}
+          onChange={(e) => setFilterShowtime(e.target.value)}
+        >
+          <option value="">Tất cả suất chiếu</option>
+          {Object.values(showtimes).map((s) => (
+            <option key={s._id} value={s._id}>
+              {new Date(s.startTime).toLocaleString("vi-VN")}
+            </option>
+          ))}
+        </select>
+
+        <input
+          type="date"
+          value={filterDate}
+          onChange={(e) => setFilterDate(e.target.value)}
+        />
       </div>
 
       <table className="booking-table">

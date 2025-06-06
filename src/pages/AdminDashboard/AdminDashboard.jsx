@@ -6,12 +6,13 @@ import { MdLocalMovies } from "react-icons/md";
 import { GiTheater } from "react-icons/gi";
 import { GrSchedulePlay } from "react-icons/gr";
 import { FaUtensils } from "react-icons/fa";
-import { MdOutlinePeopleAlt } from "react-icons/md";
+import { MdOutlinePeopleAlt, MdOutlineDiscount } from "react-icons/md";
 import { FaChartLine } from "react-icons/fa6";
 import RevenueReportPage from "./RevenueReportPage/RevenueReportPage";
 import MoviePage from "../../components/MoviePage/MoviePage";
 import TheaterPage from "../TheaterPage/TheaterPage";
 import SchedulePage from "../SchedulePage/SchedulePage";
+import NewsPage from "../NewsPage/NewsPage";
 import FoodList from "../../components/FoodList/FoodList";
 import EmployeeManagement from "./EmployeeManagement/EmployeeManagement";
 
@@ -37,7 +38,8 @@ const AdminDashboard = () => {
         return <RevenueReportPage />;
       case "employees":
         return <EmployeeManagement />;
-
+      case "promotions":
+        return <NewsPage isAdminOrEmployee={true}/>;
       default:
         return (
           <>
@@ -103,6 +105,14 @@ const AdminDashboard = () => {
             onClick={() => setSelectedTab("employees")}
           >
             <MdOutlinePeopleAlt /> Employees
+          </li>
+          <li
+            className={`sidebar-item ${
+              selectedTab === "promotions" ? "active" : ""
+            }`}
+            onClick={() => setSelectedTab("promotions")}
+          >
+            <MdOutlineDiscount /> Promotions
           </li>
         </ul>
       </aside>

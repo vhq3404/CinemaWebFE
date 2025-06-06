@@ -45,6 +45,8 @@ const HeaderComponent = () => {
           <nav className="nav">
             <a href="/movies">Phim</a>
             <a href="/theater">Rạp</a>
+            <a href="/news">Ưu đãi</a>
+            <a href="/feedback">Liên hệ</a>
             {user && user.role === "admin" && (
               <>
                 <a href="/admin/dashboard">Quản lý</a>

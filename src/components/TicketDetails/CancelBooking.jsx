@@ -72,9 +72,11 @@ const CancelBooking = ({ booking, onClose, onCancelSuccess }) => {
     if (diffHours > 24) {
       return booking.total_price; // hoàn 100%
     } else if (diffHours > 1) {
-      return booking.total_price * 0.5; // hoàn 50%
+      return booking.total_price * 0.6; // hoàn 60%
+    } else if (diffHours > 0) {
+      return booking.total_price * 0.3; // hoàn 30%
     } else {
-      return 0; // không hoàn tiền
+      return 0; // quá giờ chiếu => không hoàn
     }
   };
 
@@ -156,13 +158,16 @@ const CancelBooking = ({ booking, onClose, onCancelSuccess }) => {
       <div className="cancel-booking-policy">
         <h4>Chính sách hủy vé:</h4>
         <ul>
-          <li>Hủy vé trước suất chiếu hơn 24 giờ: Hoàn 100% tiền vé.</li>
           <li>
-            Hủy vé trước suất chiếu từ 24 giờ đến trước 1 giờ: Hoàn 50% tiền vé.
+            Hủy vé trước suất chiếu hơn 24 giờ: Hoàn 100% số tiền đã thanh toán.
           </li>
           <li>
-            Hủy vé trong vòng 1 giờ trước suất chiếu hoặc muộn hơn: Không hoàn
-            tiền.
+            Hủy vé trước suất chiếu từ 24 giờ đến trước 1 giờ: Hoàn 60% số tiền
+            đã thanh toán.
+          </li>
+          <li>
+            Hủy vé trong vòng 1 giờ trước suất chiếu: Hoàn 30% số tiền đã thanh
+            toán.
           </li>
           <li>Điểm thưởng hoặc ưu đãi đã sử dụng sẽ không được hoàn lại.</li>
           <li>Vé đã hủy không thể khôi phục lại.</li>

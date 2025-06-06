@@ -5,9 +5,11 @@ import TheaterPage from "../pages/TheaterPage/TheaterPage";
 import AdminTheaterManagement from "../components/AdminTheaterManagement/AdminTheaterManagement";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import BookingPage from "../pages/BookingPage/BookingPage";
+import NewsPage from "../pages/NewsPage/NewsPage";
 import PaymentSuccessPage from "../pages/PaymentSuccessPage/PaymentSuccessPage";
 import EmployeeDashboard from "../pages/EmployeeDashboard/EmployeeDashboard";
 import AdminDashboard from "../pages/AdminDashboard/AdminDashboard";
+
 
 export const routes = [
   {
@@ -16,13 +18,18 @@ export const routes = [
     isShowHeader: true,
   },
   {
-    path: "/employee/dashboard",
-    page: EmployeeDashboard,
+    path: "/news",
+    page: NewsPage,
     isShowHeader: true,
   },
   {
     path: "/",
     page: HomePage,
+    isShowHeader: true,
+  },
+   {
+    path: "/admin/dashboard",
+    page: AdminDashboard,
     isShowHeader: true,
   },
   {

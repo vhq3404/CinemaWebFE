@@ -31,11 +31,12 @@ const RevenueReportPage = () => {
 
   useEffect(() => {
     const prepareFoodChartDataByItem = async () => {
-      const dateMap = {}; // { '2023-06-01': { 'Pizza': 100000, 'Burger': 50000 }, ... }
+      const dateMap = {};
       const allFoodNames = new Set();
 
       for (const fb of filteredFoodBookings) {
         const dateStr = fb.created_at.split("T")[0];
+
         try {
           const res = await axios.get(
             `${process.env.REACT_APP_API_URL}/api/food-bookings/${fb.id}/items`
@@ -46,13 +47,15 @@ const RevenueReportPage = () => {
             dateMap[dateStr] = {};
           }
 
-          items.forEach((item) => {
-            const name = item.food_name;
+          const uniqueNamesInBooking = new Set(
+            items.map((item) => item.food_name)
+          );
+          uniqueNamesInBooking.forEach((name) => {
             allFoodNames.add(name);
             if (!dateMap[dateStr][name]) {
               dateMap[dateStr][name] = 0;
             }
-            dateMap[dateStr][name] += Number(item.total_price);
+            dateMap[dateStr][name] += Number(fb.total_price);
           });
         } catch (err) {
           console.error(`Lỗi khi lấy items của booking ${fb.id}`, err);
@@ -61,11 +64,11 @@ const RevenueReportPage = () => {
 
       const dateRange = getDateRange(startDate, endDate);
 
-      const chartData = dateRange.map((date) => {
+      // Bước 1: tạo chartData thô
+      let rawChartData = dateRange.map((date) => {
         const dateStr = date.toISOString().split("T")[0];
         const dataForDay = { date: dateStr };
 
-        // Đảm bảo có tất cả món ăn với giá trị 0 nếu không có doanh thu ngày đó
         allFoodNames.forEach((foodName) => {
           dataForDay[foodName] = dateMap[dateStr]?.[foodName] || null;
         });
@@ -73,7 +76,25 @@ const RevenueReportPage = () => {
         return dataForDay;
       });
 
-      setFoodChartDataByItem(chartData);
+      allFoodNames.forEach((foodName) => {
+        for (let i = 1; i < rawChartData.length - 1; i++) {
+          const prev = rawChartData[i - 1][foodName];
+          const current = rawChartData[i][foodName];
+          const next = rawChartData[i + 1][foodName];
+
+          if (
+            current === null &&
+            prev !== null &&
+            prev > 0 &&
+            next !== null &&
+            next > 0
+          ) {
+            rawChartData[i][foodName] = 0;
+          }
+        }
+      });
+
+      setFoodChartDataByItem(rawChartData);
     };
 
     if (filteredFoodBookings.length > 0) {
@@ -220,8 +241,7 @@ const RevenueReportPage = () => {
     return result;
   };
 
-  // Chuẩn bị dữ liệu biểu đồ doanh thu phim
-  const chartData = getDateRange(startDate, endDate).map((date) => {
+  let rawChartData = getDateRange(startDate, endDate).map((date) => {
     const dayStr = date.toISOString().split("T")[0];
     const dataForDay = { date: dayStr };
 
@@ -232,10 +252,8 @@ const RevenueReportPage = () => {
     filteredBookings.forEach((booking) => {
       const bookingDateStr = booking.created_at.split("T")[0];
       if (bookingDateStr === dayStr) {
-        const movieId = booking.movie_id;
-        const movie = movies.find((m) => m._id === movieId);
+        const movie = movies.find((m) => m._id === booking.movie_id);
         if (movie) {
-          // nếu hiện tại là null thì gán, nếu không thì cộng thêm
           if (dataForDay[movie.title] === null) {
             dataForDay[movie.title] = Number(booking.total_price);
           } else {
@@ -247,6 +265,41 @@ const RevenueReportPage = () => {
 
     return dataForDay;
   });
+
+  // Nối từ 0 đến ngày đầu tiên có doanh thu
+  movies.forEach((movie) => {
+    const firstWithRevenueIndex = rawChartData.findIndex(
+      (d) => d[movie.title] !== null && d[movie.title] > 0
+    );
+    if (firstWithRevenueIndex > 0) {
+      // Chỉ chèn nếu startDate không có doanh thu
+      const prev = rawChartData[firstWithRevenueIndex - 1];
+      if (prev[movie.title] === null) {
+        prev[movie.title] = 0;
+      }
+    }
+  });
+
+  // Chèn 0 vào các khoảng hở giữa hai ngày có doanh thu
+  movies.forEach((movie) => {
+    for (let i = 1; i < rawChartData.length - 1; i++) {
+      const prev = rawChartData[i - 1][movie.title];
+      const current = rawChartData[i][movie.title];
+      const next = rawChartData[i + 1][movie.title];
+
+      if (
+        current === null &&
+        prev !== null &&
+        prev > 0 &&
+        next !== null &&
+        next > 0
+      ) {
+        rawChartData[i][movie.title] = 0;
+      }
+    }
+  });
+
+  const chartData = rawChartData;
 
   const availableMonths = (() => {
     const monthSet = new Set();

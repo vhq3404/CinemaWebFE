@@ -1,0 +1,64 @@
+.promotion-page {
+  padding: 20px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.promotion-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.promotion-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.promotion-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  background: #f8f8f8;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.promotion-image {
+  width: 30%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.promotion-info {
+  flex: 1;
+}
+
+.promotion-item-title {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  color: #c62828;
+}
+
+.promotion-item-description {
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.promotion-item-dates {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.promotion-loading,
+.promotion-error,
+.promotion-empty {
+  text-align: center;
+  font-size: 1.1rem;
+  padding: 20px;
+}

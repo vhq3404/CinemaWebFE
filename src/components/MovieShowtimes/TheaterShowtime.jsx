@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import DateFilter from "../../components/DateFilter/DateFilter";
 import AuthModal from "../../components/AuthModal/AuthModal";
-import "./TheaterShowtimes.css"; // Reuse same CSS for now
+import "./TheaterShowtimes.css";
 
 const TheaterShowtimes = ({ theaterId }) => {
   const [showtimesByMovie, setShowtimesByMovie] = useState({});
@@ -14,7 +14,7 @@ const TheaterShowtimes = ({ theaterId }) => {
   const [pendingShowtime, setPendingShowtime] = useState(null);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
-  console.log("showtimesByMovie", showtimesByMovie);
+
   useEffect(() => {
     const fetchShowtimes = async () => {
       setLoading(true);
@@ -23,15 +23,13 @@ const TheaterShowtimes = ({ theaterId }) => {
           `${process.env.REACT_APP_API_URL}/api/showtimes?theaterId=${theaterId}`
         );
         const data = await response.json();
-
         if (!response.ok) throw new Error(data.error || "Lỗi dữ liệu");
 
-        const showtimes = data.showtimes;
+        const now = new Date();
+        const showtimes = data.showtimes.filter((s) => new Date(s.startTime) > now);
 
-        // Lấy tất cả movieId duy nhất từ danh sách showtimes
         const movieIds = [...new Set(showtimes.map((s) => s.movie.movieId))];
 
-        // Gọi song song để lấy thông tin từng phim
         const movieDataMap = {};
         await Promise.all(
           movieIds.map(async (movieId) => {
@@ -61,11 +59,12 @@ const TheaterShowtimes = ({ theaterId }) => {
           groupedByDate[date][movieId].showtimes.push(showtime);
         }
 
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        const dates = Object.keys(groupedByDate)
-          .filter((dateStr) => new Date(dateStr) >= today)
+        // Lọc các ngày còn ít nhất 1 suất chiếu
+        const dates = Object.entries(groupedByDate)
+          .filter(([_, movies]) =>
+            Object.values(movies).some((movie) => movie.showtimes.length > 0)
+          )
+          .map(([date]) => date)
           .sort((a, b) => new Date(a) - new Date(b));
 
         setAvailableDates(dates);
@@ -133,12 +132,9 @@ const TheaterShowtimes = ({ theaterId }) => {
 
                       return (
                         <div key={index} className="theater-group">
-                          {/* Title nằm trên cùng */}
                           <div className="theater-movie-title">
                             {movieData.title}
                           </div>
-
-                          {/* Hàng ngang chứa poster bên trái và showtimes bên phải */}
                           <div className="movie-poster-showtimes-row">
                             <img
                               src={`${process.env.REACT_APP_API_URL}/movies/${movieData.poster}`}
@@ -151,7 +147,9 @@ const TheaterShowtimes = ({ theaterId }) => {
                                   key={`${index}-${i}`}
                                   className="showtimes-row"
                                 >
-                                  <div className="theater-format-type-cell">{type}</div>
+                                  <div className="theater-format-type-cell">
+                                    {type}
+                                  </div>
                                   <div className="showtime-badges-cell">
                                     {times.map((showtime, idx) => (
                                       <span

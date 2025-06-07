@@ -26,25 +26,30 @@ const MovieShowtimes = ({ movieId }) => {
 
         if (!response.ok) throw new Error(data.error || "Lỗi dữ liệu");
 
+        const now = new Date();
         const groupedByDate = {};
 
         for (const showtime of data.showtimes) {
-          const date = showtime.date.slice(0, 10);
-          const theaterName = showtime.theater.theaterName;
+          const showtimeDateStr = showtime.date.slice(0, 10);
+          const startTime = new Date(showtime.startTime);
 
-          if (!groupedByDate[date]) groupedByDate[date] = {};
-          if (!groupedByDate[date][theaterName])
-            groupedByDate[date][theaterName] = [];
+          // Chỉ giữ suất chiếu trong tương lai
+          if (startTime > now) {
+            const theaterName = showtime.theater.theaterName;
 
-          groupedByDate[date][theaterName].push(showtime);
+            if (!groupedByDate[showtimeDateStr])
+              groupedByDate[showtimeDateStr] = {};
+            if (!groupedByDate[showtimeDateStr][theaterName])
+              groupedByDate[showtimeDateStr][theaterName] = [];
+
+            groupedByDate[showtimeDateStr][theaterName].push(showtime);
+          }
         }
 
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        const dates = Object.keys(groupedByDate)
-          .filter((dateStr) => new Date(dateStr) >= today)
-          .sort((a, b) => new Date(a) - new Date(b));
+        // Chỉ giữ ngày có ít nhất một suất chiếu hợp lệ
+        const dates = Object.keys(groupedByDate).sort(
+          (a, b) => new Date(a) - new Date(b)
+        );
 
         setAvailableDates(dates);
         setSelectedDate(dates[0] || "");
@@ -112,7 +117,10 @@ const MovieShowtimes = ({ movieId }) => {
                       return (
                         <div key={index} className="theater-group">
                           {typeEntries.map(([type, times], i) => (
-                            <div key={`${index}-${i}`} className="showtimes-row">
+                            <div
+                              key={`${index}-${i}`}
+                              className="showtimes-row"
+                            >
                               <div className="theater-name-cell">
                                 {i === 0 ? theaterName : ""}
                               </div>
@@ -122,7 +130,9 @@ const MovieShowtimes = ({ movieId }) => {
                                   <span
                                     key={idx}
                                     className="showtime-badge"
-                                    onClick={() => handleShowtimeClick(showtime)}
+                                    onClick={() =>
+                                      handleShowtimeClick(showtime)
+                                    }
                                   >
                                     {formatTime(showtime.startTime)}
                                   </span>

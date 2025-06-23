@@ -1,8 +1,7 @@
 import HomePage from "../pages/HomePage/HomePage";
 import MovieDetailPage from "../pages/MovieDetailPage/MovieDetailPage";
-import MoviePage from "../components/MoviePage/MoviePage";
+import MoviePage from "../pages/MoviePage/MoviePage";
 import TheaterPage from "../pages/TheaterPage/TheaterPage";
-import AdminTheaterManagement from "../components/AdminTheaterManagement/AdminTheaterManagement";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import BookingPage from "../pages/BookingPage/BookingPage";
 import NewsPage from "../pages/NewsPage/NewsPage";
@@ -48,11 +47,7 @@ export const routes = [
     page: TheaterPage,
     isShowHeader: true,
   },
-  {
-    path: "/management",
-    page: AdminTheaterManagement,
-    isShowHeader: true,
-  },
+  
   {
     path: "/profile/:tab?",
     page: ProfilePage,

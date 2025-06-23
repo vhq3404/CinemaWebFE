@@ -21,6 +21,7 @@ const RevenueReportPage = () => {
   const [foodBookings, setFoodBookings] = useState([]); // thêm state đồ ăn
   const [movies, setMovies] = useState([]);
   const [foodItemRevenueMap, setFoodItemRevenueMap] = useState({});
+  const [activeTab, setActiveTab] = useState("movie"); // 'movie' | 'food'
 
   const [startDate, setStartDate] = useState(getTodayString());
   const [endDate, setEndDate] = useState(getTodayString());
@@ -389,104 +390,142 @@ const RevenueReportPage = () => {
           <p style={{ color: "orange" }}>{formatCurrency(totalFoodRevenue)}</p>
         </div>
       </div>
+      <div className="revenue-tab-buttons">
+        <button
+          className={activeTab === "movie" ? "active-tab" : ""}
+          onClick={() => setActiveTab("movie")}
+        >
+          Doanh thu phim
+        </button>
+        <button
+          className={activeTab === "food" ? "active-tab" : ""}
+          onClick={() => setActiveTab("food")}
+        >
+          Doanh thu đồ ăn
+        </button>
+      </div>
 
-      <h4 className="revenue-subtitle">Biểu đồ doanh thu theo từng phim</h4>
-      <div className="revenue-chart-wrapper">
-        <ResponsiveContainer>
-          <LineChart data={chartData}>
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {movies.map((movie) =>
-              chartData.some((d) => d[movie.title]) ? (
-                <Line
-                  key={movie._id}
-                  type="linear"
-                  dataKey={movie.title}
-                  stroke={`#${Math.floor(Math.random() * 16777215).toString(
-                    16
-                  )}`}
-                  strokeWidth={2}
-                  dot={false}
+      {activeTab === "movie" && (
+        <>
+          <h4 className="revenue-subtitle">Biểu đồ doanh thu theo từng phim</h4>
+          <div className="revenue-chart-wrapper">
+            <ResponsiveContainer>
+              <LineChart data={chartData}>
+                <XAxis
+                  dataKey="date"
+                  tickFormatter={(dateStr) => {
+                    const date = new Date(dateStr);
+                    const day = String(date.getDate()).padStart(2, "0");
+                    const month = String(date.getMonth() + 1).padStart(2, "0");
+                    return `${day}/${month}`;
+                  }}
                 />
-              ) : null
-            )}
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                {movies.map((movie) =>
+                  chartData.some((d) => d[movie.title]) ? (
+                    <Line
+                      key={movie._id}
+                      type="linear"
+                      dataKey={movie.title}
+                      stroke={`#${Math.floor(Math.random() * 16777215).toString(
+                        16
+                      )}`}
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                  ) : null
+                )}
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
 
-      <h4 className="revenue-subtitle">Doanh thu theo từng phim</h4>
-      <table className="revenue-table">
-        <thead>
-          <tr>
-            <th>Tên phim</th>
-            <th>Doanh thu</th>
-          </tr>
-        </thead>
-        <tbody>
-          {movies
-            .map((movie) => ({
-              ...movie,
-              revenue: movieRevenueMap[movie._id] || 0,
-            }))
-            .filter((movie) => movie.revenue > 0)
-            .sort((a, b) => b.revenue - a.revenue)
-            .map((movie) => (
-              <tr key={movie._id}>
-                <td>{movie.title}</td>
-                <td>{formatCurrency(movie.revenue)}</td>
+          <h4 className="revenue-subtitle">Doanh thu theo từng phim</h4>
+          <table className="revenue-table">
+            <thead>
+              <tr>
+                <th>Tên phim</th>
+                <th>Doanh thu</th>
               </tr>
-            ))}
-        </tbody>
-      </table>
-
-      <h4 className="revenue-subtitle">
-        Biểu đồ doanh thu đồ ăn theo từng món
-      </h4>
-      <div className="revenue-chart-wrapper">
-        <ResponsiveContainer>
-          <LineChart data={foodChartDataByItem}>
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {foodChartDataByItem.length > 0 &&
-              Object.keys(foodChartDataByItem[0])
-                .filter((key) => key !== "date")
-                .map((foodName, index) => (
-                  <Line
-                    key={foodName}
-                    type="linear"
-                    dataKey={foodName}
-                    stroke={`hsl(${(index * 60) % 360}, 70%, 50%)`}
-                    strokeWidth={2}
-                    dot={false}
-                  />
+            </thead>
+            <tbody>
+              {movies
+                .map((movie) => ({
+                  ...movie,
+                  revenue: movieRevenueMap[movie._id] || 0,
+                }))
+                .filter((movie) => movie.revenue > 0)
+                .sort((a, b) => b.revenue - a.revenue)
+                .map((movie) => (
+                  <tr key={movie._id}>
+                    <td>{movie.title}</td>
+                    <td>{formatCurrency(movie.revenue)}</td>
+                  </tr>
                 ))}
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+            </tbody>
+          </table>
+        </>
+      )}
 
-      <h4 className="revenue-subtitle">Doanh thu theo từng món ăn</h4>
-      <table className="revenue-table">
-        <thead>
-          <tr>
-            <th>Món ăn</th>
-            <th>Doanh thu</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Object.entries(foodItemRevenueMap)
-            .sort((a, b) => b[1] - a[1])
-            .map(([name, revenue]) => (
-              <tr key={name}>
-                <td>{name}</td>
-                <td>{formatCurrency(revenue)}</td>
+      {activeTab === "food" && (
+        <>
+          <h4 className="revenue-subtitle">
+            Biểu đồ doanh thu đồ ăn theo từng món
+          </h4>
+          <div className="revenue-chart-wrapper">
+            <ResponsiveContainer>
+              <LineChart data={foodChartDataByItem}>
+                <XAxis
+                  dataKey="date"
+                  tickFormatter={(dateStr) => {
+                    const date = new Date(dateStr);
+                    const day = String(date.getDate()).padStart(2, "0");
+                    const month = String(date.getMonth() + 1).padStart(2, "0");
+                    return `${day}/${month}`;
+                  }}
+                />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                {foodChartDataByItem.length > 0 &&
+                  Object.keys(foodChartDataByItem[0])
+                    .filter((key) => key !== "date")
+                    .map((foodName, index) => (
+                      <Line
+                        key={foodName}
+                        type="linear"
+                        dataKey={foodName}
+                        stroke={`hsl(${(index * 60) % 360}, 70%, 50%)`}
+                        strokeWidth={2}
+                        dot={false}
+                      />
+                    ))}
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          <h4 className="revenue-subtitle">Doanh thu theo từng món ăn</h4>
+          <table className="revenue-table">
+            <thead>
+              <tr>
+                <th>Món ăn</th>
+                <th>Doanh thu</th>
               </tr>
-            ))}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {Object.entries(foodItemRevenueMap)
+                .sort((a, b) => b[1] - a[1])
+                .map(([name, revenue]) => (
+                  <tr key={name}>
+                    <td>{name}</td>
+                    <td>{formatCurrency(revenue)}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </>
+      )}
     </div>
   );
 };

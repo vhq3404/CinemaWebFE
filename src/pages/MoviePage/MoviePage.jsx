@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { CiEdit } from "react-icons/ci";
 import { MdRemoveCircleOutline } from "react-icons/md";
-import AddMovieComponent from "../AddMovieComponent/AddMovieComponent";
-import EditMovieComponent from "../EditMovieComponent/EditMovieComponent";
-import MovieAgeBadge from "../MovieAgeBadge/MovieAgeBadge";
+import AddMovieComponent from "./components/AddMovieComponent/AddMovieComponent";
+import EditMovieComponent from "./components/EditMovieComponent/EditMovieComponent";
+import MovieAgeBadge from "../../components/MovieAgeBadge/MovieAgeBadge";
 import "./MoviePage.css";
 
 const MoviePage = ({

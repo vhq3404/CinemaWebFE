@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import "./PaymentMethod.css";
 
-import vietQRIcon from "../../assets/434x0w.webp";
-
 const STORAGE_KEY = "appliedPoints";
 
 const PaymentMethod = ({
@@ -18,7 +16,7 @@ const PaymentMethod = ({
   const userPoints = useSelector((state) => state.user.points || 0);
 
   const methods = [
-    { label: "QR thanh toán", value: "payos", icon: vietQRIcon },
+    { label: "QR thanh toán", value: "payos"},
   ];
 
   // Khi component mount, đọc appliedPoints từ localStorage để đồng bộ trạng thái

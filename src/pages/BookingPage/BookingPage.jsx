@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import BookingDetail from "../../components/BookingDetail/BookingDetail";
+import BookingDetail from "./components/BookingDetail/BookingDetail";
 import RoomLayout from "../../components/RoomLayout/RoomLayout";
 import "./BookingPage.css";
-import PaymentMethod from "./PaymentMethod";
-import FoodSelection from "./FoodSelection";
+import PaymentMethod from "./components/PaymentMethod/PaymentMethod";
+import FoodSelection from "./components/FoodSelection/FoodSelection";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { io } from "socket.io-client";
 
@@ -424,19 +424,17 @@ const BookingPage = () => {
             />
           ) : null}
         </div>
-
+        {(currentStep === 2 || currentStep === 3) && (
+          <div className="countdown-timer">
+            <MdOutlineAccessTime />
+            Thời gian giữ ghế còn:{" "}
+            {Math.floor(countdown / 60)
+              .toString()
+              .padStart(2, "0")}
+            :{(countdown % 60).toString().padStart(2, "0")}
+          </div>
+        )}
         <div>
-          {(currentStep === 2 || currentStep === 3) && (
-            <div className="countdown-timer">
-              <MdOutlineAccessTime />
-              Thời gian giữ ghế còn:{" "}
-              {Math.floor(countdown / 60)
-                .toString()
-                .padStart(2, "0")}
-              :{(countdown % 60).toString().padStart(2, "0")}
-            </div>
-          )}
-
           <div className="booking-detail-sidebar">
             <BookingDetail
               showtime={showtime}

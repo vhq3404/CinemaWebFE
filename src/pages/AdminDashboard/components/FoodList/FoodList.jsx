@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AddFood from "../AddFood/AddFood";
+import AddFood from "./AddFood/AddFood";
 import { LuPopcorn } from "react-icons/lu";
 import { RiDrinks2Fill } from "react-icons/ri";
 import { IoFastFoodOutline } from "react-icons/io5";

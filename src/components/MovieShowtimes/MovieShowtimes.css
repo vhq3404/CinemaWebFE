@@ -1,6 +1,11 @@
 .movie-showtimes-page {
   font-family: monospace;
 }
+.movie-showtimes-page h3 {
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 20px;
+}
 .movie-showtimes-page label {
   display: flex;
   align-items: center;
@@ -115,4 +120,41 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+.theater-movie-info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  gap: 1rem;
+}
+
+.theater-movie-poster {
+  width: 60px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.theater-movie-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.filter-container {
+  display: flex;
+  align-items: start;
+  flex-direction: row;
+  gap: 50px;
+}
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-container select {
+  padding: 6px;
+  font-family: monospace;
+  border-radius: 10px;
+  font-size: 16px;
 }

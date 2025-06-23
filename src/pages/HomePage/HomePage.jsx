@@ -1,6 +1,6 @@
 import React from "react";
 import BannerComponent from "../../components/BannerComponent/BannerComponent";
-import MoviePage from "../../components/MoviePage/MoviePage";
+import MoviePage from "../MoviePage/MoviePage";
 
 function HomePage() {
   return (

@@ -4,7 +4,7 @@ import axios from "axios";
 import "./MovieDetailPage.css";
 import { FaRegPlayCircle, FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import MovieAgeBadge from "../../components/MovieAgeBadge/MovieAgeBadge";
-import MoviePage from "../../components/MoviePage/MoviePage";
+import MoviePage from "../MoviePage/MoviePage";
 import MovieShowtimes from "../../components/MovieShowtimes/MovieShowtimes";
 
 const MovieDetailPage = () => {

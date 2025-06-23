@@ -164,7 +164,10 @@
 }
 
 .countdown-timer {
-  display: flex;
+  display:flex;
+  position:fixed;
+  right: 0;
+  top: 100px;
   align-items: center;
   gap: 8px;
   margin-bottom: 20px;

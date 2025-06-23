@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import DateFilter from "../DateFilter/DateFilter";
+import DateFilter from "../../../../components/DateFilter/DateFilter";
 import "./ScheduleChart.css";
 
 const ScheduleChart = ({

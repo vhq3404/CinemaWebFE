@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import MovieAgeBadge from "../../components/MovieAgeBadge/MovieAgeBadge";
+import MovieAgeBadge from "../../../../components/MovieAgeBadge/MovieAgeBadge";
 import "./BookingDetail.css";
 
 const BookingDetail = ({

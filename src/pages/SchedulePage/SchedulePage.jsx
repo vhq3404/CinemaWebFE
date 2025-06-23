@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
-import ScheduleChart from "../../components/ScheduleChart/ScheduleChart";
+import ScheduleChart from "./components/ScheduleChart/ScheduleChart";
 import DateFilter from "../../components/DateFilter/DateFilter";
-import AddShowtimeComponent from "../../components/AddShowtimeComponent/AddShowtimeComponent";
+import AddShowtimeComponent from "./components/AddShowtimeComponent/AddShowtimeComponent";
 import { MdDeleteOutline } from "react-icons/md";
 import { IoCalendarOutline } from "react-icons/io5";
 import "./SchedulePage.css";

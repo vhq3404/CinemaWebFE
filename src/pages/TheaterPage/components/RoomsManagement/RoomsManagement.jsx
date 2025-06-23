@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import "./RoomsManagement.css";
-import RoomLayout from "../RoomLayout/RoomLayout";
+import RoomLayout from "../../../../components/RoomLayout/RoomLayout";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 
 const RoomsManagement = ({ theaterId }) => {

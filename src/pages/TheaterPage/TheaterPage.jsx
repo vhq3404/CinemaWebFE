@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import TheaterGallery from "../../components/TheaterGallery/TheaterGallery";
-import AddTheaterComponent from "../../components/AddTheaterComponent/AddTheaterComponent";
-import UpdateTheaterComponent from "../../components/UpdateTheaterComponent/UpdateTheaterComponent";
-import RoomsManagement from "../../components/RoomsManagement/RoomsManagement";
+import TheaterGallery from "./components/TheaterGallery/TheaterGallery";
+import AddTheaterComponent from "./components/AddTheaterComponent/AddTheaterComponent";
+import UpdateTheaterComponent from "./components/UpdateTheaterComponent/UpdateTheaterComponent";
+import RoomsManagement from "./components/RoomsManagement/RoomsManagement";
 import TheaterShowtime from "../../components/MovieShowtimes/TheaterShowtime";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import "./TheaterPage.css";

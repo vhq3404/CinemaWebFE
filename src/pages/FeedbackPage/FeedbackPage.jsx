@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "sonner";
 import emailjs from "@emailjs/browser";
-import MoviePage from "../../components/MoviePage/MoviePage";
+import MoviePage from "../MoviePage/MoviePage";
 import "./FeedbackPage.css";
 
 const FeedbackPage = () => {

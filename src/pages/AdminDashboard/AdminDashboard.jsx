@@ -8,13 +8,13 @@ import { GrSchedulePlay } from "react-icons/gr";
 import { FaUtensils } from "react-icons/fa";
 import { MdOutlinePeopleAlt, MdOutlineDiscount } from "react-icons/md";
 import { FaChartLine } from "react-icons/fa6";
-import RevenueReportPage from "./RevenueReportPage/RevenueReportPage";
-import MoviePage from "../../components/MoviePage/MoviePage";
+import RevenueReportPage from "./components/RevenueReportPage/RevenueReportPage";
+import MoviePage from "../MoviePage/MoviePage";
 import TheaterPage from "../TheaterPage/TheaterPage";
 import SchedulePage from "../SchedulePage/SchedulePage";
 import NewsPage from "../NewsPage/NewsPage";
-import FoodList from "../../components/FoodList/FoodList";
-import EmployeeManagement from "./EmployeeManagement/EmployeeManagement";
+import FoodList from "./components/FoodList/FoodList";
+import EmployeeManagement from "./components/EmployeeManagement/EmployeeManagement";
 
 const AdminDashboard = () => {
   const user = useSelector((state) => state.user);

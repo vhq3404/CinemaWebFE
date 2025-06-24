@@ -23,35 +23,37 @@ const MoviePage = ({
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/movies?status=${activeTab}`
-        );
-        const data = await res.json();
+  const fetchMovies = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/movies?status=${activeTab}`
+      );
+      const data = await res.json();
 
-        let sortedData = [...data];
+      let sortedData = [...data];
 
-        if (excludeId) {
-          sortedData = sortedData.filter((movie) => movie._id !== excludeId);
-        }
-
-        if (activeTab === "now_showing") {
-          sortedData.sort(
-            (a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)
-          );
-        } else if (activeTab === "coming_soon") {
-          sortedData.sort(
-            (a, b) => new Date(a.releaseDate) - new Date(b.releaseDate)
-          );
-        }
-
-        setMovies(sortedData);
-      } catch (error) {
-        console.error("Lỗi khi lấy danh sách phim:", error);
+      if (excludeId) {
+        sortedData = sortedData.filter((movie) => movie._id !== excludeId);
       }
-    };
+
+      if (activeTab === "now_showing") {
+        sortedData.sort(
+          (a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)
+        );
+      } else if (activeTab === "coming_soon") {
+        sortedData.sort(
+          (a, b) => new Date(a.releaseDate) - new Date(b.releaseDate)
+        );
+      }
+
+      setMovies(sortedData);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách phim:", error);
+    }
+  };
+
+  // Gọi lại khi tab thay đổi
+  useEffect(() => {
     fetchMovies();
   }, [activeTab, excludeId]);
 
@@ -186,9 +188,16 @@ const MoviePage = ({
         </div>
       )}
 
-      {showAddMovie && <AddMovieComponent onClose={toggleAddMovie} />}
+      {showAddMovie && (
+        <AddMovieComponent onClose={toggleAddMovie} onRefresh={fetchMovies} />
+      )}
+
       {showEditMovie && (
-        <EditMovieComponent onClose={toggleEditMovie} movie={selectedMovie} />
+        <EditMovieComponent
+          onClose={toggleEditMovie}
+          movie={selectedMovie}
+          onRefresh={fetchMovies}
+        />
       )}
     </div>
   );

@@ -1,10 +1,9 @@
-// File: LoginComponent.jsx
 import React, { useState, useRef } from "react";
 import "./EditMovieComponent.css";
-import { FaRegTrashAlt, FaRegCalendarAlt } from "react-icons/fa";
+import { FaRegCalendarAlt } from "react-icons/fa";
 import { FiPlus } from "react-icons/fi";
 
-const EditMovieComponent = ({ onClose, movie }) => {
+const EditMovieComponent = ({ onClose, movie, onRefresh }) => {
   const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
     const day = String(date.getDate()).padStart(2, "0");
@@ -141,8 +140,8 @@ const EditMovieComponent = ({ onClose, movie }) => {
 
       if (response.ok) {
         console.log("Cập nhật thành công:", result);
-        onClose();
-        window.location.reload();
+        onRefresh(); 
+        onClose(); 
       } else {
         console.error("Lỗi từ server:", result.error || result.message);
       }

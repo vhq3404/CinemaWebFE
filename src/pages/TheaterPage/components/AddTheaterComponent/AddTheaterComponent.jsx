@@ -15,8 +15,6 @@ const AddTheaterComponent = ({ onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const selectedCity = provinces.find((p) => p.id === city)?.name || "";
   
-  console.log("city", city);
-
   useEffect(() => {
     axios
       .get("https://esgoo.net/api-tinhthanh/1/0.htm")
@@ -98,7 +96,6 @@ const AddTheaterComponent = ({ onClose }) => {
 
       if (response.ok) {
         console.log("Thêm thành công:", result);
-        window.location.reload();
         onClose();
       } else {
         console.error("Lỗi từ server:", result.error);

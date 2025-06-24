@@ -47,23 +47,23 @@ const TheaterPage = ({ isAdmin = false }) => {
     setShowAddTheater(!showAddTheater);
   };
 
-  useEffect(() => {
-    const fetchTheaters = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/theaters`
-        );
-        const data = await response.json();
-        setTheaters(data);
-        setFilteredTheaters(data);
-      } catch (error) {
-        console.error("Lỗi khi tải danh sách rạp:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchTheaters = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/theaters`
+      );
+      const data = await response.json();
+      setTheaters(data);
+      setFilteredTheaters(data);
+    } catch (error) {
+      console.error("Lỗi khi tải danh sách rạp:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchTheaters();
   }, []);
 
@@ -215,12 +215,24 @@ const TheaterPage = ({ isAdmin = false }) => {
       {showUpdateForm && selectedTheater && (
         <UpdateTheaterComponent
           theater={selectedTheater}
-          onClose={() => setShowUpdateForm(false)}
+          onClose={async () => {
+            setShowUpdateForm(false);
+            await fetchTheaters(); 
+
+            const updated = theaters.find((t) => t.id === selectedTheater.id);
+            if (updated) setSelectedTheater(updated);
+          }}
         />
       )}
 
-      {showAddTheater && <AddTheaterComponent onClose={toggleAddTheater} />}
-
+      {showAddTheater && (
+        <AddTheaterComponent
+          onClose={() => {
+            toggleAddTheater();
+            fetchTheaters();
+          }}
+        />
+      )}
       {isAdmin && selectedTheater && (
         <RoomsManagement theaterId={selectedTheater.id} />
       )}

@@ -1,10 +1,9 @@
-// File: LoginComponent.jsx
 import React, { useState, useRef } from "react";
 import "./AddMovieComponent.css";
-import { FaRegTrashAlt, FaRegCalendarAlt } from "react-icons/fa";
+import { FaRegCalendarAlt } from "react-icons/fa";
 import { FiPlus } from "react-icons/fi";
 
-const AddMovieComponent = ({ onClose }) => {
+const AddMovieComponent = ({ onClose, onRefresh }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("");
@@ -117,8 +116,8 @@ const AddMovieComponent = ({ onClose }) => {
 
       if (response.ok) {
         console.log("Thêm thành công:", result);
-        window.location.reload();
-        onClose();
+        onRefresh(); 
+        onClose(); 
       } else {
         console.error("Lỗi từ server:", result.error);
       }

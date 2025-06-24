@@ -144,26 +144,41 @@ const RevenueReportPage = () => {
     fetchMovies();
   }, []);
 
-  // Lọc theo ngày & status cho bookings phim
-  useEffect(() => {
-    if (startDate && endDate) {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      end.setDate(end.getDate() + 1);
+  const toDateOnlyString = (datetime) => {
+    const date = new Date(datetime);
+    const localDate = new Date(date.getTime() + 7 * 60 * 60 * 1000);
+    return localDate.toISOString().split("T")[0];
+  };
 
+  useEffect(() => {
+    console.log("startDate", startDate);
+    console.log("endDate", endDate);
+    bookings.forEach((b) => {
+      console.log(
+        "booking:",
+        b.created_at,
+        "→",
+        toDateOnlyString(b.created_at)
+      );
+    });
+
+    if (startDate && endDate) {
       const filtered = bookings.filter((booking) => {
-        const createdAt = new Date(booking.created_at);
+        const bookingDate = toDateOnlyString(booking.created_at);
         return (
-          createdAt >= start && createdAt < end && booking.status === "PAID"
+          bookingDate >= startDate &&
+          bookingDate <= endDate &&
+          booking.status === "PAID"
         );
       });
 
       setFilteredBookings(filtered);
 
-      // Lọc đồ ăn theo ngày & status tương tự
       const filteredFood = foodBookings.filter((fb) => {
-        const createdAt = new Date(fb.created_at);
-        return createdAt >= start && createdAt < end && fb.status === "PAID";
+        const foodDate = toDateOnlyString(fb.created_at);
+        return (
+          foodDate >= startDate && foodDate <= endDate && fb.status === "PAID"
+        );
       });
 
       setFilteredFoodBookings(filteredFood);
@@ -243,7 +258,7 @@ const RevenueReportPage = () => {
   };
 
   let rawChartData = getDateRange(startDate, endDate).map((date) => {
-    const dayStr = date.toISOString().split("T")[0];
+    const dayStr = toDateOnlyString(date);
     const dataForDay = { date: dayStr };
 
     movies.forEach((movie) => {
@@ -251,7 +266,7 @@ const RevenueReportPage = () => {
     });
 
     filteredBookings.forEach((booking) => {
-      const bookingDateStr = booking.created_at.split("T")[0];
+      const bookingDateStr = toDateOnlyString(booking.created_at);
       if (bookingDateStr === dayStr) {
         const movie = movies.find((m) => m._id === booking.movie_id);
         if (movie) {
@@ -266,6 +281,7 @@ const RevenueReportPage = () => {
 
     return dataForDay;
   });
+  console.log(" chartData:", rawChartData);
 
   // Nối từ 0 đến ngày đầu tiên có doanh thu
   movies.forEach((movie) => {

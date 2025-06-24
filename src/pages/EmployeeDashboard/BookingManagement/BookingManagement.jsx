@@ -193,10 +193,13 @@ const BookingManagement = () => {
 
     const matchShowtime = !filterShowtime || b.showtime_id === filterShowtime;
 
-    const matchDate = filterDate
-      ? new Date(b.created_at).toDateString() ===
-        new Date(filterDate).toDateString()
-      : true;
+    const matchDate =
+      activeTab === "REFUND_REQUESTED"
+        ? true
+        : filterDate
+        ? new Date(b.created_at).toDateString() ===
+          new Date(filterDate).toDateString()
+        : true;
 
     return (
       matchMovie && matchUser && matchTheater && matchShowtime && matchDate

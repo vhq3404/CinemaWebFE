@@ -104,7 +104,6 @@ const UpdateTheaterComponent = ({ onClose, theater }) => {
       const result = await response.json();
       if (response.ok) {
         console.log("Cập nhật thành công:", result);
-        window.location.reload();
         onClose();
       } else {
         console.error("Lỗi từ server:", result.error);

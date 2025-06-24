@@ -13,6 +13,7 @@ const TheaterShowtimes = ({ theaterId }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [pendingShowtime, setPendingShowtime] = useState(null);
   const user = useSelector((state) => state.user);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,7 +27,9 @@ const TheaterShowtimes = ({ theaterId }) => {
         if (!response.ok) throw new Error(data.error || "Lỗi dữ liệu");
 
         const now = new Date();
-        const showtimes = data.showtimes.filter((s) => new Date(s.startTime) > now);
+        const showtimes = data.showtimes.filter(
+          (s) => new Date(s.startTime) > now
+        );
 
         const movieIds = [...new Set(showtimes.map((s) => s.movie.movieId))];
 
@@ -115,9 +118,31 @@ const TheaterShowtimes = ({ theaterId }) => {
                   setSelectedDate={setSelectedDate}
                 />
                 <hr className="schedule-divider" />
+                <input
+                  type="text"
+                  placeholder="Tìm phim..."
+                  className="movie-search-input"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  style={{
+                    padding: "8px",
+                    width: "100%",
+                    maxWidth: "400px",
+                    fontSize: "16px",
+                    fontFamily: "monospace",
+                    borderRadius: "6px",
+                    border: "1px solid #ccc",
+                  }}
+                />
+
                 <div className="showtimes-table-structured">
-                  {Object.entries(showtimesByMovie[selectedDate] || {}).map(
-                    ([movieId, movieData], index) => {
+                  {Object.entries(showtimesByMovie[selectedDate] || {})
+                    .filter(([_, movieData]) =>
+                      movieData.title
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
+                    )
+                    .map(([movieId, movieData], index) => {
                       const groupedByType = movieData.showtimes.reduce(
                         (acc, showtime) => {
                           const type = showtime.showtimeType || "Khác";
@@ -169,8 +194,7 @@ const TheaterShowtimes = ({ theaterId }) => {
                           </div>
                         </div>
                       );
-                    }
-                  )}
+                    })}
                 </div>
               </>
             ) : (

@@ -92,13 +92,13 @@ function FoodList() {
               <h4>{food.name}</h4>
               <p>{food.description}</p>
               <p className="food-list-price">{formatCurrency(food.price)}</p>
-              <p
+              {/* <p
                 className={`status ${
                   food.isAvailable ? "available" : "unavailable"
                 }`}
               >
                 {food.isAvailable ? "Còn hàng" : "Hết hàng"}
-              </p>
+              </p> */}
               <div className="food-action-buttons">
                 <button
                   className="food-btn-edit"

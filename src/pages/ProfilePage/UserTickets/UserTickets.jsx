@@ -149,7 +149,7 @@ const UserTickets = ({ userId }) => {
     <div className="user-bookings-container">
       <h2>Lịch sử giao dịch</h2>
 
-      {/* TAB CHỌN */}
+      {/* TAB CHỌN
       <div className="booking-tabs">
         <button
           className={activeTab === "tickets" ? "active" : ""}
@@ -163,7 +163,7 @@ const UserTickets = ({ userId }) => {
         >
           Đồ ăn đã đặt
         </button>
-      </div>
+      </div> */}
 
       {/* TAB: VÉ ĐÃ ĐẶT */}
       {activeTab === "tickets" && (

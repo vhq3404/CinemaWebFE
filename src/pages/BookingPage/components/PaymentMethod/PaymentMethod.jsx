@@ -14,12 +14,13 @@ const PaymentMethod = ({
   const [points, setPoints] = useState("");
   const [appliedPoints, setAppliedPoints] = useState(null);
   const userPoints = useSelector((state) => state.user.points || 0);
+  const user = useSelector((state) => state.user);
 
   const methods = [
-    { label: "QR thanh toán", value: "payos"},
+    { label: "Chuyển khoản", value: "payos" },
+    ...(user.role === "employee" ? [{ label: "Tiền mặt", value: "cash" }] : []),
   ];
 
-  // Khi component mount, đọc appliedPoints từ localStorage để đồng bộ trạng thái
   useEffect(() => {
     const savedPoints = localStorage.getItem(STORAGE_KEY);
     if (savedPoints) {

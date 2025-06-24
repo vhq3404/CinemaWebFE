@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./LoginComponent.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdOutlineEmail, MdLockOutline } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/actions";
 import { toast } from "sonner";
@@ -26,6 +27,7 @@ const LoginComponent = ({
   const [successMessage, setSuccessMessage] = useState("");
   const [countdown, setCountdown] = useState(0);
   const [otpSent, setOtpSent] = useState(false);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -39,7 +41,7 @@ const LoginComponent = ({
         }
         return prev - 1;
       });
-    }, 1000);
+    }, 600);
 
     return () => clearInterval(interval);
   }, [countdown]);
@@ -76,9 +78,14 @@ const LoginComponent = ({
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      if (showtime && navigateAfterLogin) {
+      if (data.user.role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (data.user.role === "employee") {
+        navigate("/employee/dashboard");
+      } else if (showtime && navigateAfterLogin) {
         navigateAfterLogin("/booking", { state: { showtime } });
       }
+
       onClose();
     } catch (error) {
       console.error("Lỗi khi gửi yêu cầu:", error);

@@ -87,7 +87,7 @@ function AddFood({ onClose, onFoodAdded, editingFood }) {
             onChange={handleChange}
             required
           />
-          <label>
+          {/* <label>
             <input
               name="isAvailable"
               type="checkbox"
@@ -95,7 +95,7 @@ function AddFood({ onClose, onFoodAdded, editingFood }) {
               onChange={handleChange}
             />
             Còn hàng
-          </label>
+          </label> */}
           <br />
           <select name="type" value={formData.type} onChange={handleChange}>
             <option value="bắp">Bắp</option>

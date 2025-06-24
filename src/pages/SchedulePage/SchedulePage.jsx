@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
 import ScheduleChart from "./components/ScheduleChart/ScheduleChart";
+import { useSelector } from "react-redux";
 import DateFilter from "../../components/DateFilter/DateFilter";
 import AddShowtimeComponent from "./components/AddShowtimeComponent/AddShowtimeComponent";
 import { MdDeleteOutline } from "react-icons/md";
@@ -16,6 +17,7 @@ const SchedulePage = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [isAddShowtimeVisible, setIsAddShowtimeVisible] = useState(false);
   const [isScheduleChartVisible, setIsScheduleChartVisible] = useState(false);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchTheaters = async () => {
@@ -185,12 +187,14 @@ const SchedulePage = () => {
                 selectedDate={selectedDate}
                 setSelectedDate={setSelectedDate}
               />
-              <button
-                className="add-showtime-button"
-                onClick={toggleAddShowtimeModal}
-              >
-                Thêm suất chiếu
-              </button>
+              {user?.role === "admin" && (
+                <button
+                  className="add-showtime-button"
+                  onClick={toggleAddShowtimeModal}
+                >
+                  Thêm suất chiếu
+                </button>
+              )}
 
               <button
                 className="view-chart-button"
@@ -222,7 +226,7 @@ const SchedulePage = () => {
                             <th>Phòng chiếu</th>
                             <th>Giá ghế thường</th>
                             <th>Giá ghế VIP</th>
-                            <th>Xóa</th>
+                            {user?.role === "admin" && <th>Xóa</th>}
                           </tr>
                         </thead>
                         <tbody>
@@ -249,16 +253,18 @@ const SchedulePage = () => {
                                 <td>
                                   {showtime.priceVIP.toLocaleString("vi-VN")} đ
                                 </td>
-                                <td>
-                                  <button
-                                    className="delete-showtime-button"
-                                    onClick={() =>
-                                      handleDeleteShowtime(showtime._id)
-                                    }
-                                  >
-                                    <MdDeleteOutline />
-                                  </button>
-                                </td>
+                                {user?.role === "admin" && (
+                                  <td>
+                                    <button
+                                      className="delete-showtime-button"
+                                      onClick={() =>
+                                        handleDeleteShowtime(showtime._id)
+                                      }
+                                    >
+                                      <MdDeleteOutline />
+                                    </button>
+                                  </td>
+                                )}
                               </tr>
                             ))}
                         </tbody>

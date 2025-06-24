@@ -125,30 +125,28 @@ const BookingPage = () => {
   }, [bookingId, navigate]);
 
   const handleCancelFood = useCallback(async () => {
-    if (!foodBookingId) {
-      alert("Không có đơn food booking để hủy");
-      return;
-    }
-
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/food-bookings/${foodBookingId}`,
-        {
-          method: "DELETE",
-        }
-      );
+      if (foodBookingId) {
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/food-bookings/${foodBookingId}`,
+          {
+            method: "DELETE",
+          }
+        );
 
-      if (!response.ok) {
-        throw new Error("Không thể hủy food booking");
+        if (!response.ok) {
+          throw new Error("Không thể hủy food booking");
+        }
       }
 
+      // Dù có hay không, vẫn reset các giá trị
       setFoodBookingId(null);
       setAppliedPoints(0);
       setActualAppliedPoints(0);
       localStorage.removeItem("foodBookingId");
       localStorage.removeItem("appliedPoints");
       setCurrentStep(2);
-      //setSelectedFoods([]);
+      // setSelectedFoods([]);
     } catch (error) {
       console.error("Lỗi khi hủy food booking:", error);
       alert("Hủy đơn bắp nước thất bại. Vui lòng thử lại.");
@@ -496,7 +494,45 @@ const BookingPage = () => {
               <button
                 className="booking-confirm-button"
                 style={{ width: "48%" }}
-                onClick={handlePayOSPayment}
+                onClick={async () => {
+                  if (paymentMethod === "cash") {
+                    try {
+                      const res = await fetch(
+                        `${process.env.REACT_APP_API_URL}/api/bookings/${bookingId}/status`,
+                        {
+                          method: "PUT",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ status: "PAID" }),
+                        }
+                      );
+                      if (!res.ok) {
+                        throw new Error("Cập nhật trạng thái booking thất bại");
+                      }
+
+                      if (foodBookingId) {
+                        await fetch(
+                          `${process.env.REACT_APP_API_URL}/api/food-bookings/${foodBookingId}/status`,
+                          {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ status: "PAID" }),
+                          }
+                        );
+                      }
+
+                      localStorage.setItem("bookingId", bookingId);
+                      navigate("/payment-success");
+                    } catch (error) {
+                      console.error(
+                        "Lỗi khi xử lý thanh toán tiền mặt:",
+                        error
+                      );
+                      alert("Thanh toán thất bại. Vui lòng thử lại.");
+                    }
+                  } else {
+                    handlePayOSPayment(); 
+                  }
+                }}
               >
                 Thanh toán
               </button>

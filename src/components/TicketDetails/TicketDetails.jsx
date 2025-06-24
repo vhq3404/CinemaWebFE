@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MovieAgeBadge from "../MovieAgeBadge/MovieAgeBadge";
 import { QRCodeSVG } from "qrcode.react";
-import CancelBooking from "./CancelBooking"; // import component CancelBooking
+import CancelBooking from "./CancelBooking";
 import "./TicketDetails.css";
 
 const TicketDetails = ({ booking, onClose }) => {
   const [seatDetails, setSeatDetails] = useState([]);
   const [showCancelBooking, setShowCancelBooking] = useState(false);
   const [refundInfo, setRefundInfo] = useState(null);
-
   useEffect(() => {
     const fetchRefundInfo = async () => {
       if (
@@ -241,7 +240,7 @@ const TicketDetails = ({ booking, onClose }) => {
           onClose={() => setShowCancelBooking(false)}
           onCancelSuccess={() => {
             setShowCancelBooking(false);
-            onClose(); // nếu muốn đóng luôn TicketDetails sau hủy
+            onClose(); 
           }}
         />
       )}

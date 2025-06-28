@@ -6,7 +6,8 @@ const ScheduleChart = ({
   filteredMovies,
   onClose,
   initialSelectedDate,
-  isOverlay = true
+  isOverlay = true,
+  theaterName = "",
 }) => {
   const [selectedDate, setSelectedDate] = useState("");
   const [showtimes, setShowtimes] = useState([]);
@@ -20,7 +21,11 @@ const ScheduleChart = ({
     setShowtimes(uniqueDates);
 
     if (uniqueDates.length > 0) {
-      if (initialSelectedDate && uniqueDates.includes(initialSelectedDate)) {
+      if (
+        initialSelectedDate &&
+        uniqueDates.includes(initialSelectedDate) &&
+        selectedDate !== initialSelectedDate
+      ) {
         setSelectedDate(initialSelectedDate);
       } else {
         setSelectedDate(uniqueDates[0]);
@@ -29,23 +34,75 @@ const ScheduleChart = ({
   }, [filteredMovies, initialSelectedDate]);
 
   const timeSlots = [
-    "09:00", "09:15", "09:30", "09:45",
-    "10:00", "10:15", "10:30", "10:45",
-    "11:00", "11:15", "11:30", "11:45",
-    "12:00", "12:15", "12:30", "12:45",
-    "13:00", "13:15", "13:30", "13:45",
-    "14:00", "14:15", "14:30", "14:45",
-    "15:00", "15:15", "15:30", "15:45",
-    "16:00", "16:15", "16:30", "16:45",
-    "17:00", "17:15", "17:30", "17:45",
-    "18:00", "18:15", "18:30", "18:45",
-    "19:00", "19:15", "19:30", "19:45",
-    "20:00", "20:15", "20:30", "20:45",
-    "21:00", "21:15", "21:30", "21:45",
-    "22:00", "22:15", "22:30", "22:45",
-    "23:00", "23:15", "23:30", "23:45",
-    "00:00", "00:15", "00:30", "00:45",
-    "01:00", "01:15", "01:30", "01:45","02:00"
+    "09:00",
+    "09:15",
+    "09:30",
+    "09:45",
+    "10:00",
+    "10:15",
+    "10:30",
+    "10:45",
+    "11:00",
+    "11:15",
+    "11:30",
+    "11:45",
+    "12:00",
+    "12:15",
+    "12:30",
+    "12:45",
+    "13:00",
+    "13:15",
+    "13:30",
+    "13:45",
+    "14:00",
+    "14:15",
+    "14:30",
+    "14:45",
+    "15:00",
+    "15:15",
+    "15:30",
+    "15:45",
+    "16:00",
+    "16:15",
+    "16:30",
+    "16:45",
+    "17:00",
+    "17:15",
+    "17:30",
+    "17:45",
+    "18:00",
+    "18:15",
+    "18:30",
+    "18:45",
+    "19:00",
+    "19:15",
+    "19:30",
+    "19:45",
+    "20:00",
+    "20:15",
+    "20:30",
+    "20:45",
+    "21:00",
+    "21:15",
+    "21:30",
+    "21:45",
+    "22:00",
+    "22:15",
+    "22:30",
+    "22:45",
+    "23:00",
+    "23:15",
+    "23:30",
+    "23:45",
+    "00:00",
+    "00:15",
+    "00:30",
+    "00:45",
+    "01:00",
+    "01:15",
+    "01:30",
+    "01:45",
+    "02:00",
   ];
 
   const totalSlots = timeSlots.length;
@@ -71,7 +128,7 @@ const ScheduleChart = ({
         ...showtime,
         title: movie.title,
         startIndex: getSlotIndex(toVietnamTimeHHMM(showtime.start_time)),
-        endIndex: getSlotIndex(toVietnamTimeHHMM(showtime.end_time)),
+        endIndex: getSlotIndex(toVietnamTimeHHMM(showtime.end_time)) - 1,
       }))
   );
 
@@ -81,13 +138,13 @@ const ScheduleChart = ({
 
   // Nội dung chính của biểu đồ
   const content = (
-    <div className="schedule-layout-modal">
+    <div className={`schedule-layout-modal ${!isOverlay ? "compact" : ""}`}>
       {isOverlay && (
         <span className="close-btn" onClick={onClose}>
           &times;
         </span>
       )}
-      <h2>Biểu đồ thời gian chiếu</h2>
+      <h2>Lịch chiếu của rạp{theaterName ? ` ${theaterName}` : ""}</h2>
 
       <DateFilter
         showtimes={showtimes}
@@ -133,7 +190,7 @@ const ScheduleChart = ({
                     colSpan={span}
                     className="showtime-cell"
                   >
-                    {show.title}
+                    {show.title} - {show.showtimeType}
                   </td>
                 );
 
@@ -159,7 +216,6 @@ const ScheduleChart = ({
     </div>
   );
 
-  // Nếu là overlay thì bọc thêm div phủ full màn hình với nền mờ, nếu không thì chỉ render content
   if (isOverlay) {
     return <div className="schedule-overlay">{content}</div>;
   }

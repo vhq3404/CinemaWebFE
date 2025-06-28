@@ -4,7 +4,7 @@ import ScheduleChart from "./components/ScheduleChart/ScheduleChart";
 import { useSelector } from "react-redux";
 import DateFilter from "../../components/DateFilter/DateFilter";
 import AddShowtimeComponent from "./components/AddShowtimeComponent/AddShowtimeComponent";
-import { MdDeleteOutline } from "react-icons/md";
+import UpdatePriceModal from "./components/UpdatePriceModal/UpdatePriceModal";
 import { IoCalendarOutline } from "react-icons/io5";
 import "./SchedulePage.css";
 
@@ -17,7 +17,19 @@ const SchedulePage = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [isAddShowtimeVisible, setIsAddShowtimeVisible] = useState(false);
   const [isScheduleChartVisible, setIsScheduleChartVisible] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [selectedShowtimes, setSelectedShowtimes] = useState(new Set());
+  const [isUpdatePriceModalVisible, setIsUpdatePriceModalVisible] =
+    useState(false);
   const user = useSelector((state) => state.user);
+
+  const removeVietnameseTones = (str) => {
+    return str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/đ/g, "d")
+      .replace(/Đ/g, "D");
+  };
 
   useEffect(() => {
     const fetchTheaters = async () => {
@@ -36,19 +48,16 @@ const SchedulePage = () => {
         setLoading(false);
       }
     };
-
     fetchTheaters();
   }, []);
 
   const fetchShowtimes = useCallback(async () => {
     if (!selectedTheater) return;
-
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/api/showtimes?theaterId=${selectedTheater.id}`
       );
       const data = await response.json();
-
       if (!response.ok) {
         console.error("Không có suất chiếu:", data.error);
         setFilteredMovies([]);
@@ -58,8 +67,6 @@ const SchedulePage = () => {
       }
 
       const showtimes = data.showtimes;
-
-      // Nhóm theo movie title
       const movieMap = {};
       for (const showtime of showtimes) {
         const title = showtime.movie.title;
@@ -75,11 +82,16 @@ const SchedulePage = () => {
           priceRegular: showtime.priceRegular,
           priceVIP: showtime.priceVIP,
           theater_id: showtime.theater.theaterId,
-          rawShowtime: showtime, // lưu bản gốc để log
+          showtimeType: showtime.showtimeType,
+          rawShowtime: showtime,
         });
       }
-
       const groupedMovies = Object.values(movieMap);
+      groupedMovies.forEach((movie) => {
+        movie.showtimes.sort((a, b) =>
+          a.showtimeType.localeCompare(b.showtimeType)
+        );
+      });
       setFilteredMovies(groupedMovies);
 
       const allDates = showtimes.map((s) => s.date.slice(0, 10));
@@ -87,7 +99,6 @@ const SchedulePage = () => {
         (a, b) => new Date(a) - new Date(b)
       );
       setShowtimes(uniqueDates);
-      setSelectedDate(uniqueDates[0]);
     } catch (error) {
       console.error("Lỗi khi gọi API suất chiếu:", error);
       setFilteredMovies([]);
@@ -106,39 +117,20 @@ const SchedulePage = () => {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
-      timeZone: "Asia/Ho_Chi_Minh", // múi giờ Việt Nam
+      timeZone: "Asia/Ho_Chi_Minh",
     });
   };
 
-  const handleDeleteShowtime = async (showtimeId) => {
-    if (!window.confirm("Bạn có chắc muốn xoá suất chiếu này?")) return;
-
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/showtimes/${showtimeId}`,
-        { method: "DELETE" }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        alert(`Lỗi xoá suất chiếu: ${errorData.error}`);
-        return;
-      }
-
-      // Cập nhật filteredMovies bằng cách lọc suất chiếu đã xoá
-      const updatedMovies = filteredMovies
-        .map((movie) => ({
-          ...movie,
-          showtimes: movie.showtimes.filter((s) => s._id !== showtimeId),
-        }))
-        .filter((movie) => movie.showtimes.length > 0);
-
-      setFilteredMovies(updatedMovies);
-      alert("Đã xoá suất chiếu thành công.");
-    } catch (error) {
-      console.error("Lỗi khi gọi API xoá:", error);
-      alert("Đã có lỗi xảy ra khi xoá suất chiếu.");
-    }
+  const handleDeleteSelectedShowtimes = async () => {
+    if (!window.confirm("Bạn có chắc muốn xoá các suất chiếu đã chọn?")) return;
+    const promises = Array.from(selectedShowtimes).map((id) =>
+      fetch(`${process.env.REACT_APP_API_URL}/api/showtimes/${id}`, {
+        method: "DELETE",
+      })
+    );
+    await Promise.all(promises);
+    setSelectedShowtimes(new Set());
+    fetchShowtimes();
   };
 
   const toggleAddShowtimeModal = () => {
@@ -147,6 +139,99 @@ const SchedulePage = () => {
 
   const toggleScheduleChart = () => {
     setIsScheduleChartVisible(!isScheduleChartVisible);
+  };
+
+  const toggleSelectShowtime = (id) => {
+    const newSet = new Set(selectedShowtimes);
+    if (newSet.has(id)) newSet.delete(id);
+    else newSet.add(id);
+    setSelectedShowtimes(newSet);
+  };
+
+  const selectAllShowtimesInDate = () => {
+    const newSet = new Set();
+    filteredMovies.forEach((movie) => {
+      movie.showtimes.forEach((s) => {
+        if (s.date === selectedDate) newSet.add(s._id);
+      });
+    });
+    setSelectedShowtimes(newSet);
+  };
+
+  const selectAllShowtimesInMovie = (movie) => {
+    const newSet = new Set(selectedShowtimes);
+    movie.showtimes.forEach((s) => {
+      if (s.date === selectedDate) newSet.add(s._id);
+    });
+    setSelectedShowtimes(newSet);
+  };
+
+  const areAllShowtimesSelectedInDate = () => {
+    let count = 0;
+    filteredMovies.forEach((movie) => {
+      movie.showtimes.forEach((s) => {
+        if (s.date === selectedDate) count++;
+      });
+    });
+    return selectedShowtimes.size > 0 && selectedShowtimes.size === count;
+  };
+
+  const unselectAllShowtimesInDate = () => {
+    const newSet = new Set(selectedShowtimes);
+    filteredMovies.forEach((movie) => {
+      movie.showtimes.forEach((s) => {
+        if (s.date === selectedDate) newSet.delete(s._id);
+      });
+    });
+    setSelectedShowtimes(newSet);
+  };
+
+  const areAllShowtimesSelectedInMovie = (movie) => {
+    const movieShowtimes = movie.showtimes.filter(
+      (s) => s.date === selectedDate
+    );
+    return (
+      movieShowtimes.length > 0 &&
+      movieShowtimes.every((s) => selectedShowtimes.has(s._id))
+    );
+  };
+
+  const unselectAllShowtimesInMovie = (movie) => {
+    const newSet = new Set(selectedShowtimes);
+    movie.showtimes.forEach((s) => {
+      if (s.date === selectedDate) newSet.delete(s._id);
+    });
+    setSelectedShowtimes(newSet);
+  };
+
+  const handleUpdatePrices = async ({ priceRegular, priceVIP }) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/showtimes/update-prices`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            showtimeIds: Array.from(selectedShowtimes),
+            priceRegular,
+            priceVIP,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const err = await response.json();
+        alert("Lỗi cập nhật giá: " + err.error);
+      } else {
+        fetchShowtimes();
+        setSelectedShowtimes(new Set());
+      }
+    } catch (err) {
+      console.error("Lỗi khi cập nhật giá:", err);
+      alert("Lỗi hệ thống khi cập nhật giá");
+    } finally {
+      setIsUpdatePriceModalVisible(false);
+    }
   };
 
   return (
@@ -178,7 +263,20 @@ const SchedulePage = () => {
               />
             </div>
           </div>
+          <div className="schedule-toolbar">
+            {user?.role === "admin" && (
+              <button
+                className="add-showtime-button"
+                onClick={toggleAddShowtimeModal}
+              >
+                Thêm suất chiếu
+              </button>
+            )}
 
+            <button className="view-chart-button" onClick={toggleScheduleChart}>
+              <IoCalendarOutline /> Lịch phòng
+            </button>
+          </div>
           <div>
             <h3>Lịch chiếu</h3>
             <div className="schedule-toolbar">
@@ -187,46 +285,96 @@ const SchedulePage = () => {
                 selectedDate={selectedDate}
                 setSelectedDate={setSelectedDate}
               />
-              {user?.role === "admin" && (
-                <button
-                  className="add-showtime-button"
-                  onClick={toggleAddShowtimeModal}
-                >
-                  Thêm suất chiếu
-                </button>
-              )}
-
-              <button
-                className="view-chart-button"
-                onClick={toggleScheduleChart}
-              >
-                <IoCalendarOutline />
-                Lịch phòng
-              </button>
             </div>
-
             <hr className="schedule-divider" />
+            <div className="schedule-controls">
+              <div className="left-controls">
+                <input
+                  type="text"
+                  placeholder="Tìm phim..."
+                  value={searchKeyword}
+                  onChange={(e) => setSearchKeyword(e.target.value)}
+                  className="employee-search-input"
+                />
+                <button
+                  className="update-showtime-button"
+                  onClick={() => setIsUpdatePriceModalVisible(true)}
+                  disabled={selectedShowtimes.size === 0}
+                >
+                  Cập nhật giá vé
+                </button>
+
+                <button
+                  className="delete-showtime-button"
+                  onClick={handleDeleteSelectedShowtimes}
+                  disabled={selectedShowtimes.size === 0}
+                >
+                  Xoá các suất đã chọn
+                </button>
+              </div>
+
+              <div className="right-controls">
+                {areAllShowtimesSelectedInDate() ? (
+                  <button
+                    className="select-toggle-button"
+                    onClick={unselectAllShowtimesInDate}
+                  >
+                    Bỏ chọn tất cả
+                  </button>
+                ) : (
+                  <button
+                    className="select-toggle-button"
+                    onClick={selectAllShowtimesInDate}
+                  >
+                    Chọn tất cả
+                  </button>
+                )}
+              </div>
+            </div>
 
             <div className="schedule">
               {filteredMovies.length > 0 ? (
                 filteredMovies
-                  .filter((movie) =>
-                    movie.showtimes.some(
-                      (showtime) => showtime.date === selectedDate
-                    )
+                  .filter(
+                    (movie) =>
+                      removeVietnameseTones(movie.title.toLowerCase()).includes(
+                        removeVietnameseTones(searchKeyword.toLowerCase())
+                      ) &&
+                      movie.showtimes.some(
+                        (showtime) => showtime.date === selectedDate
+                      )
                   )
                   .map((movie, movieIndex) => (
                     <div key={movieIndex} className="movie">
-                      <h3>{movie.title}</h3>
+                      <div className="movie-header">
+                        <h3>{movie.title}</h3>
+                        {areAllShowtimesSelectedInMovie(movie) ? (
+                          <button
+                            className="select-toggle-button"
+                            onClick={() => unselectAllShowtimesInMovie(movie)}
+                          >
+                            Bỏ chọn tất cả
+                          </button>
+                        ) : (
+                          <button
+                            className="select-toggle-button"
+                            onClick={() => selectAllShowtimesInMovie(movie)}
+                          >
+                            Chọn tất cả
+                          </button>
+                        )}
+                      </div>
+
                       <table>
                         <thead>
                           <tr>
+                            <th>Loại</th>
                             <th>Giờ bắt đầu</th>
                             <th>Giờ kết thúc</th>
                             <th>Phòng chiếu</th>
                             <th>Giá ghế thường</th>
                             <th>Giá ghế VIP</th>
-                            {user?.role === "admin" && <th>Xóa</th>}
+                            <th></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -236,6 +384,7 @@ const SchedulePage = () => {
                             )
                             .map((showtime, showtimeIndex) => (
                               <tr key={showtimeIndex}>
+                                <td>{showtime.showtimeType}</td>
                                 <td>
                                   {formatTimeToVietnam(showtime.start_time)}
                                 </td>
@@ -243,7 +392,6 @@ const SchedulePage = () => {
                                   {formatTimeToVietnam(showtime.end_time)}
                                 </td>
                                 <td>{showtime.room_name}</td>
-
                                 <td>
                                   {showtime.priceRegular.toLocaleString(
                                     "vi-VN"
@@ -253,18 +401,17 @@ const SchedulePage = () => {
                                 <td>
                                   {showtime.priceVIP.toLocaleString("vi-VN")} đ
                                 </td>
-                                {user?.role === "admin" && (
-                                  <td>
-                                    <button
-                                      className="delete-showtime-button"
-                                      onClick={() =>
-                                        handleDeleteShowtime(showtime._id)
-                                      }
-                                    >
-                                      <MdDeleteOutline />
-                                    </button>
-                                  </td>
-                                )}
+                                <td>
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedShowtimes.has(
+                                      showtime._id
+                                    )}
+                                    onChange={() =>
+                                      toggleSelectShowtime(showtime._id)
+                                    }
+                                  />
+                                </td>
                               </tr>
                             ))}
                         </tbody>
@@ -292,7 +439,19 @@ const SchedulePage = () => {
                 theaterId={selectedTheater?.id}
                 onClose={toggleAddShowtimeModal}
                 onAddSuccess={fetchShowtimes}
+                onChangeTheater={(theaterId) => {
+                  const theater = theaters.find((t) => t.id === theaterId);
+                  if (theater) setSelectedTheater(theater);
+                }}
                 scheduleMovies={filteredMovies}
+              />
+            </div>
+          )}
+          {isUpdatePriceModalVisible && (
+            <div className="schedule-overlay">
+              <UpdatePriceModal
+                onClose={() => setIsUpdatePriceModalVisible(false)}
+                onSubmit={handleUpdatePrices}
               />
             </div>
           )}

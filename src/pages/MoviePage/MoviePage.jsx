@@ -22,6 +22,7 @@ const MoviePage = ({
   const [showAllMovies, setShowAllMovies] = useState(false);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
+  console.log('movies', movies)
 
   const fetchMovies = async () => {
     try {

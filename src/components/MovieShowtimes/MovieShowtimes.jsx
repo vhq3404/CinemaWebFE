@@ -93,7 +93,6 @@ const MovieShowtimes = ({ movieId }) => {
 
   useEffect(() => {
     if (selectedCity === "Tất cả") {
-      // Lấy tất cả tên rạp có trong showtimes
       const allTheaterNames = new Set(
         Object.values(showtimesByTheater).flatMap((theaterGroup) =>
           Object.keys(theaterGroup)
@@ -101,12 +100,10 @@ const MovieShowtimes = ({ movieId }) => {
       );
       setTheaterOptions(["Tất cả", ...Array.from(allTheaterNames)]);
     } else {
-      // Lọc các rạp thuộc thành phố được chọn
       const filteredTheaters = theaterList
         .filter((t) => t.city === selectedCity)
         .map((t) => t.name)
         .filter((name) =>
-          // Chỉ lấy các rạp có suất chiếu trong dữ liệu
           Object.values(showtimesByTheater).some((group) =>
             Object.keys(group).includes(name)
           )
@@ -115,7 +112,6 @@ const MovieShowtimes = ({ movieId }) => {
       setTheaterOptions(["Tất cả", ...filteredTheaters]);
     }
 
-    // Reset lại selectedTheater nếu nó không còn hợp lệ
     setSelectedTheater("Tất cả");
   }, [selectedCity, showtimesByTheater, theaterList]);
 

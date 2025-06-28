@@ -4,12 +4,7 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import ScheduleChart from "../ScheduleChart/ScheduleChart";
 import "./AddShowtimeComponent.css";
 
-const AddShowtimeComponent = ({
-  onClose,
-  onAddSuccess,
-  scheduleMovies,
-  onChangeTheater,
-}) => {
+const AddShowtimeComponent = ({ onClose, onAddSuccess, scheduleMovies }) => {
   const [movies, setMovies] = useState([]);
   const [theaters, setTheaters] = useState([]);
   const [rooms, setRooms] = useState([]);
@@ -19,36 +14,17 @@ const AddShowtimeComponent = ({
   const [rawDate, setRawDate] = useState("");
   const [formattedDate, setFormattedDate] = useState("");
   const hiddenDateRef = useRef();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
     movieId: "",
     theaterId: "",
-    startDate: "",
-    endDate: "",
-    showtimeType: "",
-    showtimesPerDay: [],
+    roomId: "",
+    date: "",
+    startTime: "",
     priceRegular: "",
     priceVIP: "",
-    priceRegularWeekend: "",
-    priceVIPWeekend: "",
+    showtimeType: "",
   });
-
-  const resetFormData = () => {
-    setFormData({
-      movieId: "",
-      theaterId: "",
-      startDate: "",
-      endDate: "",
-      showtimeType: "",
-      showtimesPerDay: [],
-      priceRegular: "",
-      priceVIP: "",
-      priceRegularWeekend: "",
-      priceVIPWeekend: "",
-    });
-  };
 
   const showtimeTypeOptions = [
     { value: "2D Lồng tiếng", label: "2D Lồng tiếng" },
@@ -73,7 +49,6 @@ const AddShowtimeComponent = ({
         setMovies(data);
       } catch (err) {
         console.error("Lỗi khi lấy danh sách phim:", err);
-        setErrorMessage("Không thể tải danh sách phim.");
       }
     };
     fetchMovies();
@@ -89,7 +64,6 @@ const AddShowtimeComponent = ({
         setTheaters(data);
       } catch (err) {
         console.error("Lỗi khi lấy danh sách rạp:", err);
-        setErrorMessage("Không thể tải danh sách rạp.");
       }
     };
     fetchTheaters();
@@ -107,11 +81,14 @@ const AddShowtimeComponent = ({
       if (!response.ok) {
         console.error("Không có suất chiếu:", data.error);
         setFilteredMovies([]);
+        //setShowtimes([]);
+
         return;
       }
 
       const showtimes = data.showtimes;
 
+      // Nhóm theo movie title
       const movieMap = {};
       for (const showtime of showtimes) {
         const title = showtime.movie.title;
@@ -123,7 +100,6 @@ const AddShowtimeComponent = ({
           date: showtime.date.slice(0, 10),
           start_time: showtime.startTime,
           end_time: showtime.endTime,
-          showtimeType: showtime.showtimeType,
           room_name: showtime.room.roomName,
           priceRegular: showtime.priceRegular,
           priceVIP: showtime.priceVIP,
@@ -131,11 +107,18 @@ const AddShowtimeComponent = ({
         });
       }
 
-      setFilteredMovies(Object.values(movieMap));
+      const groupedMovies = Object.values(movieMap);
+      setFilteredMovies(groupedMovies);
+
+      const allDates = showtimes.map((s) => s.date.slice(0, 10));
+      const uniqueDates = [...new Set(allDates)].sort(
+        (a, b) => new Date(a) - new Date(b)
+      );
+      //setShowtimes(uniqueDates);
     } catch (error) {
       console.error("Lỗi khi gọi API suất chiếu:", error);
       setFilteredMovies([]);
-      setErrorMessage("Không thể tải suất chiếu.");
+      //setShowtimes([]);
     }
   }, [selectedTheater]);
 
@@ -169,72 +152,75 @@ const AddShowtimeComponent = ({
         setRooms(data);
       } catch (err) {
         console.error("Lỗi khi lấy danh sách phòng:", err);
-        setErrorMessage("Không thể tải danh sách phòng.");
       }
     };
     fetchRooms();
   }, [formData.theaterId]);
 
+  const validateStartTime = (startTime) => {
+    const [hour, minute] = startTime.split(":").map(Number);
+    return !(hour < 9 || hour > 23 || (hour === 23 && minute > 45));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
-    setErrorMessage("");
-    setIsSubmitting(true);
 
-    if (formData.showtimesPerDay.length === 0) {
-      setMessage("Vui lòng chọn ít nhất một giờ chiếu trong ngày.");
-      setIsSubmitting(false);
+    if (!validateStartTime(formData.startTime)) {
+      setMessage("Giờ bắt đầu phải từ 9:00 đến 23:45");
       return;
     }
 
     const payload = {
       ...formData,
-      theaterId: parseInt(formData.theaterId),
+      theaterId: parseInt(formData.theaterId, 10),
+      roomId: parseInt(formData.roomId, 10),
       priceRegular: parseFloat(formData.priceRegular),
       priceVIP: parseFloat(formData.priceVIP),
-      priceRegularWeekend: parseFloat(formData.priceRegularWeekend) || null,
-      priceVIPWeekend: parseFloat(formData.priceVIPWeekend) || null,
     };
 
     try {
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/showtimes/generate-showtimes`,
+        `${process.env.REACT_APP_API_URL}/api/showtimes`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         }
       );
+      console.log("formData trước khi gửi:", formData);
       const result = await res.json();
 
       if (res.ok) {
-        setMessage("Tạo các suất chiếu thành công!");
-        setErrorMessage("");
-        const currentSelectedDate = rawDate;
-        const correctTheater = theaters.find(
-          (t) => t.id === parseInt(formData.theaterId)
-        );
-        setSelectedTheater(correctTheater || null);
-
-        if (onChangeTheater && correctTheater) {
-          onChangeTheater(correctTheater.id);
-        }
-
-        setTimeout(async () => {
-          await fetchShowtimes();
-          setRawDate(currentSelectedDate);
-        }, 0);
+        setMessage("Tạo suất chiếu thành công!");
+        setFormData({
+          movieId: "",
+          theaterId: "",
+          roomId: "",
+          date: "",
+          startTime: "",
+          priceRegular: "",
+          priceVIP: "",
+          showtimeType: "",
+        });
         onAddSuccess?.();
+        onClose();
       } else {
-        setErrorMessage(`Lỗi: ${result.error}`);
-        setMessage("");
+        setMessage(`Lỗi: ${result.error}`);
       }
     } catch (err) {
-      console.error("Lỗi gửi yêu cầu:", err);
-      setErrorMessage("Không thể gửi yêu cầu tạo suất chiếu.");
-      setMessage("");
-    } finally {
-      setIsSubmitting(false);
+      console.error("Lỗi khi gửi yêu cầu tạo suất chiếu:", err);
+      setMessage("Đã xảy ra lỗi không xác định.");
+    }
+  };
+
+  const handleDateChange = (e) => {
+    const date = e.target.value;
+    setRawDate(date);
+    const [year, month, day] = date.split("-");
+    if (year && month && day) {
+      setFormattedDate(`${day}/${month}/${year}`);
+      setFormData((prev) => ({ ...prev, date }));
     }
   };
 
@@ -242,57 +228,30 @@ const AddShowtimeComponent = ({
     hiddenDateRef.current.showPicker?.();
   };
 
-  const formatNumber = (value) => {
-    if (!value) return "";
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
+  const movieOptions = movies.map((m) => ({
+    value: m._id,
+    label: m.title,
+  }));
 
-  const parseNumber = (value) => {
-    return value.replace(/,/g, "");
-  };
+  const theaterOptions = theaters.map((t) => ({
+    value: t.id,
+    label: t.name,
+  }));
 
-  const movieOptions = movies.map((m) => ({ value: m._id, label: m.title }));
-  const theaterOptions = theaters.map((t) => ({ value: t.id, label: t.name }));
-  const roomOptions = rooms.map((r) => ({ value: r.id, label: r.room_name }));
+  const roomOptions = rooms.map((r) => ({
+    value: r.id,
+    label: r.room_name,
+  }));
 
   return (
     <div className="add-showtime-wrapper">
       <div className="add-showtime-container">
-        <span
-          className="add-showtime-close-btn"
-          onClick={() => {
-            resetFormData();
-            onClose();
-          }}
-        >
+        <span className="add-showtime-close-btn" onClick={onClose}>
           &times;
         </span>
         <h2>Tạo suất chiếu mới</h2>
         <div className="add-showtime-content">
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Rạp:</label>
-              <Select
-                options={theaterOptions}
-                value={theaterOptions.find(
-                  (t) => t.value === formData.theaterId
-                )}
-                onChange={(selected) => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    theaterId: selected.value,
-                    roomId: "", // reset room khi đổi rạp
-                  }));
-
-                  // Cập nhật selectedTheater ở đây
-                  const theaterObj = theaters.find(
-                    (t) => t.id === selected.value
-                  );
-                  setSelectedTheater(theaterObj || null);
-                }}
-                placeholder="-- Chọn rạp --"
-              />
-            </div>
             <div className="form-group">
               <label>Phim:</label>
               <Select
@@ -323,113 +282,93 @@ const AddShowtimeComponent = ({
 
             <div className="form-row">
               <div className="form-group">
-                <label>Từ ngày:</label>
+                <label>Ngày chiếu:</label>
+                <div style={{ position: "relative" }}>
+                  <input
+                    type="text"
+                    value={formattedDate}
+                    readOnly
+                    onClick={openDatePicker}
+                    style={{
+                      fontSize: "16px",
+                      fontFamily: "monospace",
+                      padding: "10px 40px 10px 10px",
+                      border: "1px solid #ccc",
+                      borderRadius: "6px",
+                    }}
+                  />
+                  <span
+                    onClick={openDatePicker}
+                    style={{
+                      position: "absolute",
+                      right: "24px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      cursor: "pointer",
+                      color: "#888",
+                    }}
+                  >
+                    <FaRegCalendarAlt />
+                  </span>
+                </div>
                 <input
                   type="date"
-                  value={formData.startDate}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      startDate: e.target.value,
-                    }))
-                  }
-                  required
+                  ref={hiddenDateRef}
+                  value={rawDate}
+                  onChange={handleDateChange}
+                  style={{
+                    opacity: 0,
+                    position: "absolute",
+                    pointerEvents: "none",
+                  }}
                 />
               </div>
 
               <div className="form-group">
-                <label>Đến ngày:</label>
+                <label>Giờ bắt đầu:</label>
                 <input
-                  type="date"
-                  value={formData.endDate}
+                  type="time"
+                  name="startTime"
+                  value={formData.startTime}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      endDate: e.target.value,
+                      startTime: e.target.value,
                     }))
                   }
                   required
+                  step="900"
+                  min="09:00"
+                  max="23:45"
                 />
               </div>
             </div>
+
             <div className="form-group">
-              <label>Suất chiếu:</label>
+              <label>Rạp:</label>
               <Select
-                isMulti
-                options={[
-                  "09:00",
-                  "09:15",
-                  "09:30",
-                  "09:45",
-                  "10:00",
-                  "10:15",
-                  "10:30",
-                  "10:45",
-                  "11:00",
-                  "11:15",
-                  "11:30",
-                  "11:45",
-                  "12:00",
-                  "12:15",
-                  "12:30",
-                  "12:45",
-                  "13:00",
-                  "13:15",
-                  "13:30",
-                  "13:45",
-                  "14:00",
-                  "14:15",
-                  "14:30",
-                  "14:45",
-                  "15:00",
-                  "15:15",
-                  "15:30",
-                  "15:45",
-                  "16:00",
-                  "16:15",
-                  "16:30",
-                  "16:45",
-                  "17:00",
-                  "17:15",
-                  "17:30",
-                  "17:45",
-                  "18:00",
-                  "18:15",
-                  "18:30",
-                  "18:45",
-                  "19:00",
-                  "19:15",
-                  "19:30",
-                  "19:45",
-                  "20:00",
-                  "20:15",
-                  "20:30",
-                  "20:45",
-                  "21:00",
-                  "21:15",
-                  "21:30",
-                  "21:45",
-                  "22:00",
-                  "22:15",
-                  "22:30",
-                  "22:45",
-                  "23:00",
-                ].map((time) => ({ value: time, label: time }))}
-                value={formData.showtimesPerDay.map((time) => ({
-                  value: time,
-                  label: time,
-                }))}
-                onChange={(selected) =>
+                options={theaterOptions}
+                value={theaterOptions.find(
+                  (t) => t.value === formData.theaterId
+                )}
+                onChange={(selected) => {
                   setFormData((prev) => ({
                     ...prev,
-                    showtimesPerDay: selected.map((s) => s.value),
-                  }))
-                }
-                placeholder="-- Chọn giờ chiếu --"
+                    theaterId: selected.value,
+                    roomId: "", // reset room khi đổi rạp
+                  }));
+
+                  // Cập nhật selectedTheater ở đây
+                  const theaterObj = theaters.find(
+                    (t) => t.id === selected.value
+                  );
+                  setSelectedTheater(theaterObj || null);
+                }}
+                placeholder="-- Chọn rạp --"
               />
             </div>
 
-            {/* <div className="form-group">
+            <div className="form-group">
               <label>Phòng chiếu:</label>
               <Select
                 options={roomOptions}
@@ -440,17 +379,17 @@ const AddShowtimeComponent = ({
                 placeholder="-- Chọn phòng --"
                 isDisabled={!formData.theaterId}
               />
-            </div> */}
+            </div>
             <div className="form-row">
               <div className="form-group">
                 <label>Giá ghế Thường:</label>
                 <input
-                  type="text"
-                  value={formatNumber(formData.priceRegular)}
+                  type="number"
+                  value={formData.priceRegular}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      priceRegular: parseNumber(e.target.value),
+                      priceRegular: e.target.value,
                     }))
                   }
                   required
@@ -460,70 +399,53 @@ const AddShowtimeComponent = ({
               <div className="form-group">
                 <label>Giá ghế VIP:</label>
                 <input
-                  type="text"
-                  value={formatNumber(formData.priceVIP)}
+                  type="number"
+                  value={formData.priceVIP}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      priceVIP: parseNumber(e.target.value),
+                      priceVIP: e.target.value,
                     }))
                   }
                   required
                 />
               </div>
-            </div>
-            <div className="form-row">
-              <div className="form-group">
-                <label>Giá ghế Thường (T7/CN):</label>
-                <input
-                  type="text"
-                  value={formatNumber(formData.priceRegularWeekend)}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      priceRegularWeekend: parseNumber(e.target.value),
-                    }))
-                  }
-                />
-              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Giá ghế Thường (Thứ 7/CN):</label>
+                  <input
+                    type="number"
+                    value={formData.weekendPriceRegular}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        weekendPriceRegular: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
 
-              <div className="form-group">
-                <label>Giá ghế VIP (T7/CN):</label>
-                <input
-                  type="text"
-                  value={formatNumber(formData.priceVIPWeekend)}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      priceVIPWeekend: parseNumber(e.target.value),
-                    }))
-                  }
-                />
+                <div className="form-group">
+                  <label>Giá ghế VIP (Thứ 7/CN):</label>
+                  <input
+                    type="number"
+                    value={formData.weekendPriceVIP}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        weekendPriceVIP: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
               </div>
             </div>
 
-            <button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Đang tạo..." : "Tạo suất chiếu"}
-            </button>
+            <button type="submit">Tạo suất chiếu</button>
           </form>
         </div>
-        {message && (
-          <p
-            className="form-message"
-            style={{ color: "green", marginTop: "10px" }}
-          >
-            {message}
-          </p>
-        )}
 
-        {errorMessage && (
-          <p
-            className="form-message"
-            style={{ color: "red", marginTop: "10px" }}
-          >
-            {errorMessage}
-          </p>
-        )}
+        {message && <p className="form-message">{message}</p>}
       </div>
       <div className="schedule-wrapper">
         <ScheduleChart
@@ -531,7 +453,6 @@ const AddShowtimeComponent = ({
           onClose={onClose}
           initialSelectedDate={rawDate}
           isOverlay={false}
-          theaterName={selectedTheater?.name}
         />
       </div>
     </div>

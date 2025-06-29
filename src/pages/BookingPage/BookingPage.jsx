@@ -79,7 +79,7 @@ const BookingPage = () => {
 
       // Tạo link thanh toán PayOS
       const response = await fetch(
-        `${process.env.REACT_APP_QR_URL}/api/payments/payos`,
+        `${process.env.REACT_APP_API_URL}/api/payments/payos`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

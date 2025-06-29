@@ -3,11 +3,12 @@ import "./UpdatePriceModal.css";
 
 const formatNumber = (value) => {
   if (!value) return "";
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const cleanedValue = value.toString().replace(/[.,]/g, "");
+  return cleanedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
 const parseNumber = (value) => {
-  return value.replace(/,/g, "");
+  return value.replace(/[.,]/g, "");
 };
 
 const UpdatePriceModal = ({ onClose, onSubmit }) => {

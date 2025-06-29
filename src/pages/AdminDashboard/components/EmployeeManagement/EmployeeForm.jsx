@@ -30,9 +30,29 @@ const EmployeeForm = ({ editingEmployee, onClose, onSuccess }) => {
       });
   }, []);
 
+  const isAtLeast18YearsOld = (birthdateStr) => {
+    const birthDate = new Date(birthdateStr);
+    const today = new Date();
+
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const hasHadBirthdayThisYear =
+      today.getMonth() > birthDate.getMonth() ||
+      (today.getMonth() === birthDate.getMonth() &&
+        today.getDate() >= birthDate.getDate());
+
+    return age > 18 || (age === 18 && hasHadBirthdayThisYear);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
+    const birthdate = formData.get("birthdate");
+
+    if (!isAtLeast18YearsOld(birthdate)) {
+      alert("Nhân viên phải đủ ít nhất 18 tuổi.");
+      return;
+    }
+
     const body = Object.fromEntries(formData.entries());
 
     if (!editingEmployee) {
@@ -216,7 +236,6 @@ const EmployeeForm = ({ editingEmployee, onClose, onSuccess }) => {
                     backgroundColor: "#f0f0f0",
                     whiteSpace: "nowrap",
                     width: "30%",
-                    zIndex: 1,
                   }}
                 >
                   Tạo mật khẩu
